@@ -30,6 +30,13 @@ namespace web
 			{
 				thread(&BaseTCPServer::clientConnection, this, clientSocket).detach();
 			}
+			else if (!isRunning && clientSocket != INVALID_SOCKET)
+			{
+				if (closesocket(clientSocket) == SOCKET_ERROR)
+				{
+					//exception handle in another thread
+				}
+			}
 		}
 	}
 
