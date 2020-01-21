@@ -1,6 +1,7 @@
 #include "BaseTCPServer.h"
 
 #include <thread>
+#include <stdexcept>
 
 #pragma comment (lib,"ws2_32.lib")
 
@@ -13,11 +14,11 @@ namespace web
 {
 	namespace ServerExceptions
 	{
-		static std::string wsaStartup = "WSAStartup failed ";
-		static std::string getAddr = "getaddrinfo failed ";
-		static std::string createSocket = "create socket failed ";
-		static std::string bindSocket = "bind failed ";
-		static std::string createListenSocket = "listen failed ";
+		static std::string wsaStartup			= "WSAStartup failed ";
+		static std::string getAddr				= "getaddrinfo failed ";
+		static std::string createSocket			= "create socket failed ";
+		static std::string bindSocket			= "bind failed ";
+		static std::string createListenSocket	= "listen failed ";
 	}
 
 	void BaseTCPServer::receiveConnections()
@@ -30,13 +31,6 @@ namespace web
 			{
 				thread(&BaseTCPServer::clientConnection, this, clientSocket).detach();
 			}
-			else if (!isRunning && clientSocket != INVALID_SOCKET)
-			{
-				if (closesocket(clientSocket) == SOCKET_ERROR)
-				{
-					//exception handle in another thread
-				}
-			}
 		}
 	}
 
@@ -44,7 +38,7 @@ namespace web
 	{
 		if (WSAStartup(WINDOWS_SOCKETS_VERSION, &wsaData))
 		{
-			throw exception(CREATE_EXCEPTION(ServerExceptions::wsaStartup));
+			throw runtime_error(CREATE_EXCEPTION(ServerExceptions::wsaStartup));
 		}
 
 		memset(&hints, 0, sizeof(hints));
@@ -55,22 +49,22 @@ namespace web
 
 		if (getaddrinfo(nullptr, port.data(), &hints, &info))
 		{
-			throw exception(CREATE_EXCEPTION(ServerExceptions::getAddr));
+			throw runtime_error(CREATE_EXCEPTION(ServerExceptions::getAddr));
 		}
 
 		if ((listenSocket = socket(info->ai_family, info->ai_socktype, info->ai_protocol)) == INVALID_SOCKET)
 		{
-			throw exception(CREATE_EXCEPTION(ServerExceptions::createSocket));
+			throw runtime_error(CREATE_EXCEPTION(ServerExceptions::createSocket));
 		}
 
 		if (bind(listenSocket, info->ai_addr, info->ai_addrlen) == SOCKET_ERROR)
 		{
-			throw exception(CREATE_EXCEPTION(ServerExceptions::bindSocket));
+			throw runtime_error(CREATE_EXCEPTION(ServerExceptions::bindSocket));
 		}
 
 		if (listen(listenSocket, SOMAXCONN) == SOCKET_ERROR)
 		{
-			throw exception(CREATE_EXCEPTION(ServerExceptions::createListenSocket));
+			throw runtime_error(CREATE_EXCEPTION(ServerExceptions::createListenSocket));
 		}
 	}
 
