@@ -25,11 +25,14 @@ namespace web
 	{
 		while (isRunning)
 		{
-			SOCKET clientSocket = accept(listenSocket, nullptr, nullptr);
+			sockaddr addr;
+			int addrlen = sizeof(sockaddr);
+
+			SOCKET clientSocket = accept(listenSocket, &addr, &addrlen);
 
 			if (isRunning && clientSocket != INVALID_SOCKET)
 			{
-				thread(&BaseTCPServer::clientConnection, this, clientSocket).detach();
+				thread(&BaseTCPServer::clientConnection, this, clientSocket, addr).detach();
 			}
 		}
 	}

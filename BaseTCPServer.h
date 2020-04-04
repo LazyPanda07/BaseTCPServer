@@ -24,7 +24,7 @@ namespace web
 	protected:
 		virtual void receiveConnections();
 
-		virtual void clientConnection(SOCKET clientSocket) = 0;
+		virtual void clientConnection(SOCKET clientSocket, sockaddr addr) = 0;
 
 	public:
 		BaseTCPServer(const std::string& port, bool freeDLL = true);
