@@ -12,9 +12,10 @@ namespace web
 	class BaseTCPServer
 	{
 	protected:
+		const std::string port;
+		
 		SOCKET listenSocket;
 
-		const std::string port;
 		bool freeDLL;
 		bool isRunning;
 
