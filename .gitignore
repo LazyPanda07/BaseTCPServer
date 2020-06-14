@@ -32,5 +32,10 @@
 *.app
 
 # VS folders
+.vs/
+x64/
 Debug/
 Release/
+
+# VS files
+*.sln
