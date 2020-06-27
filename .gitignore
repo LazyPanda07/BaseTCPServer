@@ -33,9 +33,7 @@
 
 # VS folders
 .vs/
-x64/
-Debug/
-Release/
+bin/
 
 # VS files
 *.sln
