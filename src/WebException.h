@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef __WEB_EXCEPTION__
+#define __WEB_EXCEPTION__
+
 namespace web
 {
 	class WebException
@@ -19,3 +22,5 @@ namespace web
 		~WebException();
 	};
 }
+
+#endif // !__WEB_EXCEPTION__
