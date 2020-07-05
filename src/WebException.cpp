@@ -12,7 +12,7 @@ namespace web
 			FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 			nullptr,
 			WSAGetLastError(),
-			LANG_SYSTEM_DEFAULT,
+			MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),
 			reinterpret_cast<char*>(&data),
 			NULL,
 			nullptr
