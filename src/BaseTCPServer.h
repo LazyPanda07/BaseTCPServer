@@ -89,7 +89,7 @@ namespace web
 	}
 
 	template<typename StringT>
-	BaseTCPServer::BaseTCPServer(const StringT& port, bool freeDLL) : port(std::string(port)), freeDLL(freeDLL)
+	BaseTCPServer::BaseTCPServer(const StringT& port, bool freeDLL) : port(std::string(port)), freeDLL(freeDLL), isRunning(false)
 	{
 		WSADATA wsaData;
 		addrinfo* info;
