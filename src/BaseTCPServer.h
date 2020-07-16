@@ -16,6 +16,8 @@ namespace web
 		
 		SOCKET listenSocket;
 
+		DWORD timeout;
+
 		bool freeDLL;
 		bool isRunning;
 
@@ -33,7 +35,7 @@ namespace web
 
 	public:
 		template<typename StringT>
-		BaseTCPServer(const StringT& port, bool freeDLL = true);
+		BaseTCPServer(const StringT& port, DWORD timeout = 0, bool freeDLL = true);
 
 		virtual void start();
 
@@ -89,7 +91,11 @@ namespace web
 	}
 
 	template<typename StringT>
-	BaseTCPServer::BaseTCPServer(const StringT& port, bool freeDLL) : port(std::string(port)), freeDLL(freeDLL), isRunning(false)
+	BaseTCPServer::BaseTCPServer(const StringT& port, DWORD timeout, bool freeDLL) :
+		port(std::string(port)),
+		freeDLL(freeDLL),
+		isRunning(false),
+		timeout(timeout)
 	{
 		WSADATA wsaData;
 		addrinfo* info;

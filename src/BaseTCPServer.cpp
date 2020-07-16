@@ -18,6 +18,8 @@ namespace web
 
 			if (isRunning && clientSocket != INVALID_SOCKET)
 			{
+				setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&timeout), sizeof(timeout));
+
 				thread(&BaseTCPServer::clientConnection, this, clientSocket, addr).detach();
 			}
 		}
