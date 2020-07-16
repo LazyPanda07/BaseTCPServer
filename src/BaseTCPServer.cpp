@@ -13,8 +13,9 @@ namespace web
 		while (isRunning)
 		{
 			sockaddr addr;
+			int addrlen = sizeof(addr);
 
-			SOCKET clientSocket = accept(listenSocket, &addr, nullptr);
+			SOCKET clientSocket = accept(listenSocket, &addr, &addrlen);
 
 			if (isRunning && clientSocket != INVALID_SOCKET)
 			{
