@@ -3,12 +3,14 @@
 #ifndef __WEB_EXCEPTION__
 #define __WEB_EXCEPTION__
 
+#include <string>
+
 namespace web
 {
 	class WebException
 	{
 	private:
-		char* data;
+		std::string data;
 
 	public:
 		WebException();
@@ -19,7 +21,7 @@ namespace web
 
 		const char* what() const noexcept;
 
-		~WebException();
+		~WebException() = default;
 	};
 }
 
