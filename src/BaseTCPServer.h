@@ -6,12 +6,15 @@
 #include <WS2tcpip.h>
 
 #include "WebException.h"
+#include "ClientData.h"
 
 namespace web
 {
 	class BaseTCPServer
 	{
 	protected:
+		ClientData data;
+		
 		const std::string port;
 		
 		SOCKET listenSocket;
@@ -24,6 +27,8 @@ namespace web
 	protected:
 		virtual void receiveConnections();
 
+		virtual void disconnect(const std::string& ip);
+
 		virtual void clientConnection(SOCKET clientSocket, sockaddr addr) = 0;
 
 	protected:
@@ -32,6 +37,9 @@ namespace web
 
 		template<typename DataT>
 		static __int32 receiveBytes(SOCKET clientSocket, DataT* const data, __int32 count);
+
+	protected:
+		static std::string getIpV4(sockaddr& addr);
 
 	public:
 		template<typename StringT>
@@ -42,6 +50,10 @@ namespace web
 		virtual void stop();
 
 		virtual bool serverState() const;
+
+		virtual void pubDisconnect(const std::string& ip) final;
+
+		virtual std::vector<std::pair<std::string, SOCKET>> getClients() final;
 
 		virtual ~BaseTCPServer();
 	};

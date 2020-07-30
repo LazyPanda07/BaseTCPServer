@@ -226,10 +226,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\BaseTCPServer.cpp" />
+    <ClCompile Include="src\ClientData.cpp" />
     <ClCompile Include="src\WebException.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseTCPServer.h" />
+    <ClInclude Include="src\ClientData.h" />
     <ClInclude Include="src\WebException.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
