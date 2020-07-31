@@ -32,7 +32,12 @@ namespace web
 	{
 		try
 		{
-			closesocket(data[ip]);
+			auto ipAddresses = data[ip];
+
+			for (const auto& i : ipAddresses)
+			{
+				closesocket(i);
+			}
 		}
 		catch (const std::exception&)
 		{

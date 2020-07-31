@@ -13,14 +13,32 @@ namespace web
 		readWriteLock.unlock();
 	}
 
-	SOCKET& ClientData::operator [] (const std::string& ip)
+	vector<SOCKET> ClientData::operator [] (const std::string& ip)
 	{
-		return data.at(ip);
+		vector<SOCKET> result;
+
+		auto range = data.equal_range(ip);
+
+		for (auto it = range.first; it != range.second; it++)
+		{
+			result.push_back(it->second);
+		}
+
+		return result;
 	}
 
-	const SOCKET& ClientData::operator [] (const std::string& ip) const
+	const vector<SOCKET> ClientData::operator [] (const std::string& ip) const
 	{
-		return data.at(ip);
+		vector<SOCKET> result;
+
+		auto range = data.equal_range(ip);
+
+		for (auto it = range.first; it != range.second; it++)
+		{
+			result.push_back(it->second);
+		}
+
+		return result;
 	}
 
 	void ClientData::erase(const string& ip) noexcept
