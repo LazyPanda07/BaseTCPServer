@@ -62,22 +62,22 @@ namespace web
 	__int32 BaseTCPServer::sendBytes(SOCKET clientSocket, const DataT* const data, __int32 count)
 	{
 		__int32  lastSend = 0;
-		__int32 totalSend = 0;
+		__int32 totalSent = 0;
 
 		do
 		{
-			lastSend = send(clientSocket, reinterpret_cast<const char*>(data) + totalSend, count - totalSend, NULL);
+			lastSend = send(clientSocket, reinterpret_cast<const char*>(data) + totalSent, count - totalSent, NULL);
 
 			if (lastSend <= 0)
 			{
 				throw WebException();
 			}
 
-			totalSend += lastSend;
+			totalSent += lastSend;
 
-		} while (totalSend < count);
+		} while (totalSent < count);
 
-		return totalSend;
+		return totalSent;
 	}
 
 	template<typename DataT>
