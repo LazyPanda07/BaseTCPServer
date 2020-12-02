@@ -14,13 +14,9 @@ namespace web
 	{
 	protected:
 		ClientData data;
-		
 		const std::string port;
-		
 		SOCKET listenSocket;
-
 		DWORD timeout;
-
 		bool freeDLL;
 		bool isRunning;
 
@@ -33,10 +29,10 @@ namespace web
 
 	protected:
 		template<typename DataT>
-		static __int32 sendBytes(SOCKET clientSocket, const DataT* const data, __int32 count);
+		static int sendBytes(SOCKET clientSocket, const DataT* const data, int count);
 
 		template<typename DataT>
-		static __int32 receiveBytes(SOCKET clientSocket, DataT* const data, __int32 count);
+		static int receiveBytes(SOCKET clientSocket, DataT* const data, int count);
 
 	protected:
 		static std::string getIpV4(sockaddr& addr);
@@ -59,10 +55,10 @@ namespace web
 	};
 
 	template<typename DataT>
-	__int32 BaseTCPServer::sendBytes(SOCKET clientSocket, const DataT* const data, __int32 count)
+	int BaseTCPServer::sendBytes(SOCKET clientSocket, const DataT* const data, int count)
 	{
-		__int32  lastSend = 0;
-		__int32 totalSent = 0;
+		int lastSend = 0;
+		int totalSent = 0;
 
 		do
 		{
@@ -81,10 +77,10 @@ namespace web
 	}
 
 	template<typename DataT>
-	__int32 BaseTCPServer::receiveBytes(SOCKET clientSocket, DataT* const data, __int32 count)
+	int BaseTCPServer::receiveBytes(SOCKET clientSocket, DataT* const data, int count)
 	{
-		__int32 lastReceive = 0;
-		__int32 totalReceive = 0;
+		int lastReceive = 0;
+		int totalReceive = 0;
 
 		do
 		{
