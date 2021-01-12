@@ -15,6 +15,7 @@ namespace web
 	protected:
 		ClientData data;
 		const std::string port;
+		const std::string ip;
 		SOCKET listenSocket;
 		DWORD timeout;
 		bool freeDLL;
@@ -38,8 +39,8 @@ namespace web
 		static std::string getIpV4(sockaddr& addr);
 
 	public:
-		template<typename StringT>
-		BaseTCPServer(const StringT& port, DWORD timeout = 0, bool freeDLL = true);
+		template<typename PortStringT, typename IPStringT = std::string>
+		BaseTCPServer(const PortStringT& port, const IPStringT& ip = "0.0.0.0", DWORD timeout = 0, bool freeDLL = true);
 
 		virtual void start();
 
@@ -98,9 +99,10 @@ namespace web
 		return totalReceive;
 	}
 
-	template<typename StringT>
-	BaseTCPServer::BaseTCPServer(const StringT& port, DWORD timeout, bool freeDLL) :
+	template<typename PortStringT, typename IPStringT>
+	BaseTCPServer::BaseTCPServer(const PortStringT& port, const IPStringT& ip, DWORD timeout, bool freeDLL) :
 		port(std::string(port)),
+		ip(std::string(ip)),
 		freeDLL(freeDLL),
 		isRunning(false),
 		timeout(timeout)
@@ -119,7 +121,7 @@ namespace web
 		hints.ai_protocol = IPPROTO_TCP;
 		hints.ai_socktype = SOCK_STREAM;
 
-		if (getaddrinfo(nullptr, port.data(), &hints, &info))
+		if (getaddrinfo(this->ip.data(), this->port.data(), &hints, &info))
 		{
 			throw WebException();
 		}
