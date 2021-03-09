@@ -21,7 +21,7 @@ namespace web
 			{
 				setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&timeout), sizeof(timeout));
 
-				data.insert(getIpV4(addr), clientSocket);
+				data.insert(getClientIpV4(addr), clientSocket);
 
 				thread(&BaseTCPServer::clientConnection, this, clientSocket, addr).detach();
 			}
@@ -39,13 +39,13 @@ namespace web
 				closesocket(i);
 			}
 		}
-		catch (const std::exception&)
+		catch (const exception&)
 		{
 
 		}
 	}
 
-	string BaseTCPServer::getIpV4(sockaddr& addr)
+	string BaseTCPServer::getClientIpV4(sockaddr& addr)
 	{
 		string ip;
 
@@ -59,6 +59,32 @@ namespace web
 		}
 
 		return ip;
+	}
+
+	string BaseTCPServer::getServerIpV4() const
+	{
+		string ip;
+
+		ip.resize(16);
+
+		inet_ntop(AF_INET, &serverInfo.sin_addr, ip.data(), ip.size());
+
+		while (ip.back() == '\0')
+		{
+			ip.pop_back();
+		}
+
+		return ip;
+	}
+
+	uint16_t BaseTCPServer::getClientPortV4(sockaddr& addr)
+	{
+		return ntohs(reinterpret_cast<sockaddr_in&>(addr).sin_port);
+	}
+
+	uint16_t BaseTCPServer::getServerPortV4() const
+	{
+		return ntohs(serverInfo.sin_port);
 	}
 
 	void BaseTCPServer::start()

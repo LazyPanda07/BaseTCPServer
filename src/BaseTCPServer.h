@@ -20,6 +20,7 @@ namespace web
 		DWORD timeout;
 		bool freeDLL;
 		bool isRunning;
+		sockaddr_in serverInfo;
 
 	protected:
 		virtual void receiveConnections();
@@ -36,7 +37,13 @@ namespace web
 		static int receiveBytes(SOCKET clientSocket, DataT* const data, int count);
 
 	protected:
-		static std::string getIpV4(sockaddr& addr);
+		static std::string getClientIpV4(sockaddr& addr);
+
+		std::string getServerIpV4() const;
+
+		static uint16_t getClientPortV4(sockaddr& addr);
+
+		uint16_t getServerPortV4() const;
 
 	public:
 		template<typename PortStringT, typename IPStringT = std::string>
@@ -105,10 +112,11 @@ namespace web
 		ip(std::string(ip)),
 		freeDLL(freeDLL),
 		isRunning(false),
-		timeout(timeout)
+		timeout(timeout),
+		serverInfo({})
 	{
 		WSADATA wsaData;
-		addrinfo* info;
+		addrinfo* info = nullptr;
 		addrinfo hints = {};
 
 		if (WSAStartup(MAKEWORD(2, 2), &wsaData))
@@ -120,6 +128,11 @@ namespace web
 		hints.ai_flags = AI_PASSIVE;
 		hints.ai_protocol = IPPROTO_TCP;
 		hints.ai_socktype = SOCK_STREAM;
+
+		serverInfo.sin_family = AF_INET;
+		serverInfo.sin_port = ntohs(std::stol(this->port));
+
+		inet_pton(AF_INET, this->port.data(), &serverInfo.sin_addr.S_un.S_addr);
 
 		if (getaddrinfo(this->ip.data(), this->port.data(), &hints, &info))
 		{
