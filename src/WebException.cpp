@@ -5,7 +5,8 @@
 
 namespace web
 {
-	WebException::WebException()
+	WebException::WebException() :
+		runtime_error("")
 	{
 		switch (WSAGetLastError())
 		{
@@ -274,6 +275,7 @@ namespace web
 	}
 
 	WebException::WebException(WebException&& other) noexcept :
+		runtime_error(""),
 		data(std::move(other.data))
 	{
 		

@@ -14,8 +14,6 @@ namespace web
 	{
 	protected:
 		ClientData data;
-		const std::string port;
-		const std::string ip;
 		SOCKET listenSocket;
 		DWORD timeout;
 		bool freeDLL;
@@ -36,7 +34,7 @@ namespace web
 		template<typename DataT>
 		static int receiveBytes(SOCKET clientSocket, DataT* const data, int count);
 
-	protected:
+	public:
 		static std::string getClientIpV4(sockaddr& addr);
 
 		std::string getServerIpV4() const;
@@ -108,8 +106,6 @@ namespace web
 
 	template<typename PortStringT, typename IPStringT>
 	BaseTCPServer::BaseTCPServer(const PortStringT& port, const IPStringT& ip, DWORD timeout, bool freeDLL) :
-		port(std::string(port)),
-		ip(std::string(ip)),
 		freeDLL(freeDLL),
 		isRunning(false),
 		timeout(timeout),
@@ -130,11 +126,11 @@ namespace web
 		hints.ai_socktype = SOCK_STREAM;
 
 		serverInfo.sin_family = AF_INET;
-		serverInfo.sin_port = ntohs(std::stol(this->port));
+		serverInfo.sin_port = ntohs(std::stol(port));
 
-		inet_pton(AF_INET, this->port.data(), &serverInfo.sin_addr.S_un.S_addr);
+		inet_pton(AF_INET, port.data(), &serverInfo.sin_addr.S_un.S_addr);
 
-		if (getaddrinfo(this->ip.data(), this->port.data(), &hints, &info))
+		if (getaddrinfo(ip.data(), port.data(), &hints, &info))
 		{
 			throw WebException();
 		}

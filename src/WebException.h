@@ -4,10 +4,11 @@
 #define __WEB_EXCEPTION__
 
 #include <string>
+#include <stdexcept>
 
 namespace web
 {
-	class WebException
+	class WebException : public std::runtime_error
 	{
 	private:
 		std::string data;
@@ -19,7 +20,7 @@ namespace web
 
 		WebException(WebException&& other) noexcept;
 
-		const char* what() const noexcept;
+		const char* what() const noexcept override;
 
 		~WebException() = default;
 	};
