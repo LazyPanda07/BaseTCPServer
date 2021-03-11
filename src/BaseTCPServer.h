@@ -18,7 +18,6 @@ namespace web
 		DWORD timeout;
 		bool freeDLL;
 		bool isRunning;
-		sockaddr_in serverInfo;
 
 	protected:
 		virtual void receiveConnections();
@@ -108,8 +107,7 @@ namespace web
 	BaseTCPServer::BaseTCPServer(const PortStringT& port, const IPStringT& ip, DWORD timeout, bool freeDLL) :
 		freeDLL(freeDLL),
 		isRunning(false),
-		timeout(timeout),
-		serverInfo({})
+		timeout(timeout)
 	{
 		WSADATA wsaData;
 		addrinfo* info = nullptr;
@@ -124,11 +122,6 @@ namespace web
 		hints.ai_flags = AI_PASSIVE;
 		hints.ai_protocol = IPPROTO_TCP;
 		hints.ai_socktype = SOCK_STREAM;
-
-		serverInfo.sin_family = AF_INET;
-		serverInfo.sin_port = ntohs(std::stol(port));
-
-		inet_pton(AF_INET, port.data(), &serverInfo.sin_addr.S_un.S_addr);
 
 		if (getaddrinfo(ip.data(), port.data(), &hints, &info))
 		{

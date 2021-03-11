@@ -64,8 +64,12 @@ namespace web
 	string BaseTCPServer::getServerIpV4() const
 	{
 		string ip;
+		sockaddr_in serverInfo = {};
+		int len = sizeof(serverInfo);
 
 		ip.resize(16);
+
+		getsockname(listenSocket, reinterpret_cast<sockaddr*>(&serverInfo), &len);
 
 		inet_ntop(AF_INET, &serverInfo.sin_addr, ip.data(), ip.size());
 
@@ -84,6 +88,11 @@ namespace web
 
 	uint16_t BaseTCPServer::getServerPortV4() const
 	{
+		sockaddr_in serverInfo = {};
+		int len = sizeof(serverInfo);
+
+		getsockname(listenSocket, reinterpret_cast<sockaddr*>(&serverInfo), &len);
+
 		return ntohs(serverInfo.sin_port);
 	}
 

@@ -35,8 +35,6 @@ namespace web
 
 			break;
 
-			break;
-
 		case WSAEINVAL:
 			data = "Invalid argument";
 

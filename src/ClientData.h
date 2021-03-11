@@ -1,7 +1,7 @@
 #pragma once
 
 #include <thread>
-#include <mutex>
+#include <shared_mutex>
 #include <unordered_map>
 #include <vector>
 
@@ -13,7 +13,7 @@ namespace web
 	{
 	private:
 		std::unordered_multimap<std::string, SOCKET> data;
-		std::mutex readWriteLock;
+		std::shared_mutex readWriteLock;
 
 	public:
 		ClientData() = default;
@@ -21,8 +21,6 @@ namespace web
 		void insert(std::string&& ip, SOCKET clientSocket) noexcept;
 
 		std::vector<SOCKET> operator [] (const std::string& ip);
-
-		const std::vector<SOCKET> operator [] (const std::string& ip) const;
 
 		void erase(const std::string& ip) noexcept;
 

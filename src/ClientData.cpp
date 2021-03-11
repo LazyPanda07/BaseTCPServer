@@ -6,30 +6,16 @@ namespace web
 {
 	void ClientData::insert(string&& ip, SOCKET clientSocket) noexcept
 	{
-		readWriteLock.lock();
+		unique_lock<shared_mutex> lock(readWriteLock);
 
 		data.insert(make_pair(move(ip), clientSocket));
-
-		readWriteLock.unlock();
 	}
 
 	vector<SOCKET> ClientData::operator [] (const std::string& ip)
 	{
 		vector<SOCKET> result;
 
-		auto range = data.equal_range(ip);
-
-		for (auto it = range.first; it != range.second; it++)
-		{
-			result.push_back(it->second);
-		}
-
-		return result;
-	}
-
-	const vector<SOCKET> ClientData::operator [] (const std::string& ip) const
-	{
-		vector<SOCKET> result;
+		shared_lock<shared_mutex> lock(readWriteLock);
 
 		auto range = data.equal_range(ip);
 
@@ -43,21 +29,19 @@ namespace web
 
 	void ClientData::erase(const string& ip) noexcept
 	{
-		readWriteLock.lock();
+		unique_lock<shared_mutex> lock(readWriteLock);
 
 		if (data.find(ip) != end(data))
 		{
 			data.erase(ip);
 		}
-
-		readWriteLock.unlock();
 	}
 
 	vector<pair<string, SOCKET>> ClientData::getClients() noexcept
 	{
 		vector<pair<string, SOCKET>> result;
 
-		readWriteLock.lock();
+		unique_lock<shared_mutex> lock(readWriteLock);
 
 		result.reserve(data.size());
 
@@ -65,8 +49,6 @@ namespace web
 		{
 			result.emplace_back(i.first, i.second);
 		}
-
-		readWriteLock.unlock();
 
 		return result;
 	}
