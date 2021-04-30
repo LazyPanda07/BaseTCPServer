@@ -21,9 +21,18 @@ namespace web
 			{
 				setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&timeout), sizeof(timeout));
 
+				ioctlsocket(clientSocket, FIONBIO, &blockingMode);
+
 				data.insert(getClientIpV4(addr), clientSocket);
 
-				thread(&BaseTCPServer::clientConnection, this, clientSocket, addr).detach();
+				if (multiThreading)
+				{
+					thread(&BaseTCPServer::clientConnection, this, clientSocket, addr).detach();
+				}
+				else
+				{
+					this->clientConnection(clientSocket, addr);
+				}
 			}
 		}
 	}
@@ -123,6 +132,16 @@ namespace web
 	vector<pair<string, SOCKET>> BaseTCPServer::getClients()
 	{
 		return data.getClients();
+	}
+
+	u_long& BaseTCPServer::blockingModeForOtherConnections()
+	{
+		return blockingMode;
+	}
+
+	const u_long& BaseTCPServer::blockingModeForOtherConnections() const
+	{
+		return blockingMode;
 	}
 
 	BaseTCPServer::~BaseTCPServer()

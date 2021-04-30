@@ -8,6 +8,8 @@
 #include "WebException.h"
 #include "ClientData.h"
 
+using namespace std::string_view_literals;
+
 namespace web
 {
 	class BaseTCPServer
@@ -15,9 +17,11 @@ namespace web
 	protected:
 		ClientData data;
 		SOCKET listenSocket;
+		u_long blockingMode;
 		DWORD timeout;
 		bool freeDLL;
 		bool isRunning;
+		bool multiThreading;
 
 	protected:
 		virtual void receiveConnections();
@@ -43,8 +47,17 @@ namespace web
 		uint16_t getServerPortV4() const;
 
 	public:
-		template<typename PortStringT, typename IPStringT = std::string>
-		BaseTCPServer(const PortStringT& port, const IPStringT& ip = "0.0.0.0", DWORD timeout = 0, bool freeDLL = true);
+		/// @brief 
+		/// @tparam PortStringT 
+		/// @tparam IPStringT 
+		/// @param port Server's port
+		/// @param ip Server's ip
+		/// @param timeout recv function timeout in milliseconds, 0 wait for upcoming data
+		/// @param multiThreading Each client in separate thread
+		/// @param listenerSocketBlockingMode Blocking mode for listener socket (0 - blocking, not 0 - non blocking)
+		/// @param freeDLL Unload Ws2_32.dll in destructor
+		template<typename PortStringT, typename IPStringT = std::string_view>
+		BaseTCPServer(const PortStringT& port, const IPStringT& ip = "0.0.0.0"sv, DWORD timeout = 0, bool multiThreading = true, u_long listenerSocketBlockingMode = 0, bool freeDLL = true);
 
 		virtual void start();
 
@@ -55,6 +68,10 @@ namespace web
 		virtual void pubDisconnect(const std::string& ip) final;
 
 		virtual std::vector<std::pair<std::string, SOCKET>> getClients() final;
+
+		u_long& blockingModeForOtherConnections();
+
+		const u_long& blockingModeForOtherConnections() const;
 
 		virtual ~BaseTCPServer();
 	};
@@ -104,10 +121,12 @@ namespace web
 	}
 
 	template<typename PortStringT, typename IPStringT>
-	BaseTCPServer::BaseTCPServer(const PortStringT& port, const IPStringT& ip, DWORD timeout, bool freeDLL) :
+	BaseTCPServer::BaseTCPServer(const PortStringT& port, const IPStringT& ip, DWORD timeout, bool multiThreading, u_long listenerSocketBlockingMode, bool freeDLL) :
+		blockingMode(0),
+		timeout(timeout),
 		freeDLL(freeDLL),
 		isRunning(false),
-		timeout(timeout)
+		multiThreading(multiThreading)
 	{
 		WSADATA wsaData;
 		addrinfo* info = nullptr;
@@ -125,21 +144,37 @@ namespace web
 
 		if (getaddrinfo(ip.data(), port.data(), &hints, &info))
 		{
+			WSACleanup();
+
 			throw WebException();
 		}
 
 		if ((listenSocket = socket(info->ai_family, info->ai_socktype, info->ai_protocol)) == INVALID_SOCKET)
 		{
+			freeaddrinfo(info);
+
+			WSACleanup();
+
 			throw WebException();
 		}
 
+		ioctlsocket(listenSocket, FIONBIO, &listenerSocketBlockingMode);
+
 		if (bind(listenSocket, info->ai_addr, info->ai_addrlen) == SOCKET_ERROR)
 		{
+			freeaddrinfo(info);
+
+			WSACleanup();
+
 			throw WebException();
 		}
 
 		if (listen(listenSocket, SOMAXCONN) == SOCKET_ERROR)
 		{
+			freeaddrinfo(info);
+
+			WSACleanup();
+
 			throw WebException();
 		}
 
