@@ -12,15 +12,18 @@ namespace web
 	{
 	private:
 		std::string data;
+		int errorCode;
 
 	public:
 		WebException();
 
 		WebException(const WebException& other) = default;
 
-		WebException(WebException&& other) noexcept;
+		WebException(WebException&& other) noexcept = default;
 
 		const char* what() const noexcept override;
+
+		int getErrorCode() const noexcept;
 
 		~WebException() = default;
 	};

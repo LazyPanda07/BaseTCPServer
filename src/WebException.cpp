@@ -6,9 +6,10 @@
 namespace web
 {
 	WebException::WebException() :
-		runtime_error("")
+		runtime_error(""),
+		errorCode(WSAGetLastError())
 	{
-		switch (WSAGetLastError())
+		switch (errorCode)
 		{
 		case WSABASEERR:
 			data = "No Error";
@@ -272,15 +273,13 @@ namespace web
 		}
 	}
 
-	WebException::WebException(WebException&& other) noexcept :
-		runtime_error(""),
-		data(std::move(other.data))
-	{
-		
-	}
-
 	const char* WebException::what() const noexcept
 	{
 		return data.data();
+	}
+
+	int WebException::getErrorCode() const noexcept
+	{
+		return errorCode;
 	}
 }
