@@ -33,6 +33,8 @@ namespace web
 				{
 					this->clientConnection(clientSocket, addr);
 				}
+
+				this->onConnectionReceive(clientSocket, addr);
 			}
 		}
 	}
@@ -52,6 +54,11 @@ namespace web
 		{
 
 		}
+	}
+
+	void BaseTCPServer::onConnectionReceive(SOCKET clientSocket, sockaddr addr)
+	{
+
 	}
 
 	string BaseTCPServer::getClientIpV4(sockaddr& addr)

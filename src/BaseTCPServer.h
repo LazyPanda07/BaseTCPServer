@@ -30,6 +30,8 @@ namespace web
 
 		virtual void clientConnection(SOCKET clientSocket, sockaddr addr) = 0;
 
+		virtual void onConnectionReceive(SOCKET clientSocket, sockaddr addr);
+
 	protected:
 		template<typename DataT>
 		static int sendBytes(SOCKET clientSocket, const DataT* const data, int count);
