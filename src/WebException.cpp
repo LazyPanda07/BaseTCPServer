@@ -142,7 +142,7 @@ namespace web
 			break;
 
 		case WSAECONNRESET:
-			data = "Connection reste by peer";
+			data = "Connection reset by peer";
 
 			break;
 
