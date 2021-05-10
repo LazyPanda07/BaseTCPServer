@@ -8,25 +8,28 @@
 
 namespace web
 {
-	class WebException : public std::runtime_error
+	namespace exceptions
 	{
-	private:
-		std::string data;
-		int errorCode;
+		class WebException : public std::runtime_error
+		{
+		private:
+			std::string data;
+			int errorCode;
 
-	public:
-		WebException();
+		public:
+			WebException();
 
-		WebException(const WebException& other) = default;
+			WebException(const WebException& other) = default;
 
-		WebException(WebException&& other) noexcept = default;
+			WebException(WebException&& other) noexcept = default;
 
-		const char* what() const noexcept override;
+			const char* what() const noexcept override;
 
-		int getErrorCode() const noexcept;
+			int getErrorCode() const noexcept;
 
-		~WebException() = default;
-	};
+			~WebException() = default;
+		};
+	}
 }
 
 #endif // !__WEB_EXCEPTION__

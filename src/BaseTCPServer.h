@@ -90,7 +90,7 @@ namespace web
 
 			if (lastSend <= 0)
 			{
-				throw WebException();
+				throw exceptions::WebException();
 			}
 
 			totalSent += lastSend;
@@ -112,7 +112,7 @@ namespace web
 
 			if (lastReceive <= 0)
 			{
-				throw WebException();
+				throw exceptions::WebException();
 			}
 
 			totalReceive += lastReceive;
@@ -136,7 +136,7 @@ namespace web
 
 		if (WSAStartup(MAKEWORD(2, 2), &wsaData))
 		{
-			throw WebException();
+			throw exceptions::WebException();
 		}
 
 		hints.ai_family = AF_INET;
@@ -148,7 +148,7 @@ namespace web
 		{
 			WSACleanup();
 
-			throw WebException();
+			throw exceptions::WebException();
 		}
 
 		if ((listenSocket = socket(info->ai_family, info->ai_socktype, info->ai_protocol)) == INVALID_SOCKET)
@@ -157,7 +157,7 @@ namespace web
 
 			WSACleanup();
 
-			throw WebException();
+			throw exceptions::WebException();
 		}
 
 		ioctlsocket(listenSocket, FIONBIO, &listenerSocketBlockingMode);
@@ -168,7 +168,7 @@ namespace web
 
 			WSACleanup();
 
-			throw WebException();
+			throw exceptions::WebException();
 		}
 
 		if (listen(listenSocket, SOMAXCONN) == SOCKET_ERROR)
@@ -177,7 +177,7 @@ namespace web
 
 			WSACleanup();
 
-			throw WebException();
+			throw exceptions::WebException();
 		}
 
 		freeaddrinfo(info);

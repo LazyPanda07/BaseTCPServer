@@ -5,281 +5,284 @@
 
 namespace web
 {
-	WebException::WebException() :
-		runtime_error(""),
-		errorCode(WSAGetLastError())
+	namespace exceptions
 	{
-		switch (errorCode)
+		WebException::WebException() :
+			runtime_error(""),
+			errorCode(WSAGetLastError())
 		{
-		case WSABASEERR:
-			data = "No Error";
+			switch (errorCode)
+			{
+			case WSABASEERR:
+				data = "No Error";
 
-			break;
+				break;
 
-		case WSAEINTR:
-			data = "Interrupted system call";
+			case WSAEINTR:
+				data = "Interrupted system call";
 
-			break;
+				break;
 
-		case WSAEBADF:
-			data = "Bad file number";
+			case WSAEBADF:
+				data = "Bad file number";
 
-			break;
+				break;
 
-		case WSAEACCES:
-			data = "Permission denied";
+			case WSAEACCES:
+				data = "Permission denied";
 
-			break;
+				break;
 
-		case WSAEFAULT:
-			data = "Bad address";
+			case WSAEFAULT:
+				data = "Bad address";
 
-			break;
+				break;
 
-		case WSAEINVAL:
-			data = "Invalid argument";
+			case WSAEINVAL:
+				data = "Invalid argument";
 
-			break;
+				break;
 
-		case WSAEMFILE:
-			data = "Too many open files";
+			case WSAEMFILE:
+				data = "Too many open files";
 
-			break;
+				break;
 
-		case WSAEWOULDBLOCK:
-			data = "Operation would block";
+			case WSAEWOULDBLOCK:
+				data = "Operation would block";
 
-			break;
+				break;
 
-		case WSAEINPROGRESS:
-			data = "Operation now in progress";
+			case WSAEINPROGRESS:
+				data = "Operation now in progress";
 
-			break;
+				break;
 
-		case WSAEALREADY:
-			data = "Operation already in progress";
+			case WSAEALREADY:
+				data = "Operation already in progress";
 
-			break;
+				break;
 
-		case WSAENOTSOCK:
-			data = "Socket operation on non-socket";
+			case WSAENOTSOCK:
+				data = "Socket operation on non-socket";
 
-			break;
+				break;
 
-		case WSAEDESTADDRREQ:
-			data = "Destination address required";
+			case WSAEDESTADDRREQ:
+				data = "Destination address required";
 
-			break;
+				break;
 
-		case WSAEMSGSIZE:
-			data = "Message too long";
+			case WSAEMSGSIZE:
+				data = "Message too long";
 
-			break;
+				break;
 
-		case WSAEPROTOTYPE:
-			data = "Protocol wrong type for socket";
+			case WSAEPROTOTYPE:
+				data = "Protocol wrong type for socket";
 
-			break;
+				break;
 
-		case WSAENOPROTOOPT:
-			data = "Bad protocol option";
+			case WSAENOPROTOOPT:
+				data = "Bad protocol option";
 
-			break;
+				break;
 
-		case WSAEPROTONOSUPPORT:
-			data = "Protocol not supported";
+			case WSAEPROTONOSUPPORT:
+				data = "Protocol not supported";
 
-			break;
+				break;
 
-		case WSAESOCKTNOSUPPORT:
-			data = "Socket type not supported";
+			case WSAESOCKTNOSUPPORT:
+				data = "Socket type not supported";
 
-			break;
+				break;
 
-		case WSAEOPNOTSUPP:
-			data = "Operation not supported on socket";
+			case WSAEOPNOTSUPP:
+				data = "Operation not supported on socket";
 
-			break;
+				break;
 
-		case WSAEPFNOSUPPORT:
-			data = "Protocol family not supported";
+			case WSAEPFNOSUPPORT:
+				data = "Protocol family not supported";
 
-			break;
+				break;
 
-		case WSAEAFNOSUPPORT:
-			data = "Address family not supported by protocol family";
+			case WSAEAFNOSUPPORT:
+				data = "Address family not supported by protocol family";
 
-			break;
+				break;
 
-		case WSAEADDRINUSE:
-			data = "Address already in use";
+			case WSAEADDRINUSE:
+				data = "Address already in use";
 
-			break;
+				break;
 
-		case WSAEADDRNOTAVAIL:
-			data = "Can't assign requested address";
+			case WSAEADDRNOTAVAIL:
+				data = "Can't assign requested address";
 
-			break;
+				break;
 
-		case WSAENETDOWN:
-			data = "Network is down";
+			case WSAENETDOWN:
+				data = "Network is down";
 
-			break;
+				break;
 
-		case WSAENETUNREACH:
-			data = "Network in unreachable";
+			case WSAENETUNREACH:
+				data = "Network in unreachable";
 
-			break;
+				break;
 
-		case WSAENETRESET:
-			data = "Net dropped connection or reset";
+			case WSAENETRESET:
+				data = "Net dropped connection or reset";
 
-			break;
+				break;
 
-		case WSAECONNABORTED:
-			data = "Software caused connection abort";
+			case WSAECONNABORTED:
+				data = "Software caused connection abort";
 
-			break;
+				break;
 
-		case WSAECONNRESET:
-			data = "Connection reset by peer";
+			case WSAECONNRESET:
+				data = "Connection reset by peer";
 
-			break;
+				break;
 
-		case WSAENOBUFS:
-			data = "No buffer space available";
+			case WSAENOBUFS:
+				data = "No buffer space available";
 
-			break;
+				break;
 
-		case WSAEISCONN:
-			data = "Socket is already connected";
+			case WSAEISCONN:
+				data = "Socket is already connected";
 
-			break;
+				break;
 
-		case WSAENOTCONN:
-			data = "Socket is not connected";
+			case WSAENOTCONN:
+				data = "Socket is not connected";
 
-			break;
+				break;
 
-		case WSAESHUTDOWN:
-			data = "Can't send after socket shutdown";
+			case WSAESHUTDOWN:
+				data = "Can't send after socket shutdown";
 
-			break;
+				break;
 
-		case WSAETOOMANYREFS:
-			data = "Too many references, can't splice";
+			case WSAETOOMANYREFS:
+				data = "Too many references, can't splice";
 
-			break;
+				break;
 
-		case WSAETIMEDOUT:
-			data = "Connection timed out";
+			case WSAETIMEDOUT:
+				data = "Connection timed out";
 
-			break;
+				break;
 
-		case WSAECONNREFUSED:
-			data = "Connection refused";
+			case WSAECONNREFUSED:
+				data = "Connection refused";
 
-			break;
+				break;
 
-		case WSAELOOP:
-			data = "too many levels of symbolic links";
+			case WSAELOOP:
+				data = "too many levels of symbolic links";
 
-			break;
+				break;
 
-		case WSAENAMETOOLONG:
-			data = "File name too long";
+			case WSAENAMETOOLONG:
+				data = "File name too long";
 
-			break;
+				break;
 
-		case WSAEHOSTDOWN:
-			data = "Host is down";
+			case WSAEHOSTDOWN:
+				data = "Host is down";
 
-			break;
+				break;
 
-		case WSAEHOSTUNREACH:
-			data = "No Route to Host";
+			case WSAEHOSTUNREACH:
+				data = "No Route to Host";
 
-			break;
+				break;
 
-		case WSAENOTEMPTY:
-			data = "Directory not empty";
+			case WSAENOTEMPTY:
+				data = "Directory not empty";
 
-			break;
+				break;
 
-		case WSAEPROCLIM:
-			data = "Too many processes";
+			case WSAEPROCLIM:
+				data = "Too many processes";
 
-			break;
+				break;
 
-		case WSAEUSERS:
-			data = "too many users";
+			case WSAEUSERS:
+				data = "too many users";
 
-			break;
+				break;
 
-		case WSAEDQUOT:
-			data = "Disc Quota Exceeded";
-			
-			break;
+			case WSAEDQUOT:
+				data = "Disc Quota Exceeded";
 
-		case WSAESTALE:
-			data = "Stale NFS file handle";
+				break;
 
-			break;
+			case WSAESTALE:
+				data = "Stale NFS file handle";
 
-		case WSASYSNOTREADY:
-			data = "Network SubSystem is unavailable";
+				break;
 
-			break;
+			case WSASYSNOTREADY:
+				data = "Network SubSystem is unavailable";
 
-		case WSAVERNOTSUPPORTED:
-			data = "WINSOCK DLL Version out of range";
+				break;
 
-			break;
+			case WSAVERNOTSUPPORTED:
+				data = "WINSOCK DLL Version out of range";
 
-		case WSANOTINITIALISED:
-			data = "Successful WSASTARTUP not yet performed";
+				break;
 
-			break;
+			case WSANOTINITIALISED:
+				data = "Successful WSASTARTUP not yet performed";
 
-		case WSAEREMOTE:
-			data = "Too many level of remote in path";
+				break;
 
-			break;
+			case WSAEREMOTE:
+				data = "Too many level of remote in path";
 
-		case WSAHOST_NOT_FOUND:
-			data = "Host not found";
-			
-			break;
+				break;
 
-		case WSATRY_AGAIN:
-			data = "Non-Authoritative Host not found";
+			case WSAHOST_NOT_FOUND:
+				data = "Host not found";
 
-			break;
+				break;
 
-		case WSANO_RECOVERY:
-			data = "Non-Recoverable errors: FORMERR, REFUSED, NOTIMP";
+			case WSATRY_AGAIN:
+				data = "Non-Authoritative Host not found";
 
-			break;
+				break;
 
-		case WSANO_DATA:
-			data = "Valid name, no data record of requested type";
+			case WSANO_RECOVERY:
+				data = "Non-Recoverable errors: FORMERR, REFUSED, NOTIMP";
 
-			break;
+				break;
 
-		default:
-			data = std::to_string(WSAGetLastError());
+			case WSANO_DATA:
+				data = "Valid name, no data record of requested type";
 
-			break;
+				break;
+
+			default:
+				data = std::to_string(WSAGetLastError());
+
+				break;
+			}
 		}
-	}
 
-	const char* WebException::what() const noexcept
-	{
-		return data.data();
-	}
+		const char* WebException::what() const noexcept
+		{
+			return data.data();
+		}
 
-	int WebException::getErrorCode() const noexcept
-	{
-		return errorCode;
+		int WebException::getErrorCode() const noexcept
+		{
+			return errorCode;
+		}
 	}
 }
