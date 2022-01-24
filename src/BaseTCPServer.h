@@ -162,7 +162,7 @@ namespace web
 
 		ioctlsocket(listenSocket, FIONBIO, &listenerSocketBlockingMode);
 
-		if (bind(listenSocket, info->ai_addr, info->ai_addrlen) == SOCKET_ERROR)
+		if (bind(listenSocket, info->ai_addr, static_cast<int>(info->ai_addrlen)) == SOCKET_ERROR)
 		{
 			freeaddrinfo(info);
 
