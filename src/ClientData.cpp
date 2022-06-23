@@ -1,5 +1,7 @@
 #include "ClientData.h"
 
+#include <algorithm>
+
 using namespace std;
 
 namespace web
@@ -8,7 +10,7 @@ namespace web
 	{
 		unique_lock<shared_mutex> lock(readWriteLock);
 
-		data.insert(make_pair(move(ip), clientSocket));
+		data.emplace(move(ip), clientSocket);
 	}
 
 	vector<SOCKET> ClientData::operator [] (const std::string& ip)
@@ -19,10 +21,7 @@ namespace web
 
 		auto range = data.equal_range(ip);
 
-		for (auto it = range.first; it != range.second; it++)
-		{
-			result.push_back(it->second);
-		}
+		for_each(range.first, range.second, [&result](const auto& data) { result.push_back(data.second); });
 
 		return result;
 	}
@@ -47,7 +46,7 @@ namespace web
 
 		for (const auto& i : data)
 		{
-			result.emplace_back(i.first, i.second);
+			result.emplace_back(i);
 		}
 
 		return result;

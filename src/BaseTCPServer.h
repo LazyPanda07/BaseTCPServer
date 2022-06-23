@@ -34,6 +34,8 @@ namespace web
 
 		virtual void onConnectionReceive(SOCKET clientSocket, sockaddr addr);
 
+		virtual void onDisconnect(SOCKET clientSocket, const std::string& ip);
+
 	protected:
 		template<typename DataT>
 		static int sendBytes(SOCKET clientSocket, const DataT* const data, int count);

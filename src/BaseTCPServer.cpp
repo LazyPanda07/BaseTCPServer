@@ -37,6 +37,13 @@ namespace web
 				this->onConnectionReceive(clientSocket, addr);
 			}
 		}
+
+		vector<pair<string, SOCKET>> clients = data.getClients();
+
+		for (const auto& [ip, _] : clients)
+		{
+			this->pubDisconnect(ip);
+		}
 	}
 
 	void BaseTCPServer::disconnect(const string& ip)
@@ -57,6 +64,11 @@ namespace web
 	}
 
 	void BaseTCPServer::onConnectionReceive(SOCKET clientSocket, sockaddr addr)
+	{
+
+	}
+
+	void BaseTCPServer::onDisconnect(SOCKET clientSocket, const string& ip)
 	{
 
 	}
@@ -136,6 +148,13 @@ namespace web
 
 	void BaseTCPServer::pubDisconnect(const string& ip)
 	{
+		vector<SOCKET> sockets = data[ip];
+
+		for (SOCKET socket : sockets)
+		{
+			this->onDisconnect(socket, ip);
+		}
+
 		this->disconnect(ip);
 
 		data.erase(ip);
