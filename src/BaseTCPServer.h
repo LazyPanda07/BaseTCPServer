@@ -4,6 +4,7 @@
 
 #include <WinSock2.h>
 #include <WS2tcpip.h>
+#include <future>
 
 #include "WebException.h"
 #include "ClientData.h"
@@ -22,6 +23,7 @@ namespace web
 		bool freeDLL;
 		bool isRunning;
 		bool multiThreading;
+		std::future<void> handle;
 
 	protected:
 		virtual void receiveConnections();
@@ -63,7 +65,7 @@ namespace web
 
 		virtual void start();
 
-		virtual void stop();
+		virtual void stop(bool wait = true);
 
 		virtual bool serverState() const;
 

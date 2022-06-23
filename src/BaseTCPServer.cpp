@@ -116,12 +116,17 @@ namespace web
 	{
 		isRunning = true;
 
-		thread(&BaseTCPServer::receiveConnections, this).detach();
+		handle = async(&BaseTCPServer::receiveConnections, this);
 	}
 
-	void BaseTCPServer::stop()
+	void BaseTCPServer::stop(bool wait)
 	{
 		isRunning = false;
+
+		if (wait)
+		{
+			handle.wait();
+		}
 	}
 
 	bool BaseTCPServer::serverState() const
