@@ -19,6 +19,7 @@ namespace web
 		ClientData data;
 		SOCKET listenSocket;
 		u_long blockingMode;
+		u_long listenSocketBlockingMode;
 		DWORD timeout;
 		bool freeDLL;
 		bool isRunning;
@@ -60,10 +61,10 @@ namespace web
 		/// @param ip Server's ip
 		/// @param timeout recv function timeout in milliseconds, 0 wait for upcoming data
 		/// @param multiThreading Each client in separate thread
-		/// @param listenerSocketBlockingMode Blocking mode for listener socket (0 - blocking, not 0 - non blocking)
+		/// @param listenSocketBlockingMode Blocking mode for listen socket (0 - blocking, not 0 - non blocking)
 		/// @param freeDLL Unload Ws2_32.dll in destructor
 		template<typename PortStringT, typename IPStringT = std::string_view>
-		BaseTCPServer(const PortStringT& port, const IPStringT& ip = "0.0.0.0"sv, DWORD timeout = 0, bool multiThreading = true, u_long listenerSocketBlockingMode = 0, bool freeDLL = true);
+		BaseTCPServer(const PortStringT& port, const IPStringT& ip = "0.0.0.0"sv, DWORD timeout = 0, bool multiThreading = true, u_long listenSocketBlockingMode = 0, bool freeDLL = true);
 
 		virtual void start();
 
@@ -127,8 +128,9 @@ namespace web
 	}
 
 	template<typename PortStringT, typename IPStringT>
-	BaseTCPServer::BaseTCPServer(const PortStringT& port, const IPStringT& ip, DWORD timeout, bool multiThreading, u_long listenerSocketBlockingMode, bool freeDLL) :
+	BaseTCPServer::BaseTCPServer(const PortStringT& port, const IPStringT& ip, DWORD timeout, bool multiThreading, u_long listenSocketBlockingMode, bool freeDLL) :
 		blockingMode(0),
+		listenSocketBlockingMode(listenSocketBlockingMode),
 		timeout(timeout),
 		freeDLL(freeDLL),
 		isRunning(false),
@@ -163,8 +165,6 @@ namespace web
 
 			throw exceptions::WebException();
 		}
-
-		ioctlsocket(listenSocket, FIONBIO, &listenerSocketBlockingMode);
 
 		if (bind(listenSocket, info->ai_addr, static_cast<int>(info->ai_addrlen)) == SOCKET_ERROR)
 		{

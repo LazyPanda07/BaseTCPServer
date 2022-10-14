@@ -10,11 +10,11 @@ namespace web
 {
 	void BaseTCPServer::receiveConnections()
 	{
+		int addrlen = sizeof(sockaddr);
+
 		while (isRunning)
 		{
 			sockaddr addr;
-			int addrlen = sizeof(addr);
-
 			SOCKET clientSocket = accept(listenSocket, &addr, &addrlen);
 
 			if (isRunning && clientSocket != INVALID_SOCKET)
@@ -38,9 +38,7 @@ namespace web
 			}
 		}
 
-		vector<pair<string, SOCKET>> clients = data.getClients();
-
-		for (const auto& [ip, _] : clients)
+		for (const auto& [ip, _] : data.getClients())
 		{
 			this->pubDisconnect(ip);
 		}
@@ -128,6 +126,8 @@ namespace web
 
 	void BaseTCPServer::start()
 	{
+		ioctlsocket(listenSocket, FIONBIO, &listenSocketBlockingMode);
+
 		isRunning = true;
 
 		handle = async(&BaseTCPServer::receiveConnections, this);
@@ -135,11 +135,11 @@ namespace web
 
 	void BaseTCPServer::stop(bool wait)
 	{
-		u_long listenerSocketBlockingMode = 1;
+		u_long nonBlockingMode = 1;
 
 		isRunning = false;
 
-		ioctlsocket(listenSocket, FIONBIO, &listenerSocketBlockingMode);
+		ioctlsocket(listenSocket, FIONBIO, &nonBlockingMode);
 
 		if (wait)
 		{
