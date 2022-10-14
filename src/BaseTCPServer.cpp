@@ -50,11 +50,13 @@ namespace web
 	{
 		try
 		{
-			auto ipAddresses = data[ip];
+			vector<SOCKET> sockets = data[ip];
 
-			for (const auto& i : ipAddresses)
+			for (SOCKET socket : sockets)
 			{
-				closesocket(i);
+				this->onDisconnect(socket, ip);
+
+				closesocket(socket);
 			}
 		}
 		catch (const exception&)
@@ -133,7 +135,11 @@ namespace web
 
 	void BaseTCPServer::stop(bool wait)
 	{
+		u_long listenerSocketBlockingMode = 1;
+
 		isRunning = false;
+
+		ioctlsocket(listenSocket, FIONBIO, &listenerSocketBlockingMode);
 
 		if (wait)
 		{
@@ -148,13 +154,6 @@ namespace web
 
 	void BaseTCPServer::pubDisconnect(const string& ip)
 	{
-		vector<SOCKET> sockets = data[ip];
-
-		for (SOCKET socket : sockets)
-		{
-			this->onDisconnect(socket, ip);
-		}
-
 		this->disconnect(ip);
 
 		data.erase(ip);
