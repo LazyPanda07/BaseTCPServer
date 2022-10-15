@@ -8,6 +8,55 @@ using namespace std;
 
 namespace web
 {
+	void BaseTCPServer::createListenSocket()
+	{
+		addrinfo* info = nullptr;
+		addrinfo hints = {};
+
+		hints.ai_family = AF_INET;
+		hints.ai_flags = AI_PASSIVE;
+		hints.ai_protocol = IPPROTO_TCP;
+		hints.ai_socktype = SOCK_STREAM;
+
+		if (getaddrinfo(ip.data(), port.data(), &hints, &info))
+		{
+			WSACleanup();
+
+			throw exceptions::WebException();
+		}
+
+		if ((listenSocket = socket(info->ai_family, info->ai_socktype, info->ai_protocol)) == INVALID_SOCKET)
+		{
+			freeaddrinfo(info);
+
+			WSACleanup();
+
+			throw exceptions::WebException();
+		}
+
+		ioctlsocket(listenSocket, FIONBIO, &listenSocketBlockingMode);
+
+		if (::bind(listenSocket, info->ai_addr, static_cast<int>(info->ai_addrlen)) == SOCKET_ERROR)
+		{
+			freeaddrinfo(info);
+
+			WSACleanup();
+
+			throw exceptions::WebException();
+		}
+
+		if (listen(listenSocket, SOMAXCONN) == SOCKET_ERROR)
+		{
+			freeaddrinfo(info);
+
+			WSACleanup();
+
+			throw exceptions::WebException();
+		}
+
+		freeaddrinfo(info);
+	}
+
 	void BaseTCPServer::receiveConnections()
 	{
 		int addrlen = sizeof(sockaddr);
@@ -124,9 +173,28 @@ namespace web
 		return ntohs(serverInfo.sin_port);
 	}
 
+	BaseTCPServer::BaseTCPServer(const string& port, const string& ip, DWORD timeout, bool multiThreading, u_long listenSocketBlockingMode, bool freeDLL) :
+		ip(ip),
+		port(port),
+		listenSocket(INVALID_SOCKET),
+		blockingMode(0),
+		listenSocketBlockingMode(listenSocketBlockingMode),
+		timeout(timeout),
+		freeDLL(freeDLL),
+		isRunning(false),
+		multiThreading(multiThreading)
+	{
+		WSADATA wsaData;
+
+		if (WSAStartup(MAKEWORD(2, 2), &wsaData))
+		{
+			throw exceptions::WebException();
+		}
+	}
+
 	void BaseTCPServer::start()
 	{
-		ioctlsocket(listenSocket, FIONBIO, &listenSocketBlockingMode);
+		this->createListenSocket();
 
 		isRunning = true;
 
@@ -135,11 +203,9 @@ namespace web
 
 	void BaseTCPServer::stop(bool wait)
 	{
-		u_long nonBlockingMode = 1;
-
 		isRunning = false;
 
-		ioctlsocket(listenSocket, FIONBIO, &nonBlockingMode);
+		closesocket(listenSocket);
 
 		if (wait)
 		{

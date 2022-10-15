@@ -9,14 +9,14 @@
 #include "WebException.h"
 #include "ClientData.h"
 
-using namespace std::string_view_literals;
-
 namespace web
 {
 	class BaseTCPServer
 	{
 	protected:
 		ClientData data;
+		std::string ip;
+		std::string port;
 		SOCKET listenSocket;
 		u_long blockingMode;
 		u_long listenSocketBlockingMode;
@@ -27,6 +27,8 @@ namespace web
 		std::future<void> handle;
 
 	protected:
+		void createListenSocket();
+
 		virtual void receiveConnections();
 
 		virtual void disconnect(const std::string& ip);
@@ -55,16 +57,13 @@ namespace web
 
 	public:
 		/// @brief 
-		/// @tparam PortStringT 
-		/// @tparam IPStringT 
 		/// @param port Server's port
 		/// @param ip Server's ip
 		/// @param timeout recv function timeout in milliseconds, 0 wait for upcoming data
 		/// @param multiThreading Each client in separate thread
 		/// @param listenSocketBlockingMode Blocking mode for listen socket (0 - blocking, not 0 - non blocking)
 		/// @param freeDLL Unload Ws2_32.dll in destructor
-		template<typename PortStringT, typename IPStringT = std::string_view>
-		BaseTCPServer(const PortStringT& port, const IPStringT& ip = "0.0.0.0"sv, DWORD timeout = 0, bool multiThreading = true, u_long listenSocketBlockingMode = 0, bool freeDLL = true);
+		BaseTCPServer(const std::string& port, const std::string& ip = "0.0.0.0", DWORD timeout = 0, bool multiThreading = true, u_long listenSocketBlockingMode = 0, bool freeDLL = true);
 
 		virtual void start();
 
@@ -125,65 +124,5 @@ namespace web
 		} while (totalReceive < count);
 
 		return totalReceive;
-	}
-
-	template<typename PortStringT, typename IPStringT>
-	BaseTCPServer::BaseTCPServer(const PortStringT& port, const IPStringT& ip, DWORD timeout, bool multiThreading, u_long listenSocketBlockingMode, bool freeDLL) :
-		blockingMode(0),
-		listenSocketBlockingMode(listenSocketBlockingMode),
-		timeout(timeout),
-		freeDLL(freeDLL),
-		isRunning(false),
-		multiThreading(multiThreading)
-	{
-		WSADATA wsaData;
-		addrinfo* info = nullptr;
-		addrinfo hints = {};
-
-		if (WSAStartup(MAKEWORD(2, 2), &wsaData))
-		{
-			throw exceptions::WebException();
-		}
-
-		hints.ai_family = AF_INET;
-		hints.ai_flags = AI_PASSIVE;
-		hints.ai_protocol = IPPROTO_TCP;
-		hints.ai_socktype = SOCK_STREAM;
-
-		if (getaddrinfo(ip.data(), port.data(), &hints, &info))
-		{
-			WSACleanup();
-
-			throw exceptions::WebException();
-		}
-
-		if ((listenSocket = socket(info->ai_family, info->ai_socktype, info->ai_protocol)) == INVALID_SOCKET)
-		{
-			freeaddrinfo(info);
-
-			WSACleanup();
-
-			throw exceptions::WebException();
-		}
-
-		if (bind(listenSocket, info->ai_addr, static_cast<int>(info->ai_addrlen)) == SOCKET_ERROR)
-		{
-			freeaddrinfo(info);
-
-			WSACleanup();
-
-			throw exceptions::WebException();
-		}
-
-		if (listen(listenSocket, SOMAXCONN) == SOCKET_ERROR)
-		{
-			freeaddrinfo(info);
-
-			WSACleanup();
-
-			throw exceptions::WebException();
-		}
-
-		freeaddrinfo(info);
 	}
 }
