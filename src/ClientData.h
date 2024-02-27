@@ -1,11 +1,26 @@
 #pragma once
 
 #include <thread>
-#include <shared_mutex>
+#include <mutex>
 #include <unordered_map>
 #include <vector>
 
+#ifndef __LINUX__
 #include <WinSock2.h>
+#endif
+
+#ifdef __LINUX__
+#ifndef WINDOWS_STYLE_DEFINITION
+#define WINDOWS_STYLE_DEFINITION
+
+#define closesocket close
+#define SOCKET int
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR -1
+#define DWORD uint32_t
+
+#endif // WINDOWS_STYLE_DEFINITION
+#endif // __LINUX__
 
 namespace web
 {
@@ -13,7 +28,7 @@ namespace web
 	{
 	private:
 		std::unordered_multimap<std::string, SOCKET> data;
-		std::shared_mutex readWriteLock;
+		std::mutex readWriteLock;
 
 	public:
 		ClientData() = default;

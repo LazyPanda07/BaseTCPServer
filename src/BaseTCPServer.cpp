@@ -2,7 +2,9 @@
 
 #include <thread>
 
+#ifndef __LINUX__
 #pragma comment (lib,"ws2_32.lib")
+#endif
 
 using namespace std;
 

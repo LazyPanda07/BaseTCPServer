@@ -1,15 +1,29 @@
 #include "WebException.h"
 
+#ifdef __LINUX__
+#include <cstring>
+#else
 #include <WinSock2.h>
 #include <winbase.h>
+#endif // __LINUX__
 
 namespace web
 {
 	namespace exceptions
 	{
+#ifdef __LINUX__
 		WebException::WebException() :
 			runtime_error(""),
-			errorCode(WSAGetLastError())
+			errorCode(errno),
+			line(-1)
+		{
+			data = strerror(errno);
+		}
+#else
+		WebException::WebException() :
+			runtime_error(""),
+			errorCode(WSAGetLastError()),
+			line(-1)
 		{
 			switch (errorCode)
 			{
@@ -274,6 +288,14 @@ namespace web
 				break;
 			}
 		}
+#endif // __LINUX__
+
+		WebException::WebException(int line, std::string_view file) :
+			WebException()
+		{
+			this->file = file;
+			this->line = line;
+		}
 
 		const char* WebException::what() const noexcept
 		{
@@ -283,6 +305,16 @@ namespace web
 		int WebException::getErrorCode() const noexcept
 		{
 			return errorCode;
+		}
+
+		int WebException::getLine() const noexcept
+		{
+			return line;
+		}
+
+		std::string_view WebException::getFile() const noexcept
+		{
+			return file;
 		}
 	}
 }

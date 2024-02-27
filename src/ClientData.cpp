@@ -8,7 +8,7 @@ namespace web
 {
 	void ClientData::insert(string&& ip, SOCKET clientSocket) noexcept
 	{
-		unique_lock<shared_mutex> lock(readWriteLock);
+		unique_lock<mutex> lock(readWriteLock);
 
 		data.emplace(move(ip), clientSocket);
 	}
@@ -17,7 +17,7 @@ namespace web
 	{
 		vector<SOCKET> result;
 
-		shared_lock<shared_mutex> lock(readWriteLock);
+		shared_lock<mutex> lock(readWriteLock);
 
 		auto range = data.equal_range(ip);
 
@@ -28,7 +28,7 @@ namespace web
 
 	void ClientData::erase(const string& ip) noexcept
 	{
-		unique_lock<shared_mutex> lock(readWriteLock);
+		unique_lock<mutex> lock(readWriteLock);
 
 		if (data.find(ip) != end(data))
 		{
@@ -40,7 +40,7 @@ namespace web
 	{
 		vector<pair<string, SOCKET>> result;
 
-		unique_lock<shared_mutex> lock(readWriteLock);
+		unique_lock<mutex> lock(readWriteLock);
 
 		result.reserve(data.size());
 

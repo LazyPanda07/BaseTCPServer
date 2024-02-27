@@ -1,10 +1,17 @@
 #pragma once
 
 #include <string>
+#include <future>
 
+#ifdef __LINUX__
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <unistd.h>
+#else
 #include <WinSock2.h>
 #include <WS2tcpip.h>
-#include <future>
+#endif
 
 #include "WebException.h"
 #include "ClientData.h"
