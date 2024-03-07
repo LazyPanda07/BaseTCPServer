@@ -72,7 +72,11 @@ namespace web
 		/// @param freeDLL Unload Ws2_32.dll in destructor
 		BaseTCPServer(const std::string& port, const std::string& ip = "0.0.0.0", DWORD timeout = 0, bool multiThreading = true, u_long listenSocketBlockingMode = 0, bool freeDLL = true);
 
-		virtual void start();
+		/**
+		 * @brief Start server in separate thread
+		 * @param wait Wait server serving in current thread
+		 */
+		virtual void start(bool wait = false);
 
 		virtual void stop(bool wait = true);
 
@@ -99,9 +103,13 @@ namespace web
 		{
 			lastSend = send(clientSocket, reinterpret_cast<const char*>(data) + totalSent, count - totalSent, NULL);
 
-			if (lastSend <= 0)
+			if (lastSend == SOCKET_ERROR)
 			{
-				throw exceptions::WebException();
+				THROW_WEB_EXCEPTION;
+			}
+			else if (!lastSend)
+			{
+				return totalSent;
 			}
 
 			totalSent += lastSend;
@@ -121,9 +129,13 @@ namespace web
 		{
 			lastReceive = recv(clientSocket, reinterpret_cast<char*>(data) + totalReceive, count - totalReceive, NULL);
 
-			if (lastReceive <= 0)
+			if (lastReceive == SOCKET_ERROR)
 			{
-				throw exceptions::WebException();
+				THROW_WEB_EXCEPTION;
+			}
+			else if (!lastReceive)
+			{
+				return totalReceive;
 			}
 
 			totalReceive += lastReceive;

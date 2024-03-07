@@ -17,7 +17,7 @@ namespace web
 	{
 		vector<SOCKET> result;
 
-		shared_lock<mutex> lock(readWriteLock);
+		unique_lock<mutex> lock(readWriteLock);
 
 		auto range = data.equal_range(ip);
 

@@ -22,18 +22,16 @@ namespace web
 
 		if (getaddrinfo(ip.data(), port.data(), &hints, &info))
 		{
-			WSACleanup();
-
-			throw exceptions::WebException();
+			THROW_WEB_EXCEPTION;
 		}
 
 		if ((listenSocket = socket(info->ai_family, info->ai_socktype, info->ai_protocol)) == INVALID_SOCKET)
 		{
 			freeaddrinfo(info);
 
-			WSACleanup();
+			freeDLL = true;
 
-			throw exceptions::WebException();
+			THROW_WEB_EXCEPTION;
 		}
 
 		ioctlsocket(listenSocket, FIONBIO, &listenSocketBlockingMode);
@@ -42,18 +40,18 @@ namespace web
 		{
 			freeaddrinfo(info);
 
-			WSACleanup();
+			freeDLL = true;
 
-			throw exceptions::WebException();
+			THROW_WEB_EXCEPTION;
 		}
 
 		if (listen(listenSocket, SOMAXCONN) == SOCKET_ERROR)
 		{
 			freeaddrinfo(info);
 
-			WSACleanup();
+			freeDLL = true;
 
-			throw exceptions::WebException();
+			THROW_WEB_EXCEPTION;
 		}
 
 		freeaddrinfo(info);
@@ -190,17 +188,22 @@ namespace web
 
 		if (WSAStartup(MAKEWORD(2, 2), &wsaData))
 		{
-			throw exceptions::WebException();
+			THROW_WEB_EXCEPTION;
 		}
 	}
 
-	void BaseTCPServer::start()
+	void BaseTCPServer::start(bool wait)
 	{
 		this->createListenSocket();
 
 		isRunning = true;
 
-		handle = async(&BaseTCPServer::receiveConnections, this);
+		handle = async(launch::async, &BaseTCPServer::receiveConnections, this);
+
+		if (wait)
+		{
+			handle.wait();
+		}
 	}
 
 	void BaseTCPServer::stop(bool wait)
