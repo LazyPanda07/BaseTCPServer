@@ -63,4 +63,6 @@ jobs:
 
     - name: Tests
       working-directory: ${{ github.workspace }}/Tests
-      run: python tests.py
+      run: |
+          Set-ExecutionPolicy Unrestricted Scope CurrentUser -Force
+          python tests.py

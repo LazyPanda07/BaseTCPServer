@@ -4,12 +4,8 @@ import string
 import subprocess
 import time
 import unittest
-import pyuac
 
 from socket import *
-
-if not pyuac.isUserAdmin():
-    pyuac.runAsAdmin()
 
 
 class EchoServerTest(unittest.TestCase):
