@@ -63,4 +63,5 @@ jobs:
 
     - name: Tests
       working-directory: ${{ github.workspace }}/Tests
-      run: .\Tests.exe
+      shell: cmd
+      run: runas.exe /user:administrator "python tests.py"
