@@ -43,9 +43,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
   
-    - name: Install sudo
-      run: choco install -y sudo
-  
     - name: Enable NMake
       uses: ilammy/msvc-dev-cmd@v1.13.0
 
@@ -66,4 +63,5 @@ jobs:
 
     - name: Tests
       working-directory: ${{ github.workspace }}/Tests
+      shell: bash
       run: sudo python tests.py
