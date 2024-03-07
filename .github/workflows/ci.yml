@@ -63,5 +63,4 @@ jobs:
 
     - name: Tests
       working-directory: ${{ github.workspace }}/Tests
-      shell: bash
-      run: sudo python tests.py
+      run: .\Tests.exe
