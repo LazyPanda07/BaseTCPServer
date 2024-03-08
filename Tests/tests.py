@@ -14,7 +14,7 @@ class EchoServerTest(unittest.TestCase):
         if platform.system() == "Windows":
             process = subprocess.Popen([f"{os.path.abspath(os.curdir)}/Tests.exe"])
         else:
-            process = subprocess.Popen([f"{os.path.abspath(os.curdir)}/Tests"])
+            process = subprocess.Popen([f"{os.path.abspath(os.curdir)}/Tests"], shell=True)
 
         time.sleep(1)
 
