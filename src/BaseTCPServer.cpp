@@ -40,7 +40,7 @@ namespace web
 		}
 
 #ifdef __LINUX__
-		if (fcntl(listenSocket, F_SETFL,(listenSocketBlockingMode ? ~O_NONBLOCK : O_NONBLOCK)) == SOCKET_ERROR)
+		if (listenSocketBlockingMode && fcntl(listenSocket, F_SETFL, O_NONBLOCK) == SOCKET_ERROR)
 		{
 			THROW_WEB_EXCEPTION;
 		}
@@ -107,7 +107,7 @@ namespace web
 				}
 
 #ifdef __LINUX__
-				if (fcntl(clientSocket, F_SETFL, (blockingMode ? ~O_NONBLOCK : O_NONBLOCK)) == SOCKET_ERROR)
+				if (blockingMode && fcntl(clientSocket, F_SETFL, O_NONBLOCK) == SOCKET_ERROR)
 				{
 					THROW_WEB_EXCEPTION;
 				}
