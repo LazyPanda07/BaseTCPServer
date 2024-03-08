@@ -1,22 +1,14 @@
-import os.path
 import random
 import string
-import subprocess
 import time
 import unittest
-import platform
 
 from socket import *
 
 
 class EchoServerTest(unittest.TestCase):
     def test_echo(self):
-        if platform.system() == "Windows":
-            process = subprocess.Popen([f"{os.path.abspath(os.curdir)}/Tests.exe"])
-        else:
-            process = subprocess.Popen([f"{os.path.abspath(os.curdir)}/Tests"], shell=True)
-
-        time.sleep(1)
+        time.sleep(10)
 
         for i in range(8192):
             with create_connection(("127.0.0.1", 80)) as socket:
@@ -33,8 +25,6 @@ class EchoServerTest(unittest.TestCase):
                 echo_message = socket.recv(length)
 
                 self.assertEqual(message + " from echo server", echo_message.decode("UTF-8"))
-
-        process.kill()
 
     @staticmethod
     def _generate_random_message() -> str:
