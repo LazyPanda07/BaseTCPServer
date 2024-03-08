@@ -37,9 +37,20 @@ public:
 	}
 };
 
+void printClients(EchoServer& server)
+{
+	using namespace std::chrono_literals;
+
+	std::this_thread::sleep_for(1s);
+
+	std::cout << server.getClients().size() << std::endl;
+}
+
 int main(int argc, char** argv) try
 {
 	EchoServer server;
+
+	std::thread(printClients, std::ref(server)).detach();
 
 	server.start(true);
 

@@ -103,8 +103,6 @@ namespace web
 		{
 			lastSend = send(clientSocket, reinterpret_cast<const char*>(data) + totalSent, count - totalSent, NULL);
 
-			printf("%d\n", lastSend);
-
 			if (lastSend == SOCKET_ERROR)
 			{
 				THROW_WEB_EXCEPTION;
