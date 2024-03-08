@@ -68,7 +68,7 @@ namespace web
 		/// @param ip Server's ip
 		/// @param timeout recv function timeout in milliseconds, 0 wait for upcoming data
 		/// @param multiThreading Each client in separate thread
-		/// @param listenSocketBlockingMode Blocking mode for listen socket (0 - blocking, not 0 - non blocking)
+		/// @param listenSocketBlockingMode Blocking mode for listen socket (0 - blocking, non 0 - non blocking)
 		/// @param freeDLL Unload Ws2_32.dll in destructor
 		BaseTCPServer(const std::string& port, const std::string& ip = "0.0.0.0", DWORD timeout = 0, bool multiThreading = true, u_long listenSocketBlockingMode = 0, bool freeDLL = true);
 
@@ -86,9 +86,9 @@ namespace web
 
 		virtual std::vector<std::pair<std::string, SOCKET>> getClients() final;
 
-		u_long& blockingModeForOtherConnections();
+		void setBlockingModeForOtherConnections(u_long blockingMode);
 
-		const u_long& blockingModeForOtherConnections() const;
+		u_long blockingModeForOtherConnections() const;
 
 		virtual ~BaseTCPServer();
 	};

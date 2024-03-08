@@ -2,6 +2,10 @@
 
 #include <thread>
 
+#ifdef __LINUX__
+#include <fcntl.h>
+#endif
+
 #ifndef __LINUX__
 #pragma comment (lib,"ws2_32.lib")
 #endif
@@ -66,12 +70,39 @@ namespace web
 			sockaddr addr;
 			SOCKET clientSocket = accept(listenSocket, &addr, &addrlen);
 
+#ifdef __LINUX__
+			timeval timeoutValue;
+
+			timeoutValue.tv_sec = timeout / 1000;
+			timeoutValue.tv_usec = (timeout - timeoutValue.tv_sec * 1000) * 1000;
+#else
+			DWORD timeoutValue = timeout;
+#endif
+
 			if (isRunning && clientSocket != INVALID_SOCKET)
 			{
-				setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&timeout), sizeof(timeout));
+				if (setsockopt(clientSocket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&timeoutValue), sizeof(timeoutValue)) == SOCKET_ERROR)
+				{
+					THROW_WEB_EXCEPTION;
+				}
 
-				ioctlsocket(clientSocket, FIONBIO, &blockingMode);
+				if (setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&timeoutValue), sizeof(timeoutValue)) == SOCKET_ERROR)
+				{
+					THROW_WEB_EXCEPTION;
+				}
 
+#ifdef __LINUX__
+				if (fcntl(clientSocket, (blockingMode ? ~O_NONBLOCK : O_NONBLOCK)) == SOCKET_ERROR)
+				{
+					THROW_WEB_EXCEPTION;
+				}
+#else
+				if (ioctlsocket(clientSocket, FIONBIO, &blockingMode) == SOCKET_ERROR)
+				{
+					THROW_WEB_EXCEPTION;
+				}
+#endif
+				
 				data.insert(getClientIpV4(addr), clientSocket);
 
 				if (multiThreading)
@@ -184,12 +215,14 @@ namespace web
 		isRunning(false),
 		multiThreading(multiThreading)
 	{
+#ifndef __LINUX__
 		WSADATA wsaData;
 
 		if (WSAStartup(MAKEWORD(2, 2), &wsaData))
 		{
 			THROW_WEB_EXCEPTION;
 		}
+#endif // __LINUX__
 	}
 
 	void BaseTCPServer::start(bool wait)
@@ -235,12 +268,12 @@ namespace web
 		return data.getClients();
 	}
 
-	u_long& BaseTCPServer::blockingModeForOtherConnections()
+	void BaseTCPServer::setBlockingModeForOtherConnections(u_long blockingMode)
 	{
-		return blockingMode;
+		this->blockingMode = blockingMode;
 	}
 
-	const u_long& BaseTCPServer::blockingModeForOtherConnections() const
+	u_long BaseTCPServer::blockingModeForOtherConnections() const
 	{
 		return blockingMode;
 	}

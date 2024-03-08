@@ -15,10 +15,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: Start python server
-      run: python -m http.server
-  
+    
     - name: Enable NMake
       uses: ilammy/msvc-dev-cmd@v1.13.0
 
@@ -33,6 +30,29 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.configuration }}_Windows
+        path: build/install-dir/
+
+
+  linux-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build
+      run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} ..
+          make install -j $(nproc)
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.configuration }}_Linux
         path: build/install-dir/
 
 
@@ -66,5 +86,34 @@ jobs:
 
     - name: Tests
       working-directory: ${{ github.workspace }}/Tests
-      shell: cmd
-      run: runas.exe /user:administrator "python tests.py"
+      run: python tests.py
+
+
+  linux-tests:
+    runs-on: ubuntu-latest
+    needs: linux-build
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    steps:
+    - uses: actions/checkout@v4
+  
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with: 
+        name: ${{ matrix.configuration }}_Linux
+        path: BaseTCPServer
+
+    - name: Build
+      working-directory: ${{ github.workspace }}/Tests
+      run: |
+          pip3 install -r requirements.txt
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          make install -j $(nproc)
+
+    - name: Tests
+      working-directory: ${{ github.workspace }}/Tests
+      run: python3 tests.py
