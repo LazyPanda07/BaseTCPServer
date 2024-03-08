@@ -69,7 +69,7 @@ namespace web
 		/// @param timeout recv function timeout in milliseconds, 0 wait for upcoming data
 		/// @param multiThreading Each client in separate thread
 		/// @param listenSocketBlockingMode Blocking mode for listen socket (0 - blocking, non 0 - non blocking)
-		/// @param freeDLL Unload Ws2_32.dll in destructor
+		/// @param freeDLL Unload Ws2_32.dll in destructor(Windows only parameter)
 		BaseTCPServer(const std::string& port, const std::string& ip = "0.0.0.0", DWORD timeout = 0, bool multiThreading = true, u_long listenSocketBlockingMode = 0, bool freeDLL = true);
 
 		/**

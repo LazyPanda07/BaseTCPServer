@@ -4,6 +4,7 @@
 
 #ifdef __LINUX__
 #include <fcntl.h>
+#include <arpa/inet.h>
 #endif
 
 #ifndef __LINUX__
@@ -38,7 +39,17 @@ namespace web
 			THROW_WEB_EXCEPTION;
 		}
 
-		ioctlsocket(listenSocket, FIONBIO, &listenSocketBlockingMode);
+#ifdef __LINUX__
+		if (fcntl(listenSocket, (listenSocketBlockingMode ? ~O_NONBLOCK : O_NONBLOCK)) == SOCKET_ERROR)
+		{
+			THROW_WEB_EXCEPTION;
+		}
+#else
+		if (ioctlsocket(listenSocket, FIONBIO, &listenSocketBlockingMode) == SOCKET_ERROR)
+		{
+			THROW_WEB_EXCEPTION;
+		}
+#endif
 
 		if (::bind(listenSocket, info->ai_addr, static_cast<int>(info->ai_addrlen)) == SOCKET_ERROR)
 		{
@@ -63,8 +74,12 @@ namespace web
 
 	void BaseTCPServer::receiveConnections()
 	{
+#ifdef __LINUX__
+		socklen_t addrlen = sizeof(sockaddr);
+#else
 		int addrlen = sizeof(sockaddr);
-
+#endif
+		
 		while (isRunning)
 		{
 			sockaddr addr;
@@ -173,8 +188,13 @@ namespace web
 	{
 		string ip;
 		sockaddr_in serverInfo = {};
-		int len = sizeof(serverInfo);
 
+#ifdef __LINUX__
+		socklen_t len = sizeof(serverInfo);
+#else
+		int len = sizeof(serverInfo);
+#endif
+		
 		ip.resize(16);
 
 		getsockname(listenSocket, reinterpret_cast<sockaddr*>(&serverInfo), &len);
@@ -197,8 +217,13 @@ namespace web
 	uint16_t BaseTCPServer::getServerPortV4() const
 	{
 		sockaddr_in serverInfo = {};
-		int len = sizeof(serverInfo);
 
+#ifdef __LINUX__
+		socklen_t len = sizeof(serverInfo);
+#else
+		int len = sizeof(serverInfo);
+#endif
+		
 		getsockname(listenSocket, reinterpret_cast<sockaddr*>(&serverInfo), &len);
 
 		return ntohs(serverInfo.sin_port);
@@ -282,9 +307,11 @@ namespace web
 	{
 		isRunning = false;
 
+#ifndef __LINUX__
 		if (freeDLL)
 		{
 			WSACleanup();
 		}
+#endif
 	}
 }

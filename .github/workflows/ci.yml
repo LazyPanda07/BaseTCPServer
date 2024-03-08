@@ -116,4 +116,4 @@ jobs:
 
     - name: Tests
       working-directory: ${{ github.workspace }}/Tests
-      run: python3 tests.py
+      run: sudo python3 tests.py
