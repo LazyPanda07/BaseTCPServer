@@ -4,13 +4,17 @@ import string
 import subprocess
 import time
 import unittest
+import platform
 
 from socket import *
 
 
 class EchoServerTest(unittest.TestCase):
     def test_echo(self):
-        process = subprocess.Popen([f"{os.path.abspath(os.curdir)}/Tests.exe"])
+        if platform.system() == "Windows":
+            process = subprocess.Popen([f"{os.path.abspath(os.curdir)}/Tests.exe"])
+        else:
+            process = subprocess.Popen([f"{os.path.abspath(os.curdir)}/Tests"])
 
         time.sleep(1)
 
