@@ -8,7 +8,7 @@ from socket import *
 class EchoServerTest(unittest.TestCase):
     def test_echo(self):
         for i in range(8192):
-            with create_connection(("127.0.0.1", 80)) as socket:
+            with create_connection(("127.0.0.1", 80), 5) as socket:
                 message = EchoServerTest._generate_random_message()
 
                 socket.send(len(message).to_bytes(4, "little"))
