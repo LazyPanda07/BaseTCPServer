@@ -103,9 +103,15 @@ namespace web
 		{
 			lastSend = send(clientSocket, reinterpret_cast<const char*>(data) + totalSent, count - totalSent, NULL);
 
+			printf("%d\n", lastSend);
+
 			if (lastSend == SOCKET_ERROR)
 			{
 				THROW_WEB_EXCEPTION;
+			}
+			else if (!lastSend)
+			{
+				return totalSent;
 			}
 
 			totalSent += lastSend;
@@ -128,6 +134,10 @@ namespace web
 			if (lastReceive == SOCKET_ERROR)
 			{
 				THROW_WEB_EXCEPTION;
+			}
+			else if (!lastReceive)
+			{
+				return totalReceive;
 			}
 
 			totalReceive += lastReceive;

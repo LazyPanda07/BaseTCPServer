@@ -45,7 +45,7 @@ namespace web
 			THROW_WEB_EXCEPTION;
 		}
 #else
-		if (ioctlsocket(listenSocket, FIONBIO, &listenSocketBlockingMode) == SOCKET_ERROR)
+		if (listenSocketBlockingMode && ioctlsocket(listenSocket, FIONBIO, &listenSocketBlockingMode) == SOCKET_ERROR)
 		{
 			THROW_WEB_EXCEPTION;
 		}
@@ -112,7 +112,7 @@ namespace web
 					THROW_WEB_EXCEPTION;
 				}
 #else
-				if (ioctlsocket(clientSocket, FIONBIO, &blockingMode) == SOCKET_ERROR)
+				if (blockingMode && ioctlsocket(clientSocket, FIONBIO, &blockingMode) == SOCKET_ERROR)
 				{
 					THROW_WEB_EXCEPTION;
 				}
