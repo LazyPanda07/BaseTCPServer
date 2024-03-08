@@ -1,6 +1,5 @@
 import random
 import string
-import time
 import unittest
 
 from socket import *
@@ -8,8 +7,6 @@ from socket import *
 
 class EchoServerTest(unittest.TestCase):
     def test_echo(self):
-        time.sleep(10)
-
         for i in range(8192):
             with create_connection(("127.0.0.1", 80)) as socket:
                 message = EchoServerTest._generate_random_message()
