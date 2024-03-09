@@ -6,22 +6,35 @@ using namespace std;
 
 namespace web
 {
-	void ClientData::insert(string&& ip, SOCKET clientSocket) noexcept
+	void ClientData::insert(string&& ip, SOCKET clientSocket, future<void>&& servingFunction) noexcept
 	{
 		unique_lock<mutex> lock(readWriteLock);
 
-		data.emplace(move(ip), clientSocket);
+		data.emplace(move(ip), make_pair(clientSocket, move(servingFunction)));
 	}
 
-	vector<SOCKET> ClientData::operator [] (const std::string& ip)
+	vector<pair<SOCKET, future<void>>> ClientData::operator [] (const string& ip)
 	{
-		vector<SOCKET> result;
+		vector<pair<SOCKET, future<void>>> result;
 
-		unique_lock<mutex> lock(readWriteLock);
+		{
+			unique_lock<mutex> lock(readWriteLock);
+			auto it = data.equal_range(ip);
 
-		auto range = data.equal_range(ip);
+			result.reserve(distance(it.first, it.second));
 
-		for_each(range.first, range.second, [&result](const auto& data) { result.push_back(data.second); });
+			while (true)
+			{
+				auto node = data.extract(ip);
+
+				if (!node)
+				{
+					break;
+				}
+
+				result.emplace_back(move(node.mapped()));
+			}
+		}
 
 		return result;
 	}
@@ -39,14 +52,13 @@ namespace web
 	vector<pair<string, SOCKET>> ClientData::getClients() noexcept
 	{
 		vector<pair<string, SOCKET>> result;
-
 		unique_lock<mutex> lock(readWriteLock);
 
 		result.reserve(data.size());
 
-		for (const auto& i : data)
+		for (const auto& [ip, clientData] : data)
 		{
-			result.emplace_back(i);
+			result.emplace_back(ip, clientData.first);
 		}
 
 		return result;

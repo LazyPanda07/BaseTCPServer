@@ -1,5 +1,6 @@
 #include "BaseTCPServer.h"
 
+#include <iostream>
 #include <thread>
 
 #ifdef __LINUX__
@@ -79,11 +80,11 @@ namespace web
 #else
 		int addrlen = sizeof(sockaddr);
 #endif
-		
+
 		while (isRunning)
 		{
-			sockaddr addr;
-			SOCKET clientSocket = accept(listenSocket, &addr, &addrlen);
+			sockaddr address;
+			SOCKET clientSocket = accept(listenSocket, &address, &addrlen);
 
 #ifdef __LINUX__
 			timeval timeoutValue;
@@ -117,19 +118,14 @@ namespace web
 					THROW_WEB_EXCEPTION;
 				}
 #endif
-				
-				data.insert(getClientIpV4(addr), clientSocket);
 
-				if (multiThreading)
-				{
-					thread(&BaseTCPServer::clientConnection, this, clientSocket, addr).detach();
-				}
-				else
-				{
-					this->clientConnection(clientSocket, addr);
-				}
-
-				this->onConnectionReceive(clientSocket, addr);
+				data.insert
+				(
+					BaseTCPServer::getClientIpV4(address),
+					clientSocket,
+					multiThreading ? async(launch::async, &BaseTCPServer::serve, this, clientSocket, address) :
+					async(launch::deferred, &BaseTCPServer::serve, this, clientSocket, address)
+				);
 			}
 		}
 
@@ -139,26 +135,37 @@ namespace web
 		}
 	}
 
+	void BaseTCPServer::serve(SOCKET clientSocket, sockaddr address)
+	{
+		this->onConnectionReceive(clientSocket, address);
+
+		this->clientConnection(clientSocket, address);
+
+		this->pubDisconnect(BaseTCPServer::getClientIpV4(address));
+	}
+
 	void BaseTCPServer::disconnect(const string& ip)
 	{
 		try
 		{
-			vector<SOCKET> sockets = data[ip];
+			vector<pair<SOCKET, future<void>>> serving = data[ip];
 
-			for (SOCKET socket : sockets)
+			for (auto&& [socket, servingFunction] : serving)
 			{
 				this->onDisconnect(socket, ip);
+
+				servingFunction.get();
 
 				closesocket(socket);
 			}
 		}
-		catch (const exception&)
+		catch (const exception& e)
 		{
-
+			cerr << e.what() << endl;
 		}
 	}
 
-	void BaseTCPServer::onConnectionReceive(SOCKET clientSocket, sockaddr addr)
+	void BaseTCPServer::onConnectionReceive(SOCKET clientSocket, sockaddr address)
 	{
 
 	}
@@ -168,13 +175,11 @@ namespace web
 
 	}
 
-	string BaseTCPServer::getClientIpV4(sockaddr& addr)
+	string BaseTCPServer::getClientIpV4(const sockaddr& address)
 	{
-		string ip;
+		string ip(BaseTCPServer::ipV4Size, '\0');
 
-		ip.resize(16);
-
-		inet_ntop(AF_INET, reinterpret_cast<const char*>(&reinterpret_cast<sockaddr_in*>(&addr)->sin_addr), ip.data(), ip.size());
+		inet_ntop(AF_INET, reinterpret_cast<const char*>(&reinterpret_cast<const sockaddr_in*>(&address)->sin_addr), ip.data(), BaseTCPServer::ipV4Size);
 
 		while (ip.back() == '\0')
 		{
@@ -194,7 +199,7 @@ namespace web
 #else
 		int len = sizeof(serverInfo);
 #endif
-		
+
 		ip.resize(16);
 
 		getsockname(listenSocket, reinterpret_cast<sockaddr*>(&serverInfo), &len);
@@ -209,9 +214,9 @@ namespace web
 		return ip;
 	}
 
-	uint16_t BaseTCPServer::getClientPortV4(sockaddr& addr)
+	uint16_t BaseTCPServer::getClientPortV4(sockaddr& address)
 	{
-		return ntohs(reinterpret_cast<sockaddr_in&>(addr).sin_port);
+		return ntohs(reinterpret_cast<sockaddr_in&>(address).sin_port);
 	}
 
 	uint16_t BaseTCPServer::getServerPortV4() const
@@ -223,7 +228,7 @@ namespace web
 #else
 		int len = sizeof(serverInfo);
 #endif
-		
+
 		getsockname(listenSocket, reinterpret_cast<sockaddr*>(&serverInfo), &len);
 
 		return ntohs(serverInfo.sin_port);

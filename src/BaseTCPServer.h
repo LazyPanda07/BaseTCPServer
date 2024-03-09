@@ -20,6 +20,9 @@ namespace web
 {
 	class BaseTCPServer
 	{
+	public:
+		static constexpr size_t ipV4Size = 16;
+
 	protected:
 		ClientData data;
 		std::string ip;
@@ -38,11 +41,13 @@ namespace web
 
 		virtual void receiveConnections();
 
+		virtual void serve(SOCKET clientSocket, sockaddr address);
+
+		virtual void clientConnection(SOCKET clientSocket, sockaddr address) = 0;
+
 		virtual void disconnect(const std::string& ip);
 
-		virtual void clientConnection(SOCKET clientSocket, sockaddr addr) = 0;
-
-		virtual void onConnectionReceive(SOCKET clientSocket, sockaddr addr);
+		virtual void onConnectionReceive(SOCKET clientSocket, sockaddr address);
 
 		virtual void onDisconnect(SOCKET clientSocket, const std::string& ip);
 
@@ -54,11 +59,11 @@ namespace web
 		static int receiveBytes(SOCKET clientSocket, DataT* const data, int count);
 
 	public:
-		static std::string getClientIpV4(sockaddr& addr);
+		static std::string getClientIpV4(const sockaddr& address);
 
 		std::string getServerIpV4() const;
 
-		static uint16_t getClientPortV4(sockaddr& addr);
+		static uint16_t getClientPortV4(sockaddr& address);
 
 		uint16_t getServerPortV4() const;
 
