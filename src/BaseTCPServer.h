@@ -2,6 +2,8 @@
 
 #include <string>
 #include <future>
+#include <unordered_map>
+#include <vector>
 
 #ifdef __LINUX__
 #include <sys/types.h>
