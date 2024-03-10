@@ -41,16 +41,12 @@ namespace web
 
 		virtual void receiveConnections();
 
-		virtual void serve(SOCKET clientSocket, sockaddr address);
+		virtual void serve(std::string ip, SOCKET clientSocket, sockaddr address);
 
-		virtual void clientConnection(SOCKET clientSocket, sockaddr address) = 0;
+		virtual void clientConnection(SOCKET clientSocket, const sockaddr& address) = 0;
 
-		virtual void disconnect(const std::string& ip);
-
-		virtual void onConnectionReceive(SOCKET clientSocket, sockaddr address);
-
-		virtual void onDisconnect(SOCKET clientSocket, const std::string& ip);
-
+		virtual void onConnectionReceive(SOCKET clientSocket, const sockaddr& address);
+		
 	protected:
 		template<typename DataT>
 		static int sendBytes(SOCKET clientSocket, const DataT* const data, int count);
@@ -81,19 +77,31 @@ namespace web
 		 * @brief Start server in separate thread
 		 * @param wait Wait server serving in current thread
 		 */
-		virtual void start(bool wait = false);
+		void start(bool wait = false);
 
-		virtual void stop(bool wait = true);
+		/**
+		 * @brief Stop receiving new connections
+		 * @param wait Wait all clients tasks
+		 */
+		void stop(bool wait = true);
 
-		virtual bool serverState() const;
+		/**
+		 * @brief Is server accept new connections
+		 * @return 
+		 */
+		bool isServerRunning() const;
 
-		virtual void pubDisconnect(const std::string& ip) final;
+		/**
+		 * @brief Number of IP addresses
+		 * @return 
+		 */
+		size_t getNumberOfClients() const;
 
-		virtual std::vector<std::pair<std::string, SOCKET>> getClients() final;
-
-		void setBlockingModeForOtherConnections(u_long blockingMode);
-
-		u_long blockingModeForOtherConnections() const;
+		/**
+		 * @brief Number of sockets(each IP address may have few sockets)
+		 * @return 
+		 */
+		size_t getNumberOfConnections() const;
 
 		virtual ~BaseTCPServer();
 	};

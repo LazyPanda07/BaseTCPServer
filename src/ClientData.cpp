@@ -6,59 +6,36 @@ using namespace std;
 
 namespace web
 {
-	void ClientData::insert(string&& ip, SOCKET clientSocket, future<void>&& servingFunction) noexcept
+	void ClientData::add(const string& ip, SOCKET socket)
 	{
-		unique_lock<mutex> lock(readWriteLock);
+		unique_lock<mutex> lock(dataMutex);
 
-		data.emplace(move(ip), make_pair(clientSocket, move(servingFunction)));
+		data[ip].push_back(socket);
 	}
 
-	vector<pair<SOCKET, future<void>>> ClientData::operator [] (const string& ip)
+	void ClientData::remove(const string& ip, SOCKET socket)
 	{
-		vector<pair<SOCKET, future<void>>> result;
-
-		{
-			unique_lock<mutex> lock(readWriteLock);
-			auto it = data.equal_range(ip);
-
-			result.reserve(distance(it.first, it.second));
-
-			while (true)
-			{
-				auto node = data.extract(ip);
-
-				if (!node)
-				{
-					break;
-				}
-
-				result.emplace_back(move(node.mapped()));
-			}
-		}
-
-		return result;
+		unique_lock<mutex> lock(dataMutex);
+		
+		erase(data[ip], socket);
 	}
 
-	void ClientData::erase(const string& ip) noexcept
+	size_t ClientData::getNumberOfClients() const
 	{
-		unique_lock<mutex> lock(readWriteLock);
+		unique_lock<mutex> lock(dataMutex);
 
-		if (data.find(ip) != end(data))
-		{
-			data.erase(ip);
-		}
+		return data.size();
 	}
 
-	vector<pair<string, SOCKET>> ClientData::getClients() noexcept
+	size_t ClientData::getNumberOfConnections() const
 	{
-		vector<pair<string, SOCKET>> result;
-		unique_lock<mutex> lock(readWriteLock);
+		size_t result = 0;
 
-		result.reserve(data.size());
+		unique_lock<mutex> lock(dataMutex);
 
-		for (const auto& [ip, clientData] : data)
+		for (const auto& [key, value] : data)
 		{
-			result.emplace_back(ip, clientData.first);
+			result += value.size();
 		}
 
 		return result;

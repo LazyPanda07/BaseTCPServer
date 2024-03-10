@@ -80,7 +80,6 @@ namespace web
 #else
 		int addrlen = sizeof(sockaddr);
 #endif
-
 		while (isRunning)
 		{
 			sockaddr address;
@@ -119,58 +118,44 @@ namespace web
 				}
 #endif
 
-				data.insert
-				(
-					BaseTCPServer::getClientIpV4(address),
-					clientSocket,
-					multiThreading ? async(launch::async, &BaseTCPServer::serve, this, clientSocket, address) :
-					async(launch::deferred, &BaseTCPServer::serve, this, clientSocket, address)
-				);
+				string ip = BaseTCPServer::getClientIpV4(address);
+
+				data.add(ip, clientSocket);
+
+				if (multiThreading)
+				{
+					thread(&BaseTCPServer::serve, this, ip, clientSocket, address).detach();
+				}
+				else
+				{
+					this->serve(ip, clientSocket, address);
+				}
 			}
 		}
 
-		for (const auto& [ip, _] : data.getClients())
+		while (true)
 		{
-			this->pubDisconnect(ip);
+			if (!this->getNumberOfConnections())
+			{
+				break;
+			}
+
+			this_thread::sleep_for(1s);
 		}
 	}
 
-	void BaseTCPServer::serve(SOCKET clientSocket, sockaddr address)
+	void BaseTCPServer::serve(string ip, SOCKET clientSocket, sockaddr address)
 	{
 		this->onConnectionReceive(clientSocket, address);
 
 		this->clientConnection(clientSocket, address);
 
-		this->pubDisconnect(BaseTCPServer::getClientIpV4(address));
+		closesocket(clientSocket);
+
+		data.remove(ip, clientSocket);
 	}
 
-	void BaseTCPServer::disconnect(const string& ip)
-	{
-		try
-		{
-			vector<pair<SOCKET, future<void>>> serving = data[ip];
-
-			for (auto&& [socket, servingFunction] : serving)
-			{
-				this->onDisconnect(socket, ip);
-
-				servingFunction.get();
-
-				closesocket(socket);
-			}
-		}
-		catch (const exception& e)
-		{
-			cerr << e.what() << endl;
-		}
-	}
-
-	void BaseTCPServer::onConnectionReceive(SOCKET clientSocket, sockaddr address)
-	{
-
-	}
-
-	void BaseTCPServer::onDisconnect(SOCKET clientSocket, const string& ip)
+	void BaseTCPServer::onConnectionReceive(SOCKET clientSocket, const sockaddr& address)
 	{
 
 	}
@@ -200,11 +185,11 @@ namespace web
 		int len = sizeof(serverInfo);
 #endif
 
-		ip.resize(16);
+		ip.resize(BaseTCPServer::ipV4Size);
 
 		getsockname(listenSocket, reinterpret_cast<sockaddr*>(&serverInfo), &len);
 
-		inet_ntop(AF_INET, &serverInfo.sin_addr, ip.data(), ip.size());
+		inet_ntop(AF_INET, &serverInfo.sin_addr, ip.data(), BaseTCPServer::ipV4Size);
 
 		while (ip.back() == '\0')
 		{
@@ -281,36 +266,27 @@ namespace web
 		}
 	}
 
-	bool BaseTCPServer::serverState() const
+	bool BaseTCPServer::isServerRunning() const
 	{
 		return isRunning;
 	}
 
-	void BaseTCPServer::pubDisconnect(const string& ip)
+	size_t BaseTCPServer::getNumberOfClients() const
 	{
-		this->disconnect(ip);
-
-		data.erase(ip);
+		return data.getNumberOfClients();
 	}
 
-	vector<pair<string, SOCKET>> BaseTCPServer::getClients()
+	size_t BaseTCPServer::getNumberOfConnections() const
 	{
-		return data.getClients();
-	}
-
-	void BaseTCPServer::setBlockingModeForOtherConnections(u_long blockingMode)
-	{
-		this->blockingMode = blockingMode;
-	}
-
-	u_long BaseTCPServer::blockingModeForOtherConnections() const
-	{
-		return blockingMode;
+		return data.getNumberOfConnections();
 	}
 
 	BaseTCPServer::~BaseTCPServer()
 	{
-		isRunning = false;
+		if (isRunning)
+		{
+			this->stop();
+		}
 
 #ifndef __LINUX__
 		if (freeDLL)

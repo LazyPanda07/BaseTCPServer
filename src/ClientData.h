@@ -1,10 +1,8 @@
 #pragma once
 
-#include <thread>
 #include <mutex>
 #include <unordered_map>
 #include <vector>
-#include <future>
 
 #ifndef __LINUX__
 #include <WinSock2.h>
@@ -28,19 +26,19 @@ namespace web
 	class ClientData
 	{
 	private:
-		std::unordered_multimap<std::string, std::pair<SOCKET, std::future<void>>> data;
-		std::mutex readWriteLock;
+		std::unordered_map<std::string, std::vector<SOCKET>> data;
+		mutable std::mutex dataMutex;
 
 	public:
 		ClientData() = default;
 
-		void insert(std::string&& ip, SOCKET clientSocket, std::future<void>&& servingFunction) noexcept;
+		void add(const std::string& ip, SOCKET socket);
 
-		std::vector<std::pair<SOCKET, std::future<void>>> operator [] (const std::string& ip);
+		void remove(const std::string& ip, SOCKET socket);
 
-		void erase(const std::string& ip) noexcept;
+		size_t getNumberOfClients() const;
 
-		std::vector<std::pair<std::string, SOCKET>> getClients() noexcept;
+		size_t getNumberOfConnections() const;
 
 		~ClientData() = default;
 	};
