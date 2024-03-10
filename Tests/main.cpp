@@ -5,7 +5,7 @@
 class EchoServer : public web::BaseTCPServer
 {
 private:
-	void clientConnection(SOCKET clientSocket, sockaddr addr) override try
+	void clientConnection(SOCKET clientSocket, const sockaddr& addr) override try
 	{
 		int length = 0;
 		std::string message;
