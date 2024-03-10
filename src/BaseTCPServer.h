@@ -14,12 +14,47 @@
 #endif
 
 #include "WebException.h"
-#include "ClientData.h"
+
+#ifdef __LINUX__
+#ifndef WINDOWS_STYLE_DEFINITION
+#define WINDOWS_STYLE_DEFINITION
+
+#define closesocket close
+#define SOCKET int
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR -1
+#define DWORD uint32_t
+
+#endif // WINDOWS_STYLE_DEFINITION
+#endif // __LINUX__
 
 namespace web
 {
 	class BaseTCPServer
 	{
+	private:
+		class ClientData
+		{
+		private:
+			std::unordered_map<std::string, std::vector<SOCKET>> data;
+			mutable std::mutex dataMutex;
+
+		public:
+			ClientData() = default;
+
+			void add(const std::string& ip, SOCKET socket);
+
+			void remove(const std::string& ip, SOCKET socket);
+
+			std::vector<SOCKET> extract(const std::string& ip);
+
+			size_t getNumberOfClients() const;
+
+			size_t getNumberOfConnections() const;
+
+			~ClientData() = default;
+		};
+
 	public:
 		static constexpr size_t ipV4Size = 16;
 
@@ -84,6 +119,12 @@ namespace web
 		 * @param wait Wait all clients tasks
 		 */
 		void stop(bool wait = true);
+
+		/**
+		 * @brief Kick specific client
+		 * @param ip 
+		 */
+		void kick(const std::string& ip);
 
 		/**
 		 * @brief Is server accept new connections

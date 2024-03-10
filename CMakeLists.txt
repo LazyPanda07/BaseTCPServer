@@ -12,7 +12,6 @@ project(BaseTCPServer)
 add_library(
 	${PROJECT_NAME} STATIC
 	src/BaseTCPServer.cpp
-	src/ClientData.cpp
 	src/WebException.cpp
 )
 

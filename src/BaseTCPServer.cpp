@@ -16,6 +16,59 @@ using namespace std;
 
 namespace web
 {
+	void BaseTCPServer::ClientData::add(const string& ip, SOCKET socket)
+	{
+		unique_lock<mutex> lock(dataMutex);
+
+		data[ip].push_back(socket);
+	}
+
+	void BaseTCPServer::ClientData::remove(const string& ip, SOCKET socket)
+	{
+		unique_lock<mutex> lock(dataMutex);
+
+		if (!data.contains(ip))
+		{
+			return;
+		}
+
+		erase(data[ip], socket);
+	}
+
+	vector<SOCKET> BaseTCPServer::ClientData::extract(const string& ip)
+	{
+		unique_lock<mutex> lock(dataMutex);
+		vector<SOCKET> result;
+
+		if (auto node = data.extract(ip))
+		{
+			result = move(node.mapped());
+		}
+
+		return result;
+	}
+
+	size_t BaseTCPServer::ClientData::getNumberOfClients() const
+	{
+		unique_lock<mutex> lock(dataMutex);
+
+		return data.size();
+	}
+
+	size_t BaseTCPServer::ClientData::getNumberOfConnections() const
+	{
+		size_t result = 0;
+
+		unique_lock<mutex> lock(dataMutex);
+
+		for (const auto& [key, value] : data)
+		{
+			result += value.size();
+		}
+
+		return result;
+	}
+
 	void BaseTCPServer::createListenSocket()
 	{
 		addrinfo* info = nullptr;
@@ -263,6 +316,16 @@ namespace web
 		if (wait)
 		{
 			handle.wait();
+		}
+	}
+
+	void BaseTCPServer::kick(const string& ip)
+	{
+		vector<SOCKET> sockets = data.extract(ip);
+
+		for (SOCKET socket : sockets)
+		{
+			closesocket(socket);
 		}
 	}
 
