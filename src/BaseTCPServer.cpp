@@ -272,6 +272,13 @@ namespace web
 		return ntohs(serverInfo.sin_port);
 	}
 
+	string BaseTCPServer::getVersion()
+	{
+		string version = "1.0.0";
+		
+		return version;
+	}
+
 	BaseTCPServer::BaseTCPServer(const string& port, const string& ip, DWORD timeout, bool multiThreading, u_long listenSocketBlockingMode, bool freeDLL) :
 		ip(ip),
 		port(port),

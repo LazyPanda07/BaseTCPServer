@@ -92,13 +92,37 @@ namespace web
 		static int receiveBytes(SOCKET clientSocket, DataT* const data, int count);
 
 	public:
+		/**
+		 * @brief Get client IP address
+		 * @param address 
+		 * @return 
+		 */
 		static std::string getClientIpV4(const sockaddr& address);
 
+		/**
+		 * @brief Get server IP address
+		 * @return 
+		 */
 		std::string getServerIpV4() const;
 
+		/**
+		 * @brief Get client port
+		 * @param address 
+		 * @return 
+		 */
 		static uint16_t getClientPortV4(sockaddr& address);
 
+		/**
+		 * @brief Get server port
+		 * @return 
+		 */
 		uint16_t getServerPortV4() const;
+
+		/**
+		 * @brief Get BaseTCPServer version
+		 * @return 
+		 */
+		static std::string getVersion();
 
 	public:
 		/// @brief 
