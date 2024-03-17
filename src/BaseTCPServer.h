@@ -50,6 +50,8 @@ namespace web
 
 			std::vector<SOCKET> extract(const std::string& ip);
 
+			std::vector<std::pair<std::string, std::vector<SOCKET>>> getClients() const;
+
 			size_t getNumberOfClients() const;
 
 			size_t getNumberOfConnections() const;
@@ -169,6 +171,12 @@ namespace web
 		 * @return 
 		 */
 		size_t getNumberOfConnections() const;
+
+		/**
+		 * @brief Get all clients ip - sockets
+		 * @return 
+		 */
+		std::vector<std::pair<std::string, std::vector<SOCKET>>> getClients() const;
 
 		virtual ~BaseTCPServer();
 	};

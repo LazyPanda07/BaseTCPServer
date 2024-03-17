@@ -48,6 +48,21 @@ namespace web
 		return result;
 	}
 
+	vector<pair<string, vector<SOCKET>>> BaseTCPServer::ClientData::getClients() const
+	{
+		vector<pair<string, vector<SOCKET>>> result;
+		unique_lock<mutex> lock(dataMutex);
+
+		result.reserve(data.size());
+
+		for (const auto& [ip, sockets] : data)
+		{
+			result.emplace_back(ip, sockets);
+		}
+
+		return result;
+	}
+
 	size_t BaseTCPServer::ClientData::getNumberOfClients() const
 	{
 		unique_lock<mutex> lock(dataMutex);
@@ -274,7 +289,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.0.0";
+		string version = "1.0.1";
 		
 		return version;
 	}
@@ -349,6 +364,11 @@ namespace web
 	size_t BaseTCPServer::getNumberOfConnections() const
 	{
 		return data.getNumberOfConnections();
+	}
+
+	vector<pair<string, vector<SOCKET>>> BaseTCPServer::getClients() const
+	{
+		return data.getClients();
 	}
 
 	BaseTCPServer::~BaseTCPServer()

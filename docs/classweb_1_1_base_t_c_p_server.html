@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BaseTCPServer<span id="projectnumber">&#160;v1.0.0</span>
+   <div id="projectname">BaseTCPServer<span id="projectnumber">&#160;v1.0.1</span>
    </div>
    <div id="projectbrief">Base class for TCP server</div>
   </td>
@@ -117,6 +117,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aec74fb231e1bf86444de94869e407626" id="r_aec74fb231e1bf86444de94869e407626"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#aec74fb231e1bf86444de94869e407626">getNumberOfConnections</a> () const</td></tr>
 <tr class="memdesc:aec74fb231e1bf86444de94869e407626"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of sockets(each IP address may have few sockets)  <br /></td></tr>
 <tr class="separator:aec74fb231e1bf86444de94869e407626"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab55dfb83a2c92bf3449dd0cc415e1aa" id="r_aab55dfb83a2c92bf3449dd0cc415e1aa"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; std::string, std::vector&lt; SOCKET &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#aab55dfb83a2c92bf3449dd0cc415e1aa">getClients</a> () const</td></tr>
+<tr class="memdesc:aab55dfb83a2c92bf3449dd0cc415e1aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all clients ip - sockets.  <br /></td></tr>
+<tr class="separator:aab55dfb83a2c92bf3449dd0cc415e1aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac998527b5d534facf0414c9958e0a2b" id="r_aac998527b5d534facf0414c9958e0a2b"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#aac998527b5d534facf0414c9958e0a2b">~BaseTCPServer</a> ()</td></tr>
 <tr class="separator:aac998527b5d534facf0414c9958e0a2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -401,6 +404,26 @@ Protected Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="aab55dfb83a2c92bf3449dd0cc415e1aa" name="aab55dfb83a2c92bf3449dd0cc415e1aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab55dfb83a2c92bf3449dd0cc415e1aa">&#9670;&#160;</a></span>getClients()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; pair&lt; string, vector&lt; SOCKET &gt; &gt; &gt; web::BaseTCPServer::getClients </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get all clients ip - sockets. </p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
