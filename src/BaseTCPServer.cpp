@@ -267,9 +267,9 @@ namespace web
 		return ip;
 	}
 
-	uint16_t BaseTCPServer::getClientPortV4(sockaddr& address)
+	uint16_t BaseTCPServer::getClientPortV4(const sockaddr& address)
 	{
-		return ntohs(reinterpret_cast<sockaddr_in&>(address).sin_port);
+		return ntohs(reinterpret_cast<const sockaddr_in&>(address).sin_port);
 	}
 
 	uint16_t BaseTCPServer::getServerPortV4() const
@@ -289,7 +289,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.0.2";
+		string version = "1.0.3";
 		
 		return version;
 	}
