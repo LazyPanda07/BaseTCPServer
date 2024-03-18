@@ -82,7 +82,13 @@ namespace web
 
 		virtual void serve(std::string ip, SOCKET clientSocket, sockaddr address);
 
-		virtual void clientConnection(SOCKET clientSocket, const sockaddr& address) = 0;
+		/**
+		 * @brief Serving each client connection
+		 * @param ip Client IP address
+		 * @param clientSocket Client socket
+		 * @param address 
+		 */
+		virtual void clientConnection(const std::string& ip, SOCKET clientSocket, const sockaddr& address) = 0;
 
 		virtual void onConnectionReceive(SOCKET clientSocket, const sockaddr& address);
 		

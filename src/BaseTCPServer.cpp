@@ -216,7 +216,7 @@ namespace web
 	{
 		this->onConnectionReceive(clientSocket, address);
 
-		this->clientConnection(clientSocket, address);
+		this->clientConnection(ip, clientSocket, address);
 
 		closesocket(clientSocket);
 
@@ -289,7 +289,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.0.1";
+		string version = "1.0.2";
 		
 		return version;
 	}
