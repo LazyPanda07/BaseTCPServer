@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BaseTCPServer<span id="projectnumber">&#160;v1.0.3</span>
+   <div id="projectname">BaseTCPServer<span id="projectnumber">&#160;v1.1.0</span>
    </div>
    <div id="projectbrief">Base class for TCP server</div>
   </td>
@@ -82,7 +82,7 @@ $(function() {
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="classweb_1_1_base_t_c_p_server.html#a9aba43d256996e14a23e32cbeb7af217">BaseTCPServer</a>(const std::string &amp;port, const std::string &amp;ip=&quot;0.0.0.0&quot;, DWORD timeout=0, bool multiThreading=true, u_long listenSocketBlockingMode=0, bool freeDLL=true)</td><td class="entry"><a class="el" href="classweb_1_1_base_t_c_p_server.html">web::BaseTCPServer</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classweb_1_1_base_t_c_p_server.html#a731a9453cb36a953e0294b4bc683b419">blockingMode</a></td><td class="entry"><a class="el" href="classweb_1_1_base_t_c_p_server.html">web::BaseTCPServer</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classweb_1_1_base_t_c_p_server.html#a2adf779fa17c8cba3c74dfa7a485b920">clientConnection</a>(const std::string &amp;ip, SOCKET clientSocket, const sockaddr &amp;address)=0</td><td class="entry"><a class="el" href="classweb_1_1_base_t_c_p_server.html">web::BaseTCPServer</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classweb_1_1_base_t_c_p_server.html#aa3950cd9a61e9404f9304713cf14e533">clientConnection</a>(const std::string &amp;ip, SOCKET clientSocket, const sockaddr &amp;address, std::function&lt; void()&gt; &amp;&amp;cleanup)=0</td><td class="entry"><a class="el" href="classweb_1_1_base_t_c_p_server.html">web::BaseTCPServer</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classweb_1_1_base_t_c_p_server.html#acae8de788ba30f4e493a57154fa21e18">createListenSocket</a>()</td><td class="entry"><a class="el" href="classweb_1_1_base_t_c_p_server.html">web::BaseTCPServer</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classweb_1_1_base_t_c_p_server.html#a001df382216299a5bed1f07114862b59">data</a></td><td class="entry"><a class="el" href="classweb_1_1_base_t_c_p_server.html">web::BaseTCPServer</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classweb_1_1_base_t_c_p_server.html#a3f7d1ef495a9b3d2d8607a8f37af9309">freeDLL</a></td><td class="entry"><a class="el" href="classweb_1_1_base_t_c_p_server.html">web::BaseTCPServer</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>

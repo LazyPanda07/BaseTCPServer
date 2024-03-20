@@ -86,9 +86,10 @@ namespace web
 		 * @brief Serving each client connection
 		 * @param ip Client IP address
 		 * @param clientSocket Client socket
-		 * @param address 
+		 * @param address Structure used to store most addresses.
+		 * @param cleanup Move this function if you want made cleanup by yourself
 		 */
-		virtual void clientConnection(const std::string& ip, SOCKET clientSocket, const sockaddr& address) = 0;
+		virtual void clientConnection(const std::string& ip, SOCKET clientSocket, const sockaddr& address, std::function<void()>&& cleanup) = 0;
 
 		virtual void onConnectionReceive(SOCKET clientSocket, const sockaddr& address);
 		

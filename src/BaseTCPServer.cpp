@@ -214,13 +214,30 @@ namespace web
 
 	void BaseTCPServer::serve(string ip, SOCKET clientSocket, sockaddr address)
 	{
+		function<void()> cleanup = [this, clientSocket, ip]()
+			{
+				closesocket(clientSocket);
+
+				data.remove(ip, clientSocket);
+			};
+
 		this->onConnectionReceive(clientSocket, address);
 
-		this->clientConnection(ip, clientSocket, address);
+		this->clientConnection(ip, clientSocket, address, move(cleanup));
 
-		closesocket(clientSocket);
+#ifndef __LINUX__
+#pragma warning(push)
+#pragma warning(disable: 26800)
+#endif
 
-		data.remove(ip, clientSocket);
+		if (static_cast<bool>(cleanup))
+		{
+			cleanup();
+		}
+
+#ifndef __LINUX__
+#pragma warning(pop)
+#endif
 	}
 
 	void BaseTCPServer::onConnectionReceive(SOCKET clientSocket, const sockaddr& address)
@@ -285,12 +302,12 @@ namespace web
 		getsockname(listenSocket, reinterpret_cast<sockaddr*>(&serverInfo), &len);
 
 		return ntohs(serverInfo.sin_port);
-	}
+}
 
 	string BaseTCPServer::getVersion()
 	{
 		string version = "1.0.3";
-		
+
 		return version;
 	}
 
