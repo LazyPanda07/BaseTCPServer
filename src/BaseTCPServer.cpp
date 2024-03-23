@@ -141,13 +141,15 @@ namespace web
 		freeaddrinfo(info);
 	}
 
-	void BaseTCPServer::receiveConnections()
+	void BaseTCPServer::receiveConnections(const function<void()>& onStartServer)
 	{
 #ifdef __LINUX__
 		socklen_t addrlen = sizeof(sockaddr);
 #else
 		int addrlen = sizeof(sockaddr);
 #endif
+		onStartServer();
+
 		while (isRunning)
 		{
 			sockaddr address;
@@ -306,7 +308,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.1.0";
+		string version = "1.2.0";
 
 		return version;
 	}
@@ -332,13 +334,13 @@ namespace web
 #endif // __LINUX__
 	}
 
-	void BaseTCPServer::start(bool wait)
+	void BaseTCPServer::start(bool wait, const function<void()>& onStartServer)
 	{
 		this->createListenSocket();
 
 		isRunning = true;
 
-		handle = async(launch::async, &BaseTCPServer::receiveConnections, this);
+		handle = async(launch::async, &BaseTCPServer::receiveConnections, this, ref(onStartServer));
 
 		if (wait)
 		{
