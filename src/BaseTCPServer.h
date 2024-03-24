@@ -39,12 +39,13 @@ namespace web
 		{
 		private:
 			std::unordered_map<std::string, std::vector<SOCKET>> data;
+			std::future<void> handle;
 			mutable std::mutex dataMutex;
 
 		public:
 			ClientData() = default;
 
-			void add(const std::string& ip, SOCKET socket);
+			std::future<void>& add(const std::string& ip, SOCKET socket, std::future<void>&& handle);
 
 			void remove(const std::string& ip, SOCKET socket);
 
@@ -72,7 +73,7 @@ namespace web
 		DWORD timeout;
 		bool freeDLL;
 		bool isRunning;
-		bool multiThreading;
+		const bool multiThreading;
 		std::future<void> handle;
 
 	protected:
@@ -141,7 +142,7 @@ namespace web
 		/// @param multiThreading Each client in separate thread
 		/// @param listenSocketBlockingMode Blocking mode for listen socket (0 - blocking, non 0 - non blocking)
 		/// @param freeDLL Unload Ws2_32.dll in destructor(Windows only parameter)
-		BaseTCPServer(const std::string& port, const std::string& ip = "0.0.0.0", DWORD timeout = 0, bool multiThreading = true, u_long listenSocketBlockingMode = 0, bool freeDLL = true);
+		BaseTCPServer(std::string_view port, std::string_view ip = "0.0.0.0", DWORD timeout = 0, bool multiThreading = true, u_long listenSocketBlockingMode = 0, bool freeDLL = true);
 
 		/**
 		 * @brief Start server in separate thread
