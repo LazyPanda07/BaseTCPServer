@@ -39,13 +39,12 @@ namespace web
 		{
 		private:
 			std::unordered_map<std::string, std::vector<SOCKET>> data;
-			std::future<void> handle;
 			mutable std::mutex dataMutex;
 
 		public:
 			ClientData() = default;
 
-			std::future<void>& add(const std::string& ip, SOCKET socket, std::future<void>&& handle);
+			void add(const std::string& ip, SOCKET socket);
 
 			void remove(const std::string& ip, SOCKET socket);
 

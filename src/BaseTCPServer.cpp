@@ -16,14 +16,11 @@ using namespace std;
 
 namespace web
 {
-	future<void>& BaseTCPServer::ClientData::add(const string& ip, SOCKET socket, future<void>&& handle)
+	void BaseTCPServer::ClientData::add(const string& ip, SOCKET socket)
 	{
 		unique_lock<mutex> lock(dataMutex);
 
-		this->handle = move(handle);
 		data[ip].push_back(socket);
-
-		return this->handle;
 	}
 
 	void BaseTCPServer::ClientData::remove(const string& ip, SOCKET socket)
@@ -193,18 +190,15 @@ namespace web
 
 				string ip = BaseTCPServer::getClientIpV4(address);
 
-				future<void>& clientHandle = data.add
-				(
-					ip,
-					clientSocket,
-					multiThreading ?
-					async(launch::async, &BaseTCPServer::serve, this, ip, clientSocket, address) :
-					async(launch::deferred, &BaseTCPServer::serve, this, ip, clientSocket, address)
-				);
+				data.add(ip, clientSocket);
 
-				if (!multiThreading)
+				if (multiThreading)
 				{
-					clientHandle.get();
+					thread(&BaseTCPServer::serve, this, ip, clientSocket, address).detach();
+				}
+				else
+				{
+					this->serve(ip, clientSocket, address);
 				}
 			}
 		}
@@ -310,11 +304,11 @@ namespace web
 		getsockname(listenSocket, reinterpret_cast<sockaddr*>(&serverInfo), &len);
 
 		return ntohs(serverInfo.sin_port);
-}
+	}
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.3.0";
+		string version = "1.4.0";
 
 		return version;
 	}
