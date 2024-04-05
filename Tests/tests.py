@@ -2,6 +2,7 @@ import random
 import string
 import unittest
 import platform
+import subprocess
 
 from socket import *
 
