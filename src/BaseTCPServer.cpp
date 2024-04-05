@@ -308,7 +308,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.4.0";
+		string version = "1.4.1";
 
 		return version;
 	}
