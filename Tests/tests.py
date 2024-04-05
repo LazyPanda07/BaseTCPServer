@@ -3,6 +3,7 @@ import string
 import unittest
 import platform
 import subprocess
+import os
 
 from socket import *
 

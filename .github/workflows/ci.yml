@@ -154,7 +154,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    needs: [windows-build, linux-build]
+    needs: [windows-tests, linux-tests, memory-leak-tests]
 
     steps:
     - uses: actions/checkout@v4
