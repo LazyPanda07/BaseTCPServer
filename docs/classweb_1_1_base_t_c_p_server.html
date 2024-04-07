@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BaseTCPServer<span id="projectnumber">&#160;v1.4.1</span>
+   <div id="projectname">BaseTCPServer<span id="projectnumber">&#160;v1.5.0</span>
    </div>
    <div id="projectbrief">Base class for TCP server</div>
   </td>
@@ -99,13 +99,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac0bc162a61d631c104f20c46f26bd2eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7199aa694f57848a23b2c718ece6814e" id="r_a7199aa694f57848a23b2c718ece6814e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#a7199aa694f57848a23b2c718ece6814e">BaseTCPServer</a> (std::string_view <a class="el" href="classweb_1_1_base_t_c_p_server.html#a8fdad28f271cabb979f79d0476e27f43">port</a>, std::string_view <a class="el" href="classweb_1_1_base_t_c_p_server.html#a77777c6bb68accdad9b5d4ce99ec5687">ip</a>=&quot;0.0.0.0&quot;, DWORD <a class="el" href="classweb_1_1_base_t_c_p_server.html#a8b45f4e4fb6d6feaa7a86cc101740d58">timeout</a>=0, bool <a class="el" href="classweb_1_1_base_t_c_p_server.html#ad69fcd1c3fa43d8844677b98e0c7c936">multiThreading</a>=true, u_long <a class="el" href="classweb_1_1_base_t_c_p_server.html#a639c3addfd8511f1601cbb82e0ed06b4">listenSocketBlockingMode</a>=0, bool <a class="el" href="classweb_1_1_base_t_c_p_server.html#a3f7d1ef495a9b3d2d8607a8f37af9309">freeDLL</a>=true)</td></tr>
 <tr class="separator:a7199aa694f57848a23b2c718ece6814e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9be6af32619204893e8d20be929c623" id="r_ac9be6af32619204893e8d20be929c623"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#ac9be6af32619204893e8d20be929c623">start</a> (bool wait=false, const std::function&lt; void()&gt; &amp;onStartServer=[]() {})</td></tr>
+<tr class="memitem:ac9be6af32619204893e8d20be929c623" id="r_ac9be6af32619204893e8d20be929c623"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#ac9be6af32619204893e8d20be929c623">start</a> (bool wait=false, const std::function&lt; void()&gt; &amp;onStartServer=[]() {})</td></tr>
 <tr class="memdesc:ac9be6af32619204893e8d20be929c623"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start server in separate thread.  <br /></td></tr>
 <tr class="separator:ac9be6af32619204893e8d20be929c623"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66e951f0c881acd58c1c07031b0a5c02" id="r_a66e951f0c881acd58c1c07031b0a5c02"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#a66e951f0c881acd58c1c07031b0a5c02">stop</a> (bool wait=true)</td></tr>
+<tr class="memitem:a66e951f0c881acd58c1c07031b0a5c02" id="r_a66e951f0c881acd58c1c07031b0a5c02"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#a66e951f0c881acd58c1c07031b0a5c02">stop</a> (bool wait=true)</td></tr>
 <tr class="memdesc:a66e951f0c881acd58c1c07031b0a5c02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop receiving new connections.  <br /></td></tr>
 <tr class="separator:a66e951f0c881acd58c1c07031b0a5c02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a987cc874adf94e4b7c35cc72509e80a4" id="r_a987cc874adf94e4b7c35cc72509e80a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#a987cc874adf94e4b7c35cc72509e80a4">kick</a> (const std::string &amp;<a class="el" href="classweb_1_1_base_t_c_p_server.html#a77777c6bb68accdad9b5d4ce99ec5687">ip</a>)</td></tr>
+<tr class="memitem:a987cc874adf94e4b7c35cc72509e80a4" id="r_a987cc874adf94e4b7c35cc72509e80a4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#a987cc874adf94e4b7c35cc72509e80a4">kick</a> (const std::string &amp;<a class="el" href="classweb_1_1_base_t_c_p_server.html#a77777c6bb68accdad9b5d4ce99ec5687">ip</a>)</td></tr>
 <tr class="memdesc:a987cc874adf94e4b7c35cc72509e80a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kick specific client.  <br /></td></tr>
 <tr class="separator:a987cc874adf94e4b7c35cc72509e80a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ce4a6e35cf678208f6915889830ac78" id="r_a8ce4a6e35cf678208f6915889830ac78"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#a8ce4a6e35cf678208f6915889830ac78">isServerRunning</a> () const</td></tr>
@@ -156,12 +156,12 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
 Static Protected Member Functions</h2></td></tr>
-<tr class="memitem:af1b99c142b047468231924749627d9df" id="r_af1b99c142b047468231924749627d9df"><td class="memTemplParams" colspan="2">template&lt;typename DataT &gt; </td></tr>
-<tr class="memitem:af1b99c142b047468231924749627d9df"><td class="memTemplItemLeft" align="right" valign="top">static int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#af1b99c142b047468231924749627d9df">sendBytes</a> (SOCKET clientSocket, const DataT *const <a class="el" href="classweb_1_1_base_t_c_p_server.html#a001df382216299a5bed1f07114862b59">data</a>, int count)</td></tr>
-<tr class="separator:af1b99c142b047468231924749627d9df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27287059a338093ae14ff3cf05ce4f2d" id="r_a27287059a338093ae14ff3cf05ce4f2d"><td class="memTemplParams" colspan="2">template&lt;typename DataT &gt; </td></tr>
-<tr class="memitem:a27287059a338093ae14ff3cf05ce4f2d"><td class="memTemplItemLeft" align="right" valign="top">static int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#a27287059a338093ae14ff3cf05ce4f2d">receiveBytes</a> (SOCKET clientSocket, DataT *const <a class="el" href="classweb_1_1_base_t_c_p_server.html#a001df382216299a5bed1f07114862b59">data</a>, int count)</td></tr>
-<tr class="separator:a27287059a338093ae14ff3cf05ce4f2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae11c32b5f5ef76e3a2c0926d81212b42" id="r_ae11c32b5f5ef76e3a2c0926d81212b42"><td class="memTemplParams" colspan="2">template&lt;typename DataT &gt; </td></tr>
+<tr class="memitem:ae11c32b5f5ef76e3a2c0926d81212b42"><td class="memTemplItemLeft" align="right" valign="top">static int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#ae11c32b5f5ef76e3a2c0926d81212b42">sendBytes</a> (SOCKET clientSocket, const DataT *const <a class="el" href="classweb_1_1_base_t_c_p_server.html#a001df382216299a5bed1f07114862b59">data</a>, int size)</td></tr>
+<tr class="separator:ae11c32b5f5ef76e3a2c0926d81212b42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1c4f194ffe7c41bd5992dcfeda87f2c" id="r_ac1c4f194ffe7c41bd5992dcfeda87f2c"><td class="memTemplParams" colspan="2">template&lt;typename DataT &gt; </td></tr>
+<tr class="memitem:ac1c4f194ffe7c41bd5992dcfeda87f2c"><td class="memTemplItemLeft" align="right" valign="top">static int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classweb_1_1_base_t_c_p_server.html#ac1c4f194ffe7c41bd5992dcfeda87f2c">receiveBytes</a> (SOCKET clientSocket, DataT *const <a class="el" href="classweb_1_1_base_t_c_p_server.html#a001df382216299a5bed1f07114862b59">data</a>, int size)</td></tr>
+<tr class="separator:ac1c4f194ffe7c41bd5992dcfeda87f2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -585,6 +585,9 @@ Protected Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void web::BaseTCPServer::kick </td>
@@ -594,6 +597,11 @@ Protected Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Kick specific client. </p>
@@ -642,8 +650,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a27287059a338093ae14ff3cf05ce4f2d" name="a27287059a338093ae14ff3cf05ce4f2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27287059a338093ae14ff3cf05ce4f2d">&#9670;&#160;</a></span>receiveBytes()</h2>
+<a id="ac1c4f194ffe7c41bd5992dcfeda87f2c" name="ac1c4f194ffe7c41bd5992dcfeda87f2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1c4f194ffe7c41bd5992dcfeda87f2c">&#9670;&#160;</a></span>receiveBytes()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -669,7 +677,7 @@ template&lt;typename DataT &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>count</em>&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -712,8 +720,8 @@ template&lt;typename DataT &gt; </div>
 
 </div>
 </div>
-<a id="af1b99c142b047468231924749627d9df" name="af1b99c142b047468231924749627d9df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1b99c142b047468231924749627d9df">&#9670;&#160;</a></span>sendBytes()</h2>
+<a id="ae11c32b5f5ef76e3a2c0926d81212b42" name="ae11c32b5f5ef76e3a2c0926d81212b42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae11c32b5f5ef76e3a2c0926d81212b42">&#9670;&#160;</a></span>sendBytes()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -739,7 +747,7 @@ template&lt;typename DataT &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>count</em>&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -803,6 +811,9 @@ template&lt;typename DataT &gt; </div>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void web::BaseTCPServer::start </td>
@@ -822,6 +833,11 @@ template&lt;typename DataT &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Start server in separate thread. </p>
@@ -840,6 +856,9 @@ template&lt;typename DataT &gt; </div>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void web::BaseTCPServer::stop </td>
@@ -849,6 +868,11 @@ template&lt;typename DataT &gt; </div>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Stop receiving new connections. </p>

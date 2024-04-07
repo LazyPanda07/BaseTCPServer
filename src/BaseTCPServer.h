@@ -95,10 +95,10 @@ namespace web
 		
 	protected:
 		template<typename DataT>
-		static int sendBytes(SOCKET clientSocket, const DataT* const data, int count);
+		static int sendBytes(SOCKET clientSocket, const DataT* const data, int size);
 
 		template<typename DataT>
-		static int receiveBytes(SOCKET clientSocket, DataT* const data, int count);
+		static int receiveBytes(SOCKET clientSocket, DataT* const data, int size);
 
 	public:
 		/**
@@ -148,19 +148,19 @@ namespace web
 		 * @param wait Wait server serving in current thread
 		 * @param onStartServer Call function before accept first connection
 		 */
-		void start(bool wait = false, const std::function<void()>& onStartServer = []() {});
+		virtual void start(bool wait = false, const std::function<void()>& onStartServer = []() {});
 
 		/**
 		 * @brief Stop receiving new connections
 		 * @param wait Wait all clients tasks
 		 */
-		void stop(bool wait = true);
+		virtual void stop(bool wait = true);
 
 		/**
 		 * @brief Kick specific client
 		 * @param ip 
 		 */
-		void kick(const std::string& ip);
+		virtual void kick(const std::string& ip);
 
 		/**
 		 * @brief Is server accept new connections
@@ -190,14 +190,14 @@ namespace web
 	};
 
 	template<typename DataT>
-	int BaseTCPServer::sendBytes(SOCKET clientSocket, const DataT* const data, int count)
+	int BaseTCPServer::sendBytes(SOCKET clientSocket, const DataT* const data, int size)
 	{
 		int lastSend = 0;
 		int totalSent = 0;
 
 		do
 		{
-			lastSend = send(clientSocket, reinterpret_cast<const char*>(data) + totalSent, count - totalSent, NULL);
+			lastSend = send(clientSocket, reinterpret_cast<const char*>(data) + totalSent, size - totalSent, NULL);
 
 			if (lastSend == SOCKET_ERROR)
 			{
@@ -210,34 +210,21 @@ namespace web
 
 			totalSent += lastSend;
 
-		} while (totalSent < count);
+		} while (totalSent < size);
 
 		return totalSent;
 	}
 
 	template<typename DataT>
-	int BaseTCPServer::receiveBytes(SOCKET clientSocket, DataT* const data, int count)
+	int BaseTCPServer::receiveBytes(SOCKET clientSocket, DataT* const data, int size)
 	{
-		int lastReceive = 0;
-		int totalReceive = 0;
+		int lastReceive = recv(clientSocket, reinterpret_cast<char*>(data), size, NULL);
 
-		do
+		if (lastReceive == SOCKET_ERROR)
 		{
-			lastReceive = recv(clientSocket, reinterpret_cast<char*>(data) + totalReceive, count - totalReceive, NULL);
+			THROW_WEB_EXCEPTION;
+		}
 
-			if (lastReceive == SOCKET_ERROR)
-			{
-				THROW_WEB_EXCEPTION;
-			}
-			else if (!lastReceive)
-			{
-				return totalReceive;
-			}
-
-			totalReceive += lastReceive;
-
-		} while (totalReceive < count);
-
-		return totalReceive;
+		return lastReceive;
 	}
 }
