@@ -44,6 +44,8 @@ jobs:
     
     - name: Build
       run: |
+          export CC=/usr/bin/gcc-13
+          export CXX=/usr/bin/g++-13
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} ..
@@ -108,6 +110,8 @@ jobs:
     - name: Build
       working-directory: ${{ github.workspace }}/Tests
       run: |
+          export CC=/usr/bin/gcc-13
+          export CXX=/usr/bin/g++-13
           pip3 install -r requirements.txt
           mkdir build
           cd build
@@ -138,6 +142,8 @@ jobs:
     - name: Build
       working-directory: ${{ github.workspace }}/Tests
       run: |
+          export CC=/usr/bin/gcc-13
+          export CXX=/usr/bin/g++-13
           pip3 install -r requirements.txt
           mkdir build
           cd build
