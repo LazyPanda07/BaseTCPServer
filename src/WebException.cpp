@@ -1,5 +1,7 @@
 #include "WebException.h"
 
+#include <format>
+
 #ifdef __LINUX__
 #include <cstring>
 #else
@@ -299,7 +301,7 @@ namespace web
 
 		const char* WebException::what() const noexcept
 		{
-			return data.data();
+			return format("Error code '{}' with description '{}' in file '{}' on line '{}'", errorCode, data, file, line).data();
 		}
 
 		int WebException::getErrorCode() const noexcept
