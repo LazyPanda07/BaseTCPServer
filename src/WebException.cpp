@@ -297,11 +297,13 @@ namespace web
 		{
 			this->file = file;
 			this->line = line;
+
+			data = format("Error code '{}' with description '{}' in file '{}' on line '{}'", errorCode, data, file, line);
 		}
 
 		const char* WebException::what() const noexcept
 		{
-			return format("Error code '{}' with description '{}' in file '{}' on line '{}'", errorCode, data, file, line).data();
+			return data.data();
 		}
 
 		int WebException::getErrorCode() const noexcept
