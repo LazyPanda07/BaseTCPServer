@@ -118,7 +118,7 @@ namespace web
 			flags = 0;
 		}
 
-		flags = listenSocketBlockingMode ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
+		flags = this->isListenSocketInBlockingMode() ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
 
 		if (fcntl(listenSocket, F_SETFL, flags) == SOCKET_ERROR)
 		{
@@ -197,7 +197,7 @@ namespace web
 					flags = 0;
 				}
 
-				flags = blockingMode ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
+				flags = this->isAcceptedSocketsInBlockingMode() ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
 
 				if (fcntl(clientSocket, F_SETFL, flags) == SOCKET_ERROR)
 				{
@@ -330,7 +330,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.5.4";
+		string version = "1.6.0";
 
 		return version;
 	}
@@ -395,6 +395,16 @@ namespace web
 	bool BaseTCPServer::isServerRunning() const
 	{
 		return isRunning;
+	}
+
+	bool BaseTCPServer::isListenSocketInBlockingMode() const
+	{
+		return !static_cast<bool>(listenSocketBlockingMode);
+	}
+
+	bool BaseTCPServer::isAcceptedSocketsInBlockingMode() const
+	{
+		return !static_cast<bool>(blockingMode);
 	}
 
 	size_t BaseTCPServer::getNumberOfClients() const

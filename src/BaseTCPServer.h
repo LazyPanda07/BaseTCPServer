@@ -67,13 +67,21 @@ namespace web
 		std::string ip;
 		std::string port;
 		SOCKET listenSocket;
-		u_long blockingMode;
-		u_long listenSocketBlockingMode;
 		DWORD timeout;
 		bool freeDLL;
 		bool isRunning;
 		const bool multiThreading;
 		std::future<void> handle;
+
+		/**
+		 * @brief 0 for blocking, non 0 for non blocking
+		 */
+		u_long blockingMode;
+
+		/**
+		 * @brief 0 for blocking, non 0 for non blocking
+		 */
+		u_long listenSocketBlockingMode;
 
 	protected:
 		void createListenSocket();
@@ -167,6 +175,18 @@ namespace web
 		 * @return 
 		 */
 		bool isServerRunning() const;
+
+		/**
+		 * @brief Is server's listen socket in blocking mode
+		 * @return 
+		 */
+		bool isListenSocketInBlockingMode() const;
+
+		/**
+		 * @brief Is client's socket in blocking mode
+		 * @return 
+		 */
+		bool isAcceptedSocketsInBlockingMode() const;
 
 		/**
 		 * @brief Number of IP addresses
