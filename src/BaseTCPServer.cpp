@@ -177,12 +177,23 @@ namespace web
 				}
 
 #ifdef __LINUX__
-				if (blockingMode && fcntl(clientSocket, F_SETFL, O_NONBLOCK) == SOCKET_ERROR)
+				int flags = fcntl(clientSocket, F_GETFL, 0);
+
+				if (flags == -1)
+				{
+					std::cerr << "Can't F_GETFL on socket" << std::endl;
+
+					flags = 0;
+				}
+
+				flags = blockingMode ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
+
+				if (fcntl(clientSocket, F_SETFL, flags) == SOCKET_ERROR)
 				{
 					THROW_WEB_EXCEPTION;
 				}
 #else
-				if (blockingMode && ioctlsocket(clientSocket, FIONBIO, &blockingMode) == SOCKET_ERROR)
+				if (ioctlsocket(clientSocket, FIONBIO, &blockingMode) == SOCKET_ERROR)
 				{
 					THROW_WEB_EXCEPTION;
 				}
@@ -308,7 +319,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.5.2";
+		string version = "1.5.3";
 
 		return version;
 	}

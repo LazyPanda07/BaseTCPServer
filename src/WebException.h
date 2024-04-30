@@ -37,7 +37,7 @@ namespace web
 
 			std::string_view getFile() const noexcept;
 
-			~WebException() = default;
+			virtual ~WebException() = default;
 		};
 	}
 }
