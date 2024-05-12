@@ -100,6 +100,8 @@ namespace web
 		virtual void clientConnection(const std::string& ip, SOCKET clientSocket, const sockaddr& address, std::function<void()>&& cleanup) = 0;
 
 		virtual void onConnectionReceive(SOCKET clientSocket, const sockaddr& address);
+
+		virtual void onInvalidConnectionReceive();
 		
 	protected:
 		template<typename DataT>

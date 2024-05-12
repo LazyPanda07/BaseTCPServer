@@ -223,6 +223,10 @@ namespace web
 					this->serve(ip, clientSocket, address);
 				}
 			}
+			else
+			{
+				this->onInvalidConnectionReceive();
+			}
 		}
 
 		while (true)
@@ -265,6 +269,11 @@ namespace web
 	}
 
 	void BaseTCPServer::onConnectionReceive(SOCKET clientSocket, const sockaddr& address)
+	{
+
+	}
+
+	void BaseTCPServer::onInvalidConnectionReceive()
 	{
 
 	}
@@ -330,7 +339,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.6.0";
+		string version = "1.7.0";
 
 		return version;
 	}
