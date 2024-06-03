@@ -339,7 +339,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.7.0";
+		string version = "1.7.1";
 
 		return version;
 	}
