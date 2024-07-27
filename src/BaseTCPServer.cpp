@@ -159,7 +159,10 @@ namespace web
 #else
 		int addrlen = sizeof(sockaddr);
 #endif
-		onStartServer();
+		if (onStartServer)
+		{
+			onStartServer();
+		}
 
 		while (isRunning)
 		{
@@ -339,7 +342,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.7.1";
+		string version = "1.7.2";
 
 		return version;
 	}
