@@ -13,7 +13,7 @@
 #else
 #include <WinSock2.h>
 #include <WS2tcpip.h>
-#endif
+#endif // __LINUX__
 
 #include "WebException.h"
 
