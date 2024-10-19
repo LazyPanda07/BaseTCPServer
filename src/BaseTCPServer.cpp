@@ -1,8 +1,5 @@
 #include "BaseTCPServer.h"
 
-#include <iostream>
-#include <thread>
-
 #ifdef __LINUX__
 #include <fcntl.h>
 #include <arpa/inet.h>
@@ -46,6 +43,13 @@ namespace web
 		}
 
 		return result;
+	}
+
+	void BaseTCPServer::ClientData::clear()
+	{
+		unique_lock<mutex> lock(dataMutex);
+
+		data.clear();
 	}
 
 	vector<pair<string, vector<SOCKET>>> BaseTCPServer::ClientData::getClients() const
@@ -232,14 +236,9 @@ namespace web
 			}
 		}
 
-		while (true)
+		if (this->getNumberOfConnections())
 		{
-			if (!this->getNumberOfConnections())
-			{
-				break;
-			}
-
-			this_thread::sleep_for(1s);
+			this->kickAll();
 		}
 	}
 
@@ -342,7 +341,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.7.2";
+		string version = "1.8.0";
 
 		return version;
 	}
@@ -374,7 +373,7 @@ namespace web
 
 		isRunning = true;
 
-		handle = async(launch::async, &BaseTCPServer::receiveConnections, this, ref(onStartServer));
+		handle = async(launch::async, &BaseTCPServer::receiveConnections, this, onStartServer);
 
 		if (wait)
 		{
@@ -402,6 +401,19 @@ namespace web
 		{
 			closesocket(socket);
 		}
+	}
+
+	void BaseTCPServer::kickAll()
+	{
+		for (auto&& [ip, sockets] : data.getClients())
+		{
+			for (SOCKET socket : sockets)
+			{
+				closesocket(socket);
+			}
+		}
+
+		data.clear();
 	}
 
 	bool BaseTCPServer::isServerRunning() const

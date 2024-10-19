@@ -50,6 +50,8 @@ namespace web
 
 			std::vector<SOCKET> extract(const std::string& ip);
 
+			void clear();
+
 			std::vector<std::pair<std::string, std::vector<SOCKET>>> getClients() const;
 
 			size_t getNumberOfClients() const;
@@ -171,6 +173,11 @@ namespace web
 		 * @param ip 
 		 */
 		virtual void kick(const std::string& ip);
+
+		/**
+		 * @brief Kick all clients
+		 */
+		virtual void kickAll();
 
 		/**
 		 * @brief Is server accept new connections
