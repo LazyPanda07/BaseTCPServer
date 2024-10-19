@@ -1,6 +1,8 @@
 #include "BaseTCPServer.h"
 
 #ifdef __LINUX__
+#include <iostream>
+
 #include <fcntl.h>
 #include <arpa/inet.h>
 #endif
