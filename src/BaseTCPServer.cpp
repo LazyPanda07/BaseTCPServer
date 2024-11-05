@@ -272,7 +272,7 @@ namespace web
 #endif
 	}
 
-	void BaseTCPServer::onConnectionReceive(SOCKET clientSocket, const sockaddr& address)
+	void BaseTCPServer::onConnectionReceive(SOCKET clientSocket, sockaddr address)
 	{
 
 	}
@@ -282,7 +282,7 @@ namespace web
 
 	}
 
-	string BaseTCPServer::getClientIpV4(const sockaddr& address)
+	string BaseTCPServer::getClientIpV4(sockaddr address)
 	{
 		string ip(BaseTCPServer::ipV4Size, '\0');
 
@@ -321,7 +321,7 @@ namespace web
 		return ip;
 	}
 
-	uint16_t BaseTCPServer::getClientPortV4(const sockaddr& address)
+	uint16_t BaseTCPServer::getClientPortV4(sockaddr address)
 	{
 		return ntohs(reinterpret_cast<const sockaddr_in&>(address).sin_port);
 	}
@@ -343,7 +343,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.8.0";
+		string version = "1.8.1";
 
 		return version;
 	}

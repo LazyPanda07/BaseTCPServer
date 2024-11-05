@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['getclientipv4_0',['getClientIpV4',['../classweb_1_1_base_t_c_p_server.html#aa8756aabbe47fe1b6893e79e7c02a3b7',1,'web::BaseTCPServer']]],
-  ['getclientportv4_1',['getClientPortV4',['../classweb_1_1_base_t_c_p_server.html#a749902a2f64f0355c8a41aad41c0fadf',1,'web::BaseTCPServer']]],
+  ['getclientipv4_0',['getClientIpV4',['../classweb_1_1_base_t_c_p_server.html#a79ba00191e866bdd550d929d58dd2e5f',1,'web::BaseTCPServer']]],
+  ['getclientportv4_1',['getClientPortV4',['../classweb_1_1_base_t_c_p_server.html#aa278133fb747c1ab3ce91e3f513b4d55',1,'web::BaseTCPServer']]],
   ['getclients_2',['getClients',['../classweb_1_1_base_t_c_p_server.html#aab55dfb83a2c92bf3449dd0cc415e1aa',1,'web::BaseTCPServer']]],
   ['geterrorcode_3',['getErrorCode',['../classweb_1_1exceptions_1_1_web_exception.html#a681061e84ba823609aefe1cd770a7848',1,'web::exceptions::WebException']]],
   ['getfile_4',['getFile',['../classweb_1_1exceptions_1_1_web_exception.html#a51d2e537403a9a5fb58457f91d68ec82',1,'web::exceptions::WebException']]],

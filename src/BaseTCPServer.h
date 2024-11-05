@@ -99,9 +99,9 @@ namespace web
 		 * @param address Structure used to store most addresses.
 		 * @param cleanup Move this function if you want made cleanup by yourself
 		 */
-		virtual void clientConnection(const std::string& ip, SOCKET clientSocket, const sockaddr& address, std::function<void()>&& cleanup) = 0;
+		virtual void clientConnection(const std::string& ip, SOCKET clientSocket, sockaddr address, std::function<void()>&& cleanup) = 0;
 
-		virtual void onConnectionReceive(SOCKET clientSocket, const sockaddr& address);
+		virtual void onConnectionReceive(SOCKET clientSocket, sockaddr address);
 
 		virtual void onInvalidConnectionReceive();
 		
@@ -118,7 +118,7 @@ namespace web
 		 * @param address 
 		 * @return 
 		 */
-		static std::string getClientIpV4(const sockaddr& address);
+		static std::string getClientIpV4(sockaddr address);
 
 		/**
 		 * @brief Get server IP address
@@ -131,7 +131,7 @@ namespace web
 		 * @param address 
 		 * @return 
 		 */
-		static uint16_t getClientPortV4(const sockaddr& address);
+		static uint16_t getClientPortV4(sockaddr address);
 
 		/**
 		 * @brief Get server port
