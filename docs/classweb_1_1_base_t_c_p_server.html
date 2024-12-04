@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BaseTCPServer<span id="projectnumber">&#160;v1.9.0</span>
+   <div id="projectname">BaseTCPServer<span id="projectnumber">&#160;v1.10.0</span>
    </div>
    <div id="projectbrief">Base class for TCP server</div>
   </td>
@@ -171,9 +171,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a7c9c703d72f0abf60fb95cdb86c76420"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5175777cd7de4111b7c6dfa9109b8256" id="r_a5175777cd7de4111b7c6dfa9109b8256"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5175777cd7de4111b7c6dfa9109b8256">serve</a> (std::string <a class="el" href="#a77777c6bb68accdad9b5d4ce99ec5687">ip</a>, SOCKET clientSocket, sockaddr address)</td></tr>
 <tr class="separator:a5175777cd7de4111b7c6dfa9109b8256"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7850b3bbf7f6809fd2abe023d99a8a01" id="r_a7850b3bbf7f6809fd2abe023d99a8a01"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7850b3bbf7f6809fd2abe023d99a8a01">clientConnection</a> (const std::string &amp;<a class="el" href="#a77777c6bb68accdad9b5d4ce99ec5687">ip</a>, SOCKET clientSocket, sockaddr address, std::function&lt; void()&gt; &amp;&amp;cleanup)=0</td></tr>
-<tr class="memdesc:a7850b3bbf7f6809fd2abe023d99a8a01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serving each client connection.  <br /></td></tr>
-<tr class="separator:a7850b3bbf7f6809fd2abe023d99a8a01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb1db6b1ac5442eb464439d4aff36eb7" id="r_afb1db6b1ac5442eb464439d4aff36eb7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb1db6b1ac5442eb464439d4aff36eb7">clientConnection</a> (const std::string &amp;<a class="el" href="#a77777c6bb68accdad9b5d4ce99ec5687">ip</a>, SOCKET clientSocket, sockaddr address, std::function&lt; void()&gt; &amp;cleanup)=0</td></tr>
+<tr class="memdesc:afb1db6b1ac5442eb464439d4aff36eb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serving each client connection.  <br /></td></tr>
+<tr class="separator:afb1db6b1ac5442eb464439d4aff36eb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71e71f0168e9ab4de60dbbafd7b821a6" id="r_a71e71f0168e9ab4de60dbbafd7b821a6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a71e71f0168e9ab4de60dbbafd7b821a6">onConnectionReceive</a> (SOCKET clientSocket, sockaddr address)</td></tr>
 <tr class="separator:a71e71f0168e9ab4de60dbbafd7b821a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac981f6207b6ef0649b2ffa444cfd3092" id="r_ac981f6207b6ef0649b2ffa444cfd3092"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac981f6207b6ef0649b2ffa444cfd3092">onInvalidConnectionReceive</a> ()</td></tr>
@@ -294,8 +294,8 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a7850b3bbf7f6809fd2abe023d99a8a01" name="a7850b3bbf7f6809fd2abe023d99a8a01"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7850b3bbf7f6809fd2abe023d99a8a01">&#9670;&#160;</a></span>clientConnection()</h2>
+<a id="afb1db6b1ac5442eb464439d4aff36eb7" name="afb1db6b1ac5442eb464439d4aff36eb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb1db6b1ac5442eb464439d4aff36eb7">&#9670;&#160;</a></span>clientConnection()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -321,7 +321,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::function&lt; void()&gt; &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>cleanup</em></span>&#160;)</td>
+          <td class="paramtype">std::function&lt; void()&gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>cleanup</em></span>&#160;)</td>
         </tr>
       </table>
   </td>

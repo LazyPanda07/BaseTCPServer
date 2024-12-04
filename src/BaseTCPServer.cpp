@@ -255,21 +255,12 @@ namespace web
 
 		this->onConnectionReceive(clientSocket, address);
 
-		this->clientConnection(ip, clientSocket, address, move(cleanup));
-
-#ifndef __LINUX__
-#pragma warning(push)
-#pragma warning(disable: 26800)
-#endif
+		this->clientConnection(ip, clientSocket, address, cleanup);
 
 		if (static_cast<bool>(cleanup))
 		{
 			cleanup();
 		}
-
-#ifndef __LINUX__
-#pragma warning(pop)
-#endif
 	}
 
 	void BaseTCPServer::onConnectionReceive(SOCKET clientSocket, sockaddr address)
@@ -343,7 +334,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.8.1";
+		string version = "1.10.0";
 
 		return version;
 	}

@@ -99,7 +99,7 @@ namespace web
 		 * @param address Structure used to store most addresses.
 		 * @param cleanup Move this function if you want made cleanup by yourself
 		 */
-		virtual void clientConnection(const std::string& ip, SOCKET clientSocket, sockaddr address, std::function<void()>&& cleanup) = 0;
+		virtual void clientConnection(const std::string& ip, SOCKET clientSocket, sockaddr address, std::function<void()>& cleanup) = 0;
 
 		virtual void onConnectionReceive(SOCKET clientSocket, sockaddr address);
 
