@@ -198,6 +198,12 @@ namespace web
 		bool isAcceptedSocketsInBlockingMode() const;
 
 		/**
+		 * @brief Set blocking mode for all connected sockets
+		 * @param block 
+		 */
+		void setAcceptedSocketsBlockingMode(bool block);
+
+		/**
 		 * @brief Number of IP addresses
 		 * @return 
 		 */

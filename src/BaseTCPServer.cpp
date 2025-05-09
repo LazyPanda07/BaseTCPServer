@@ -334,7 +334,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.10.0";
+		string version = "1.11.0";
 
 		return version;
 	}
@@ -422,6 +422,11 @@ namespace web
 	bool BaseTCPServer::isAcceptedSocketsInBlockingMode() const
 	{
 		return !static_cast<bool>(blockingMode);
+	}
+
+	void BaseTCPServer::setAcceptedSocketsBlockingMode(bool block)
+	{
+		blockingMode = !block;
 	}
 
 	size_t BaseTCPServer::getNumberOfClients() const

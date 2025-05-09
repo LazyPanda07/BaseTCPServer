@@ -7,7 +7,7 @@ if (UNIX)
 	add_definitions(-D__LINUX__)
 endif (UNIX)
 
-project(BaseTCPServer VERSION 1.9.0)
+project(BaseTCPServer VERSION 1.11.0)
 
 add_library(
 	${PROJECT_NAME} STATIC

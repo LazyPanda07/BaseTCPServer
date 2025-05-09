@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BaseTCPServer<span id="projectnumber">&#160;v1.10.0</span>
+   <div id="projectname">BaseTCPServer<span id="projectnumber">&#160;v1.11.0</span>
    </div>
    <div id="projectbrief">Base class for TCP server</div>
   </td>
@@ -134,6 +134,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a524cfd6d4efb382169ea47fc7e7f801c" id="r_a524cfd6d4efb382169ea47fc7e7f801c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a524cfd6d4efb382169ea47fc7e7f801c">isAcceptedSocketsInBlockingMode</a> () const</td></tr>
 <tr class="memdesc:a524cfd6d4efb382169ea47fc7e7f801c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is client's socket in blocking mode.  <br /></td></tr>
 <tr class="separator:a524cfd6d4efb382169ea47fc7e7f801c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae974ac120d51ed8d7bfc1aa5603b5cd6" id="r_ae974ac120d51ed8d7bfc1aa5603b5cd6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae974ac120d51ed8d7bfc1aa5603b5cd6">setAcceptedSocketsBlockingMode</a> (bool block)</td></tr>
+<tr class="memdesc:ae974ac120d51ed8d7bfc1aa5603b5cd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set blocking mode for all connected sockets.  <br /></td></tr>
+<tr class="separator:ae974ac120d51ed8d7bfc1aa5603b5cd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6313f76a1f3b1c80111f9c30c998f016" id="r_a6313f76a1f3b1c80111f9c30c998f016"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6313f76a1f3b1c80111f9c30c998f016">getNumberOfClients</a> () const</td></tr>
 <tr class="memdesc:a6313f76a1f3b1c80111f9c30c998f016"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of IP addresses.  <br /></td></tr>
 <tr class="separator:a6313f76a1f3b1c80111f9c30c998f016"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -867,6 +870,31 @@ template&lt;typename DataT &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae974ac120d51ed8d7bfc1aa5603b5cd6" name="ae974ac120d51ed8d7bfc1aa5603b5cd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae974ac120d51ed8d7bfc1aa5603b5cd6">&#9670;&#160;</a></span>setAcceptedSocketsBlockingMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void web::BaseTCPServer::setAcceptedSocketsBlockingMode </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>block</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set blocking mode for all connected sockets. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">block</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
