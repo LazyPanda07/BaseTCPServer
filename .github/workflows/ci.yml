@@ -177,7 +177,6 @@ jobs:
     - name: Build
       working-directory: ${{ github.workspace }}/Tests
       run: |
-          pip3 install -r requirements.txt
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -187,6 +186,9 @@ jobs:
       working-directory: ${{ github.workspace }}/Tests
       run: | 
           export ADDITIONAL_ARGUMENT=qemu-aarch64
+          python3 -m venv .venv
+          source .venv/bin/activate
+          pip3 install -r requirements.txt
           python3 tests.py
 
 
