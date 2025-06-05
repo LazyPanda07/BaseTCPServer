@@ -118,7 +118,10 @@ jobs:
 
     - name: Tests
       working-directory: ${{ github.workspace }}/Tests
-      run: python tests.py
+      run: |
+          start Tests.exe
+          timeout /t 1 /nobreak > nul
+          python tests.py
 
 
   linux-tests:
@@ -150,7 +153,9 @@ jobs:
 
     - name: Tests
       working-directory: ${{ github.workspace }}/Tests
-      run: python3 tests.py
+      run: |
+          ./Tests & sleep 1
+          python3 tests.py
 
 
   linux-aarch64-tests:
@@ -186,7 +191,7 @@ jobs:
       working-directory: ${{ github.workspace }}/Tests
       shell: bash
       run: | 
-          export ADDITIONAL_ARGUMENT=qemu-aarch64
+          qemu-aarch64 ./Tests & sleep 1
           python3 -m venv .venv
           source .venv/bin/activate
           pip3 install -r requirements.txt

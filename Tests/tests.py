@@ -11,17 +11,17 @@ from socket import *
 
 class EchoServerTest(unittest.TestCase):
     def test_echo(self):
-        additional_argument = os.getenv("ADDITIONAL_ARGUMENT", default="")
+        # additional_argument = os.getenv("ADDITIONAL_ARGUMENT", default="")
 
-        if additional_argument:
-            additional_argument += " "
+        # if additional_argument:
+        #     additional_argument += " "
 
-        if platform.system() == "Windows":
-            process = subprocess.Popen([f"{os.path.abspath(os.curdir)}/Tests.exe"])
-        else:
-            process = subprocess.Popen([f"{additional_argument}{os.path.abspath(os.curdir)}/Tests"])
+        # if platform.system() == "Windows":
+        #     process = subprocess.Popen([f"{os.path.abspath(os.curdir)}/Tests.exe"])
+        # else:
+        #     process = subprocess.Popen([f"{additional_argument}{os.path.abspath(os.curdir)}/Tests"])
 
-        time.sleep(1)
+        # time.sleep(1)
 
         for i in range(8192):
             with create_connection(("127.0.0.1", 8080), 5) as socket:
