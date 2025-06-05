@@ -187,7 +187,7 @@ jobs:
       run: | 
           export ADDITIONAL_ARGUMENT=qemu-aarch64
           python3 -m venv .venv
-          source .venv/bin/activate
+          ./.venv/bin/activate
           pip3 install -r requirements.txt
           python3 tests.py
 
