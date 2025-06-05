@@ -7,13 +7,17 @@ if (UNIX)
 	add_definitions(-D__LINUX__)
 endif (UNIX)
 
-project(BaseTCPServer VERSION 1.11.0)
+project(BaseTCPServer VERSION 1.12.0)
 
 add_library(
 	${PROJECT_NAME} STATIC
 	src/BaseTCPServer.cpp
 	src/WebException.cpp
 )
+
+if (DEFINED ENV{MARCH} AND NOT "$ENV{MARCH}" STREQUAL "")
+	target_compile_options(${PROJECT_NAME} PRIVATE -march=$ENV{MARCH})
+endif()
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 

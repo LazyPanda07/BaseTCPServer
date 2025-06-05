@@ -11,10 +11,12 @@ from socket import *
 
 class EchoServerTest(unittest.TestCase):
     def test_echo(self):
+        additional_argument = os.getenv("ADDITIONAL_ARGUMENT")
+
         if platform.system() == "Windows":
             process = subprocess.Popen([f"{os.path.abspath(os.curdir)}/Tests.exe"])
         else:
-            process = subprocess.Popen([f"{os.path.abspath(os.curdir)}/Tests"])
+            process = subprocess.Popen([f"{additional_argument} {os.path.abspath(os.curdir)}/Tests"])
 
         time.sleep(1)
 
