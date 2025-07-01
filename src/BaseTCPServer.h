@@ -88,7 +88,7 @@ namespace web
 	protected:
 		void createListenSocket();
 
-		virtual void receiveConnections(const std::function<void()>& onStartServer);
+		virtual void receiveConnections(const std::function<void()>& onStartServer, std::exception** outException);
 
 		virtual void serve(std::string ip, SOCKET clientSocket, sockaddr address);
 
@@ -160,7 +160,7 @@ namespace web
 		 * @param wait Wait server serving in current thread
 		 * @param onStartServer Call function before accept first connection
 		 */
-		virtual void start(bool wait = false, const std::function<void()>& onStartServer = []() {});
+		virtual void start(bool wait = false, const std::function<void()>& onStartServer = []() {}, std::exception** outException = nullptr);
 
 		/**
 		 * @brief Stop receiving new connections

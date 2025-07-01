@@ -1,8 +1,8 @@
 #include "BaseTCPServer.h"
 
-#ifdef __LINUX__
 #include <iostream>
 
+#ifdef __LINUX__
 #include <fcntl.h>
 #include <arpa/inet.h>
 #endif
@@ -119,7 +119,7 @@ namespace web
 
 		if (flags == -1)
 		{
-			std::cerr << "Can't F_GETFL on listen socket" << std::endl;
+			cerr << "Can't F_GETFL on listen socket" << endl;
 
 			flags = 0;
 		}
@@ -158,89 +158,103 @@ namespace web
 		freeaddrinfo(info);
 	}
 
-	void BaseTCPServer::receiveConnections(const function<void()>& onStartServer)
+	void BaseTCPServer::receiveConnections(const function<void()>& onStartServer, exception** outException)
 	{
-#ifdef __LINUX__
-		socklen_t addrlen = sizeof(sockaddr);
-#else
-		int addrlen = sizeof(sockaddr);
-#endif
-		if (onStartServer)
+		try
 		{
-			onStartServer();
-		}
-
-		while (isRunning)
-		{
-			sockaddr address;
-			SOCKET clientSocket = accept(listenSocket, &address, &addrlen);
-
 #ifdef __LINUX__
-			timeval timeoutValue;
-
-			timeoutValue.tv_sec = timeout / 1000;
-			timeoutValue.tv_usec = (timeout - timeoutValue.tv_sec * 1000) * 1000;
+			socklen_t addrlen = sizeof(sockaddr);
 #else
-			DWORD timeoutValue = timeout;
+			int addrlen = sizeof(sockaddr);
 #endif
-
-			if (isRunning && clientSocket != INVALID_SOCKET)
+			if (onStartServer)
 			{
-				if (setsockopt(clientSocket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&timeoutValue), sizeof(timeoutValue)) == SOCKET_ERROR)
-				{
-					THROW_WEB_EXCEPTION;
-				}
+				onStartServer();
+			}
 
-				if (setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&timeoutValue), sizeof(timeoutValue)) == SOCKET_ERROR)
-				{
-					THROW_WEB_EXCEPTION;
-				}
+			while (isRunning)
+			{
+				sockaddr address;
+				SOCKET clientSocket = accept(listenSocket, &address, &addrlen);
 
 #ifdef __LINUX__
-				int flags = fcntl(clientSocket, F_GETFL, 0);
+				timeval timeoutValue;
 
-				if (flags == -1)
-				{
-					std::cerr << "Can't F_GETFL on socket" << std::endl;
-
-					flags = 0;
-				}
-
-				flags = this->isAcceptedSocketsInBlockingMode() ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
-
-				if (fcntl(clientSocket, F_SETFL, flags) == SOCKET_ERROR)
-				{
-					THROW_WEB_EXCEPTION;
-				}
+				timeoutValue.tv_sec = timeout / 1000;
+				timeoutValue.tv_usec = (timeout - timeoutValue.tv_sec * 1000) * 1000;
 #else
-				if (ioctlsocket(clientSocket, FIONBIO, &blockingMode) == SOCKET_ERROR)
-				{
-					THROW_WEB_EXCEPTION;
-				}
+				DWORD timeoutValue = timeout;
 #endif
 
-				string ip = BaseTCPServer::getClientIpV4(address);
-
-				data.add(ip, clientSocket);
-
-				if (multiThreading)
+				if (isRunning && clientSocket != INVALID_SOCKET)
 				{
-					thread(&BaseTCPServer::serve, this, ip, clientSocket, address).detach();
+					if (setsockopt(clientSocket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&timeoutValue), sizeof(timeoutValue)) == SOCKET_ERROR)
+					{
+						THROW_WEB_EXCEPTION;
+					}
+
+					if (setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&timeoutValue), sizeof(timeoutValue)) == SOCKET_ERROR)
+					{
+						THROW_WEB_EXCEPTION;
+					}
+
+#ifdef __LINUX__
+					int flags = fcntl(clientSocket, F_GETFL, 0);
+
+					if (flags == -1)
+					{
+						cerr << "Can't F_GETFL on socket" << endl;
+
+						flags = 0;
+					}
+
+					flags = this->isAcceptedSocketsInBlockingMode() ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
+
+					if (fcntl(clientSocket, F_SETFL, flags) == SOCKET_ERROR)
+					{
+						THROW_WEB_EXCEPTION;
+					}
+#else
+					if (ioctlsocket(clientSocket, FIONBIO, &blockingMode) == SOCKET_ERROR)
+					{
+						THROW_WEB_EXCEPTION;
+					}
+#endif
+
+					string ip = BaseTCPServer::getClientIpV4(address);
+
+					data.add(ip, clientSocket);
+
+					if (multiThreading)
+					{
+						thread(&BaseTCPServer::serve, this, ip, clientSocket, address).detach();
+					}
+					else
+					{
+						this->serve(ip, clientSocket, address);
+					}
 				}
 				else
 				{
-					this->serve(ip, clientSocket, address);
+					this->onInvalidConnectionReceive();
 				}
+			}
+
+			if (this->getNumberOfConnections())
+			{
+				this->kickAll();
+			}
+		}
+		catch (const exception& e)
+		{
+			if (outException)
+			{
+				*outException = new exception(e.what());
 			}
 			else
 			{
-				this->onInvalidConnectionReceive();
+				cerr << __func__ << " throws exception: " << e.what() << endl;
 			}
-		}
-
-		if (this->getNumberOfConnections())
-		{
-			this->kickAll();
 		}
 	}
 
@@ -360,13 +374,13 @@ namespace web
 #endif // __LINUX__
 	}
 
-	void BaseTCPServer::start(bool wait, const function<void()>& onStartServer)
+	void BaseTCPServer::start(bool wait, const function<void()>& onStartServer, exception** outException)
 	{
 		this->createListenSocket();
 
 		isRunning = true;
 
-		handle = async(launch::async, &BaseTCPServer::receiveConnections, this, onStartServer);
+		handle = async(launch::async, &BaseTCPServer::receiveConnections, this, onStartServer, outException);
 
 		if (wait)
 		{

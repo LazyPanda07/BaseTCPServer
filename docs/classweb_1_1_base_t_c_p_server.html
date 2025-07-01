@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BaseTCPServer<span id="projectnumber">&#160;v1.12.0</span>
+   <div id="projectname">BaseTCPServer<span id="projectnumber">&#160;v1.13.0</span>
    </div>
    <div id="projectbrief">Base class for TCP server</div>
   </td>
@@ -113,9 +113,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac0bc162a61d631c104f20c46f26bd2eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7199aa694f57848a23b2c718ece6814e" id="r_a7199aa694f57848a23b2c718ece6814e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7199aa694f57848a23b2c718ece6814e">BaseTCPServer</a> (std::string_view <a class="el" href="#a8fdad28f271cabb979f79d0476e27f43">port</a>, std::string_view <a class="el" href="#a77777c6bb68accdad9b5d4ce99ec5687">ip</a>=&quot;0.0.0.0&quot;, DWORD <a class="el" href="#a8b45f4e4fb6d6feaa7a86cc101740d58">timeout</a>=0, bool <a class="el" href="#ad69fcd1c3fa43d8844677b98e0c7c936">multiThreading</a>=true, u_long <a class="el" href="#a639c3addfd8511f1601cbb82e0ed06b4">listenSocketBlockingMode</a>=0, bool <a class="el" href="#a3f7d1ef495a9b3d2d8607a8f37af9309">freeDLL</a>=true)</td></tr>
 <tr class="separator:a7199aa694f57848a23b2c718ece6814e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9be6af32619204893e8d20be929c623" id="r_ac9be6af32619204893e8d20be929c623"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9be6af32619204893e8d20be929c623">start</a> (bool wait=false, const std::function&lt; void()&gt; &amp;onStartServer=[]() {})</td></tr>
-<tr class="memdesc:ac9be6af32619204893e8d20be929c623"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start server in separate thread.  <br /></td></tr>
-<tr class="separator:ac9be6af32619204893e8d20be929c623"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b4aa45a637d70d88a46657611f136f2" id="r_a7b4aa45a637d70d88a46657611f136f2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b4aa45a637d70d88a46657611f136f2">start</a> (bool wait=false, const std::function&lt; void()&gt; &amp;onStartServer=[]() {}, std::exception **outException=nullptr)</td></tr>
+<tr class="memdesc:a7b4aa45a637d70d88a46657611f136f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start server in separate thread.  <br /></td></tr>
+<tr class="separator:a7b4aa45a637d70d88a46657611f136f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66e951f0c881acd58c1c07031b0a5c02" id="r_a66e951f0c881acd58c1c07031b0a5c02"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66e951f0c881acd58c1c07031b0a5c02">stop</a> (bool wait=true)</td></tr>
 <tr class="memdesc:a66e951f0c881acd58c1c07031b0a5c02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop receiving new connections.  <br /></td></tr>
 <tr class="separator:a66e951f0c881acd58c1c07031b0a5c02"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -170,8 +170,8 @@ Static Public Attributes</h2></td></tr>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:acae8de788ba30f4e493a57154fa21e18" id="r_acae8de788ba30f4e493a57154fa21e18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acae8de788ba30f4e493a57154fa21e18">createListenSocket</a> ()</td></tr>
 <tr class="separator:acae8de788ba30f4e493a57154fa21e18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c9c703d72f0abf60fb95cdb86c76420" id="r_a7c9c703d72f0abf60fb95cdb86c76420"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c9c703d72f0abf60fb95cdb86c76420">receiveConnections</a> (const std::function&lt; void()&gt; &amp;onStartServer)</td></tr>
-<tr class="separator:a7c9c703d72f0abf60fb95cdb86c76420"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c52dc0429a8f7d39d50982de85c00c8" id="r_a1c52dc0429a8f7d39d50982de85c00c8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c52dc0429a8f7d39d50982de85c00c8">receiveConnections</a> (const std::function&lt; void()&gt; &amp;onStartServer, std::exception **outException)</td></tr>
+<tr class="separator:a1c52dc0429a8f7d39d50982de85c00c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5175777cd7de4111b7c6dfa9109b8256" id="r_a5175777cd7de4111b7c6dfa9109b8256"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5175777cd7de4111b7c6dfa9109b8256">serve</a> (std::string <a class="el" href="#a77777c6bb68accdad9b5d4ce99ec5687">ip</a>, SOCKET clientSocket, sockaddr address)</td></tr>
 <tr class="separator:a5175777cd7de4111b7c6dfa9109b8256"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb1db6b1ac5442eb464439d4aff36eb7" id="r_afb1db6b1ac5442eb464439d4aff36eb7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb1db6b1ac5442eb464439d4aff36eb7">clientConnection</a> (const std::string &amp;<a class="el" href="#a77777c6bb68accdad9b5d4ce99ec5687">ip</a>, SOCKET clientSocket, sockaddr address, std::function&lt; void()&gt; &amp;cleanup)=0</td></tr>
@@ -778,8 +778,8 @@ template&lt;typename DataT &gt; </div>
 
 </div>
 </div>
-<a id="a7c9c703d72f0abf60fb95cdb86c76420" name="a7c9c703d72f0abf60fb95cdb86c76420"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7c9c703d72f0abf60fb95cdb86c76420">&#9670;&#160;</a></span>receiveConnections()</h2>
+<a id="a1c52dc0429a8f7d39d50982de85c00c8" name="a1c52dc0429a8f7d39d50982de85c00c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c52dc0429a8f7d39d50982de85c00c8">&#9670;&#160;</a></span>receiveConnections()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -790,8 +790,12 @@ template&lt;typename DataT &gt; </div>
         <tr>
           <td class="memname">void web::BaseTCPServer::receiveConnections </td>
           <td>(</td>
-          <td class="paramtype">const std::function&lt; void()&gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>onStartServer</em></span></td><td>)</td>
+          <td class="paramtype">const std::function&lt; void()&gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>onStartServer</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::exception **</td>          <td class="paramname"><span class="paramname"><em>outException</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -898,8 +902,8 @@ template&lt;typename DataT &gt; </div>
 
 </div>
 </div>
-<a id="ac9be6af32619204893e8d20be929c623" name="ac9be6af32619204893e8d20be929c623"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9be6af32619204893e8d20be929c623">&#9670;&#160;</a></span>start()</h2>
+<a id="a7b4aa45a637d70d88a46657611f136f2" name="a7b4aa45a637d70d88a46657611f136f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b4aa45a637d70d88a46657611f136f2">&#9670;&#160;</a></span>start()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -915,7 +919,12 @@ template&lt;typename DataT &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::function&lt; void()&gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>onStartServer</em></span><span class="paramdefsep"> = </span><span class="paramdefval">[]()&#160;{}</span>&#160;)</td>
+          <td class="paramtype">const std::function&lt; void()&gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>onStartServer</em></span><span class="paramdefsep"> = </span><span class="paramdefval">[]()&#160;{}</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::exception **</td>          <td class="paramname"><span class="paramname"><em>outException</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>&#160;)</td>
         </tr>
       </table>
   </td>
