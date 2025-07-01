@@ -249,7 +249,7 @@ namespace web
 		{
 			if (outException)
 			{
-				*outException = new exception(e.what());
+				*outException = new runtime_error(e.what());
 			}
 			else
 			{
