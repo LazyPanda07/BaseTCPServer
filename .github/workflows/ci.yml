@@ -118,7 +118,7 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -G "Ninja" ..
           cmake --build . -j
-          cmake --install
+          cmake --install .
 
     - name: Tests
       working-directory: ${{ github.workspace }}/Tests

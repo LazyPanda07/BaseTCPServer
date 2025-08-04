@@ -28,4 +28,4 @@ target_link_libraries(
 	BaseTCPServer
 )
 
-install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_SOURCE_DIR}/)
+install(TARGETS ${PROJECT_NAME} DESTINATION .)
