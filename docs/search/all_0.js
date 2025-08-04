@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['_5f_5fweb_5fexception_5f_5f_0',['__WEB_EXCEPTION__',['../_web_exception_8h.html#a0f1cc9e68a2f823b294fe2d25ae42211',1,'WebException.h']]]
+  ['basetcpserver_0',['BaseTCPServer',['../classweb_1_1_base_t_c_p_server.html',1,'web::BaseTCPServer'],['../classweb_1_1_base_t_c_p_server.html#a7199aa694f57848a23b2c718ece6814e',1,'web::BaseTCPServer::BaseTCPServer()']]],
+  ['basetcpserver_2ecpp_1',['BaseTCPServer.cpp',['../_base_t_c_p_server_8cpp.html',1,'']]],
+  ['basetcpserver_2eh_2',['BaseTCPServer.h',['../_base_t_c_p_server_8h.html',1,'']]],
+  ['blockingmode_3',['blockingMode',['../classweb_1_1_base_t_c_p_server.html#a731a9453cb36a953e0294b4bc683b419',1,'web::BaseTCPServer']]]
 ];

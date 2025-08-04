@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['basetcpserver_0',['BaseTCPServer',['../classweb_1_1_base_t_c_p_server.html',1,'web::BaseTCPServer'],['../classweb_1_1_base_t_c_p_server.html#a7199aa694f57848a23b2c718ece6814e',1,'web::BaseTCPServer::BaseTCPServer()']]],
-  ['basetcpserver_2ecpp_1',['BaseTCPServer.cpp',['../_base_t_c_p_server_8cpp.html',1,'']]],
-  ['basetcpserver_2eh_2',['BaseTCPServer.h',['../_base_t_c_p_server_8h.html',1,'']]],
-  ['blockingmode_3',['blockingMode',['../classweb_1_1_base_t_c_p_server.html#a731a9453cb36a953e0294b4bc683b419',1,'web::BaseTCPServer']]]
+  ['clientconnection_0',['clientConnection',['../classweb_1_1_base_t_c_p_server.html#afb1db6b1ac5442eb464439d4aff36eb7',1,'web::BaseTCPServer']]],
+  ['createlistensocket_1',['createListenSocket',['../classweb_1_1_base_t_c_p_server.html#acae8de788ba30f4e493a57154fa21e18',1,'web::BaseTCPServer']]]
 ];

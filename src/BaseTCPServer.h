@@ -236,7 +236,7 @@ namespace web
 
 			if (lastSend == SOCKET_ERROR)
 			{
-				THROW_WEB_EXCEPTION;
+				THROW_WEB_SERVER_EXCEPTION;
 			}
 			else if (!lastSend)
 			{
@@ -257,7 +257,7 @@ namespace web
 
 		if (lastReceive == SOCKET_ERROR)
 		{
-			THROW_WEB_EXCEPTION;
+			THROW_WEB_SERVER_EXCEPTION;
 		}
 
 		return lastReceive;

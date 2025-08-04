@@ -22,7 +22,7 @@ namespace web
 			data = strerror(errno);
 		}
 #else
-		WebException::WebException() :
+		WebServerException::WebServerException() :
 			runtime_error(""),
 			errorCode(WSAGetLastError()),
 			line(-1)
@@ -292,8 +292,8 @@ namespace web
 		}
 #endif // __LINUX__
 
-		WebException::WebException(int line, std::string_view file) :
-			WebException()
+		WebServerException::WebServerException(int line, std::string_view file) :
+			WebServerException()
 		{
 			this->file = file;
 			this->line = line;
@@ -301,22 +301,22 @@ namespace web
 			data = format("Error code '{}' with description '{}' in file '{}' on line '{}'", errorCode, data, file, line);
 		}
 
-		const char* WebException::what() const noexcept
+		const char* WebServerException::what() const noexcept
 		{
 			return data.data();
 		}
 
-		int WebException::getErrorCode() const noexcept
+		int WebServerException::getErrorCode() const noexcept
 		{
 			return errorCode;
 		}
 
-		int WebException::getLine() const noexcept
+		int WebServerException::getLine() const noexcept
 		{
 			return line;
 		}
 
-		std::string_view WebException::getFile() const noexcept
+		std::string_view WebServerException::getFile() const noexcept
 		{
 			return file;
 		}

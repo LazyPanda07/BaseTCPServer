@@ -102,7 +102,7 @@ namespace web
 
 		if (getaddrinfo(ip.data(), port.data(), &hints, &info))
 		{
-			THROW_WEB_EXCEPTION;
+			THROW_WEB_SERVER_EXCEPTION;
 		}
 
 		if ((listenSocket = socket(info->ai_family, info->ai_socktype, info->ai_protocol)) == INVALID_SOCKET)
@@ -111,7 +111,7 @@ namespace web
 
 			freeDLL = true;
 
-			THROW_WEB_EXCEPTION;
+			THROW_WEB_SERVER_EXCEPTION;
 		}
 
 #ifdef __LINUX__
@@ -128,12 +128,12 @@ namespace web
 
 		if (fcntl(listenSocket, F_SETFL, flags) == SOCKET_ERROR)
 		{
-			THROW_WEB_EXCEPTION;
+			THROW_WEB_SERVER_EXCEPTION;
 		}
 #else
 		if (ioctlsocket(listenSocket, FIONBIO, &listenSocketBlockingMode) == SOCKET_ERROR)
 		{
-			THROW_WEB_EXCEPTION;
+			THROW_WEB_SERVER_EXCEPTION;
 		}
 #endif
 
@@ -143,7 +143,7 @@ namespace web
 
 			freeDLL = true;
 
-			THROW_WEB_EXCEPTION;
+			THROW_WEB_SERVER_EXCEPTION;
 		}
 
 		if (listen(listenSocket, SOMAXCONN) == SOCKET_ERROR)
@@ -152,7 +152,7 @@ namespace web
 
 			freeDLL = true;
 
-			THROW_WEB_EXCEPTION;
+			THROW_WEB_SERVER_EXCEPTION;
 		}
 
 		freeaddrinfo(info);
@@ -190,12 +190,12 @@ namespace web
 				{
 					if (setsockopt(clientSocket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&timeoutValue), sizeof(timeoutValue)) == SOCKET_ERROR)
 					{
-						THROW_WEB_EXCEPTION;
+						THROW_WEB_SERVER_EXCEPTION;
 					}
 
 					if (setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&timeoutValue), sizeof(timeoutValue)) == SOCKET_ERROR)
 					{
-						THROW_WEB_EXCEPTION;
+						THROW_WEB_SERVER_EXCEPTION;
 					}
 
 #ifdef __LINUX__
@@ -212,12 +212,12 @@ namespace web
 
 					if (fcntl(clientSocket, F_SETFL, flags) == SOCKET_ERROR)
 					{
-						THROW_WEB_EXCEPTION;
+						THROW_WEB_SERVER_EXCEPTION;
 					}
 #else
 					if (ioctlsocket(clientSocket, FIONBIO, &blockingMode) == SOCKET_ERROR)
 					{
-						THROW_WEB_EXCEPTION;
+						THROW_WEB_SERVER_EXCEPTION;
 					}
 #endif
 
@@ -348,7 +348,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.12.0";
+		string version = "1.14.0";
 
 		return version;
 	}
@@ -369,7 +369,7 @@ namespace web
 
 		if (WSAStartup(MAKEWORD(2, 2), &wsaData))
 		{
-			THROW_WEB_EXCEPTION;
+			THROW_WEB_SERVER_EXCEPTION;
 		}
 #endif // __LINUX__
 	}

@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef __WEB_EXCEPTION__
-#define __WEB_EXCEPTION__
-
 #include <string>
 #include <stdexcept>
 
@@ -11,7 +8,7 @@ namespace web
 	namespace exceptions
 	{
 		/// @brief Network exception
-		class WebException : public std::runtime_error
+		class WebServerException : public std::runtime_error
 		{
 		private:
 			std::string data;
@@ -20,14 +17,14 @@ namespace web
 			int line;
 
 		private:
-			WebException();
+			WebServerException();
 
 		public:
-			WebException(int line, std::string_view file);
+			WebServerException(int line, std::string_view file);
 
-			WebException(const exceptions::WebException& other) = default;
+			WebServerException(const exceptions::WebServerException& other) = default;
 
-			WebException(WebException&& other) noexcept = default;
+			WebServerException(WebServerException&& other) noexcept = default;
 
 			const char* what() const noexcept override;
 
@@ -37,15 +34,9 @@ namespace web
 
 			std::string_view getFile() const noexcept;
 
-			virtual ~WebException() = default;
+			virtual ~WebServerException() = default;
 		};
 	}
 }
 
-#endif // !__WEB_EXCEPTION__
-
-#ifndef THROW_WEB_EXCEPTION
-
-#define THROW_WEB_EXCEPTION { throw web::exceptions::WebException(__LINE__, __FILE__); }
-
-#endif
+#define THROW_WEB_SERVER_EXCEPTION { throw web::exceptions::WebServerException(__LINE__, __FILE__); }
