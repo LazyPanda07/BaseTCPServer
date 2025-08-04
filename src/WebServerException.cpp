@@ -12,7 +12,7 @@
 namespace web::exceptions
 {
 #ifdef __LINUX__
-	WebException::WebException() :
+	WebServerException::WebServerException() :
 		runtime_error(""),
 		errorCode(errno),
 		line(-1)

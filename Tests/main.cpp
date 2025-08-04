@@ -45,7 +45,7 @@ int main(int argc, char** argv) try
 
 	return 0;
 }
-catch (const web::exceptions::WebException& e)
+catch (const web::exceptions::WebServerException& e)
 {
 	std::cout << e.getErrorCode() << ' ' << e.what() << ' ' << e.getFile() << ' ' << e.getLine() << std::endl;
 
