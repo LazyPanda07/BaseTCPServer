@@ -15,7 +15,7 @@
 #include <WS2tcpip.h>
 #endif // __LINUX__
 
-#include "WebException.h"
+#include "WebServerException.h"
 
 #ifdef __LINUX__
 #ifndef WINDOWS_STYLE_DEFINITION

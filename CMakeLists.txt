@@ -12,7 +12,7 @@ project(BaseTCPServer VERSION 1.14.0)
 add_library(
 	${PROJECT_NAME} STATIC
 	src/BaseTCPServer.cpp
-	src/WebException.cpp
+	src/WebServerException.cpp
 )
 
 if (DEFINED ENV{MARCH} AND NOT "$ENV{MARCH}" STREQUAL "")
