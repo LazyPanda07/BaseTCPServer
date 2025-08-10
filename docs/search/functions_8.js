@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['webserverexception_0',['WebServerException',['../classweb_1_1exceptions_1_1_web_server_exception.html#a3f514b4fd14219dd92b3a45437e61d32',1,'web::exceptions::WebServerException::WebServerException(int line, std::string_view file)'],['../classweb_1_1exceptions_1_1_web_server_exception.html#a1b13691973b6463b632b78d3a96088be',1,'web::exceptions::WebServerException::WebServerException(const exceptions::WebServerException &amp;other)=default'],['../classweb_1_1exceptions_1_1_web_server_exception.html#a6e33d24bde905754c7e3fa005da19e0a',1,'web::exceptions::WebServerException::WebServerException(WebServerException &amp;&amp;other) noexcept=default']]],
-  ['what_1',['what',['../classweb_1_1exceptions_1_1_web_server_exception.html#a2a187728507d9be315c417c717f7b3ac',1,'web::exceptions::WebServerException']]]
+  ['sendbytes_0',['sendBytes',['../classweb_1_1_base_t_c_p_server.html#ae11c32b5f5ef76e3a2c0926d81212b42',1,'web::BaseTCPServer']]],
+  ['serve_1',['serve',['../classweb_1_1_base_t_c_p_server.html#a5175777cd7de4111b7c6dfa9109b8256',1,'web::BaseTCPServer']]],
+  ['setacceptedsocketsblockingmode_2',['setAcceptedSocketsBlockingMode',['../classweb_1_1_base_t_c_p_server.html#ae974ac120d51ed8d7bfc1aa5603b5cd6',1,'web::BaseTCPServer']]],
+  ['start_3',['start',['../classweb_1_1_base_t_c_p_server.html#a7b4aa45a637d70d88a46657611f136f2',1,'web::BaseTCPServer']]],
+  ['stop_4',['stop',['../classweb_1_1_base_t_c_p_server.html#a66e951f0c881acd58c1c07031b0a5c02',1,'web::BaseTCPServer']]]
 ];

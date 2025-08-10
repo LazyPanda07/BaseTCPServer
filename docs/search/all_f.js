@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['web_0',['web',['../namespaceweb.html',1,'']]],
-  ['web_3a_3aexceptions_1',['exceptions',['../namespaceweb_1_1exceptions.html',1,'web']]],
-  ['webexception_2ecpp_2',['WebException.cpp',['../_web_exception_8cpp.html',1,'']]],
-  ['webexception_2eh_3',['WebException.h',['../_web_exception_8h.html',1,'']]],
-  ['webserverexception_4',['WebServerException',['../classweb_1_1exceptions_1_1_web_server_exception.html',1,'web::exceptions::WebServerException'],['../classweb_1_1exceptions_1_1_web_server_exception.html#a3f514b4fd14219dd92b3a45437e61d32',1,'web::exceptions::WebServerException::WebServerException(int line, std::string_view file)'],['../classweb_1_1exceptions_1_1_web_server_exception.html#a1b13691973b6463b632b78d3a96088be',1,'web::exceptions::WebServerException::WebServerException(const exceptions::WebServerException &amp;other)=default'],['../classweb_1_1exceptions_1_1_web_server_exception.html#a6e33d24bde905754c7e3fa005da19e0a',1,'web::exceptions::WebServerException::WebServerException(WebServerException &amp;&amp;other) noexcept=default']]],
-  ['what_5',['what',['../classweb_1_1exceptions_1_1_web_server_exception.html#a2a187728507d9be315c417c717f7b3ac',1,'web::exceptions::WebServerException']]]
+  ['throw_5fweb_5fserver_5fexception_0',['THROW_WEB_SERVER_EXCEPTION',['../_web_server_exception_8h.html#a91535f41327aab4e8324f49dcb2e4f31',1,'WebServerException.h']]],
+  ['timeout_1',['timeout',['../classweb_1_1_base_t_c_p_server.html#a8b45f4e4fb6d6feaa7a86cc101740d58',1,'web::BaseTCPServer']]]
 ];

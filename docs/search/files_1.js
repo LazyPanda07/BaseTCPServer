@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['webexception_2ecpp_0',['WebException.cpp',['../_web_exception_8cpp.html',1,'']]],
-  ['webexception_2eh_1',['WebException.h',['../_web_exception_8h.html',1,'']]]
+  ['webserverexception_2ecpp_0',['WebServerException.cpp',['../_web_server_exception_8cpp.html',1,'']]],
+  ['webserverexception_2eh_1',['WebServerException.h',['../_web_server_exception_8h.html',1,'']]]
 ];

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['receivebytes_0',['receiveBytes',['../classweb_1_1_base_t_c_p_server.html#ac1c4f194ffe7c41bd5992dcfeda87f2c',1,'web::BaseTCPServer']]],
-  ['receiveconnections_1',['receiveConnections',['../classweb_1_1_base_t_c_p_server.html#a1c52dc0429a8f7d39d50982de85c00c8',1,'web::BaseTCPServer']]]
+  ['onconnectionreceive_0',['onConnectionReceive',['../classweb_1_1_base_t_c_p_server.html#a71e71f0168e9ab4de60dbbafd7b821a6',1,'web::BaseTCPServer']]],
+  ['oninvalidconnectionreceive_1',['onInvalidConnectionReceive',['../classweb_1_1_base_t_c_p_server.html#ac981f6207b6ef0649b2ffa444cfd3092',1,'web::BaseTCPServer']]]
 ];
