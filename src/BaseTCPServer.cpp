@@ -262,7 +262,10 @@ namespace web
 	{
 		function<void()> cleanup = [this, clientSocket, ip]()
 			{
-				closesocket(clientSocket);
+				if (this->autoCloseSocket())
+				{
+					closesocket(clientSocket);
+				}
 
 				data.remove(ip, clientSocket);
 			};
@@ -285,6 +288,11 @@ namespace web
 	void BaseTCPServer::onInvalidConnectionReceive()
 	{
 
+	}
+
+	bool BaseTCPServer::autoCloseSocket() const
+	{
+		return true;
 	}
 
 	string BaseTCPServer::getClientIpV4(sockaddr address)
@@ -348,7 +356,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.14.0";
+		string version = "1.15.0";
 
 		return version;
 	}

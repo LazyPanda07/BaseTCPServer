@@ -104,6 +104,12 @@ namespace web
 		virtual void onConnectionReceive(SOCKET clientSocket, sockaddr address);
 
 		virtual void onInvalidConnectionReceive();
+
+		/**
+		 * @brief Automatically close socket after clientConnection in cleanup function
+		 * @return 
+		 */
+		virtual bool autoCloseSocket() const;
 		
 	protected:
 		template<typename DataT>
