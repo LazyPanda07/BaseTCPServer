@@ -227,6 +227,18 @@ namespace web
 		 */
 		std::vector<std::pair<std::string, std::vector<SOCKET>>> getClients() const;
 
+		/**
+		 * @brief Initial passed IP
+		 * @return 
+		 */
+		std::string_view getIp() const;
+		
+		/**
+		 * @brief Initial passed port
+		 * @return 
+		 */
+		std::string_view getPort() const;
+
 		virtual ~BaseTCPServer();
 	};
 

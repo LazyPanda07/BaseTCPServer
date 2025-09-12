@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BaseTCPServer<span id="projectnumber">&#160;v1.15.0</span>
+   <div id="projectname">BaseTCPServer<span id="projectnumber">&#160;v1.16.0</span>
    </div>
    <div id="projectbrief">Base class for TCP server</div>
   </td>
@@ -146,6 +146,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aab55dfb83a2c92bf3449dd0cc415e1aa" id="r_aab55dfb83a2c92bf3449dd0cc415e1aa"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; std::string, std::vector&lt; SOCKET &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab55dfb83a2c92bf3449dd0cc415e1aa">getClients</a> () const</td></tr>
 <tr class="memdesc:aab55dfb83a2c92bf3449dd0cc415e1aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all clients ip - sockets.  <br /></td></tr>
 <tr class="separator:aab55dfb83a2c92bf3449dd0cc415e1aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82bb34d596e9bddafbc1e62dc269f6df" id="r_a82bb34d596e9bddafbc1e62dc269f6df"><td class="memItemLeft" align="right" valign="top">std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a82bb34d596e9bddafbc1e62dc269f6df">getIp</a> () const</td></tr>
+<tr class="memdesc:a82bb34d596e9bddafbc1e62dc269f6df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial passed IP.  <br /></td></tr>
+<tr class="separator:a82bb34d596e9bddafbc1e62dc269f6df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a171465f5145002e6b910e549e89acc77" id="r_a171465f5145002e6b910e549e89acc77"><td class="memItemLeft" align="right" valign="top">std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a171465f5145002e6b910e549e89acc77">getPort</a> () const</td></tr>
+<tr class="memdesc:a171465f5145002e6b910e549e89acc77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial passed port.  <br /></td></tr>
+<tr class="separator:a171465f5145002e6b910e549e89acc77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac998527b5d534facf0414c9958e0a2b" id="r_aac998527b5d534facf0414c9958e0a2b"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac998527b5d534facf0414c9958e0a2b">~BaseTCPServer</a> ()</td></tr>
 <tr class="separator:aac998527b5d534facf0414c9958e0a2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -491,6 +497,26 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a82bb34d596e9bddafbc1e62dc269f6df" name="a82bb34d596e9bddafbc1e62dc269f6df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82bb34d596e9bddafbc1e62dc269f6df">&#9670;&#160;</a></span>getIp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string_view web::BaseTCPServer::getIp </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initial passed IP. </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
 <a id="a6313f76a1f3b1c80111f9c30c998f016" name="a6313f76a1f3b1c80111f9c30c998f016"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6313f76a1f3b1c80111f9c30c998f016">&#9670;&#160;</a></span>getNumberOfClients()</h2>
 
@@ -527,6 +553,26 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Number of sockets(each IP address may have few sockets) </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="a171465f5145002e6b910e549e89acc77" name="a171465f5145002e6b910e549e89acc77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a171465f5145002e6b910e549e89acc77">&#9670;&#160;</a></span>getPort()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string_view web::BaseTCPServer::getPort </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initial passed port. </p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>

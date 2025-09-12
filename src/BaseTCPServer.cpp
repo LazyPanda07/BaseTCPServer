@@ -356,7 +356,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.15.0";
+		string version = "1.16.0";
 
 		return version;
 	}
@@ -464,6 +464,16 @@ namespace web
 	vector<pair<string, vector<SOCKET>>> BaseTCPServer::getClients() const
 	{
 		return data.getClients();
+	}
+
+	string_view BaseTCPServer::getIp() const
+	{
+		return ip;
+	}
+
+	string_view BaseTCPServer::getPort() const
+	{
+		return port;
 	}
 
 	BaseTCPServer::~BaseTCPServer()
