@@ -114,6 +114,17 @@ namespace web
 			THROW_WEB_SERVER_EXCEPTION;
 		}
 
+		int yes = 1;
+
+		if (setsockopt(listenSocket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&yes), sizeof(yes)) == SOCKET_ERROR)
+		{
+			freeaddrinfo(info);
+
+			freeDLL = true;
+
+			THROW_WEB_SERVER_EXCEPTION;
+		}
+
 #ifdef __LINUX__
 		int flags = fcntl(listenSocket, F_GETFL, 0);
 
@@ -128,11 +139,19 @@ namespace web
 
 		if (fcntl(listenSocket, F_SETFL, flags) == SOCKET_ERROR)
 		{
+			freeaddrinfo(info);
+
+			freeDLL = true;
+
 			THROW_WEB_SERVER_EXCEPTION;
 		}
 #else
 		if (ioctlsocket(listenSocket, FIONBIO, &listenSocketBlockingMode) == SOCKET_ERROR)
 		{
+			freeaddrinfo(info);
+
+			freeDLL = true;
+
 			THROW_WEB_SERVER_EXCEPTION;
 		}
 #endif
@@ -356,7 +375,7 @@ namespace web
 
 	string BaseTCPServer::getVersion()
 	{
-		string version = "1.16.0";
+		string version = "1.16.1";
 
 		return version;
 	}
