@@ -220,9 +220,9 @@ namespace web
 
 					if (flags == -1)
 					{
-						cerr << "Can't F_GETFL on socket" << endl;
+						std::cerr << "Can't F_GETFL on socket" << std::endl;
 
-						flags = 0;
+						THROW_WEB_SERVER_EXCEPTION;
 					}
 
 					flags = this->isAcceptedSocketsInBlockingMode() ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
