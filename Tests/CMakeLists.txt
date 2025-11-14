@@ -15,7 +15,7 @@ add_executable(
 
 target_include_directories(
 	${PROJECT_NAME} PRIVATE
-	${CMAKE_SOURCE_DIR}/../src/
+	${CMAKE_SOURCE_DIR}/../include/
 )
 
 target_link_directories(

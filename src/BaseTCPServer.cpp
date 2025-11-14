@@ -8,36 +8,34 @@
 #endif
 
 #ifndef __LINUX__
-#pragma comment (lib,"ws2_32.lib")
+#pragma comment (lib, "ws2_32.lib")
 #endif
-
-using namespace std;
 
 namespace web
 {
-	void BaseTCPServer::ClientData::add(const string& ip, SOCKET socket)
+	void BaseTCPServer::ClientData::add(const std::string& ip, SOCKET socket)
 	{
-		unique_lock<mutex> lock(dataMutex);
+		std::unique_lock<std::mutex> lock(dataMutex);
 
 		data[ip].push_back(socket);
 	}
 
-	void BaseTCPServer::ClientData::remove(const string& ip, SOCKET socket)
+	void BaseTCPServer::ClientData::remove(const std::string& ip, SOCKET socket)
 	{
-		unique_lock<mutex> lock(dataMutex);
+		std::unique_lock<std::mutex> lock(dataMutex);
 
 		if (!data.contains(ip))
 		{
 			return;
 		}
 
-		erase(data[ip], socket);
+		std::erase(data[ip], socket);
 	}
 
-	vector<SOCKET> BaseTCPServer::ClientData::extract(const string& ip)
+	std::vector<SOCKET> BaseTCPServer::ClientData::extract(const std::string& ip)
 	{
-		unique_lock<mutex> lock(dataMutex);
-		vector<SOCKET> result;
+		std::unique_lock<std::mutex> lock(dataMutex);
+		std::vector<SOCKET> result;
 
 		if (auto node = data.extract(ip))
 		{
@@ -49,15 +47,15 @@ namespace web
 
 	void BaseTCPServer::ClientData::clear()
 	{
-		unique_lock<mutex> lock(dataMutex);
+		std::unique_lock<std::mutex> lock(dataMutex);
 
 		data.clear();
 	}
 
-	vector<pair<string, vector<SOCKET>>> BaseTCPServer::ClientData::getClients() const
+	std::vector<std::pair<std::string, std::vector<SOCKET>>> BaseTCPServer::ClientData::getClients() const
 	{
-		vector<pair<string, vector<SOCKET>>> result;
-		unique_lock<mutex> lock(dataMutex);
+		std::vector<std::pair<std::string, std::vector<SOCKET>>> result;
+		std::unique_lock<std::mutex> lock(dataMutex);
 
 		result.reserve(data.size());
 
@@ -71,7 +69,7 @@ namespace web
 
 	size_t BaseTCPServer::ClientData::getNumberOfClients() const
 	{
-		unique_lock<mutex> lock(dataMutex);
+		std::unique_lock<std::mutex> lock(dataMutex);
 
 		return data.size();
 	}
@@ -80,7 +78,7 @@ namespace web
 	{
 		size_t result = 0;
 
-		unique_lock<mutex> lock(dataMutex);
+		std::unique_lock<std::mutex> lock(dataMutex);
 
 		for (const auto& [key, value] : data)
 		{
@@ -156,7 +154,7 @@ namespace web
 		}
 #endif
 
-		if (::bind(listenSocket, info->ai_addr, static_cast<int>(info->ai_addrlen)) == SOCKET_ERROR)
+		if (bind(listenSocket, info->ai_addr, static_cast<int>(info->ai_addrlen)) == SOCKET_ERROR)
 		{
 			freeaddrinfo(info);
 
@@ -177,7 +175,7 @@ namespace web
 		freeaddrinfo(info);
 	}
 
-	void BaseTCPServer::receiveConnections(const function<void()>& onStartServer, exception** outException)
+	void BaseTCPServer::receiveConnections(const std::function<void()>& onStartServer, std::exception** outException)
 	{
 		try
 		{
@@ -240,13 +238,13 @@ namespace web
 					}
 #endif
 
-					string ip = BaseTCPServer::getClientIpV4(address);
+					std::string ip = BaseTCPServer::getClientIpV4(address);
 
 					data.add(ip, clientSocket);
 
 					if (multiThreading)
 					{
-						thread(&BaseTCPServer::serve, this, ip, clientSocket, address).detach();
+						std::thread(&BaseTCPServer::serve, this, ip, clientSocket, address).detach();
 					}
 					else
 					{
@@ -264,22 +262,22 @@ namespace web
 				this->kickAll();
 			}
 		}
-		catch (const exception& e)
+		catch (const std::exception& e)
 		{
 			if (outException)
 			{
-				*outException = new runtime_error(e.what());
+				*outException = new std::runtime_error(e.what());
 			}
 			else
 			{
-				cerr << __func__ << " throws exception: " << e.what() << endl;
+				std::cerr << __func__ << " throws exception: " << e.what() << std::endl;
 			}
 		}
 	}
 
-	void BaseTCPServer::serve(string ip, SOCKET clientSocket, sockaddr address)
+	void BaseTCPServer::serve(std::string ip, SOCKET clientSocket, sockaddr address)
 	{
-		function<void()> cleanup = [this, clientSocket, ip]()
+		std::function<void()> cleanup = [this, clientSocket, ip]()
 			{
 				if (this->autoCloseSocket())
 				{
@@ -314,9 +312,9 @@ namespace web
 		return true;
 	}
 
-	string BaseTCPServer::getClientIpV4(sockaddr address)
+	std::string BaseTCPServer::getClientIpV4(sockaddr address)
 	{
-		string ip(BaseTCPServer::ipV4Size, '\0');
+		std::string ip(BaseTCPServer::ipV4Size, '\0');
 
 		inet_ntop(AF_INET, reinterpret_cast<const char*>(&reinterpret_cast<const sockaddr_in*>(&address)->sin_addr), ip.data(), BaseTCPServer::ipV4Size);
 
@@ -328,9 +326,9 @@ namespace web
 		return ip;
 	}
 
-	string BaseTCPServer::getServerIpV4() const
+	std::string BaseTCPServer::getServerIpV4() const
 	{
-		string ip;
+		std::string ip;
 		sockaddr_in serverInfo = {};
 
 #ifdef __LINUX__
@@ -373,14 +371,14 @@ namespace web
 		return ntohs(serverInfo.sin_port);
 	}
 
-	string BaseTCPServer::getVersion()
+	std::string BaseTCPServer::getVersion()
 	{
-		string version = "1.16.1";
+		std::string version = "1.17.0";
 
 		return version;
 	}
 
-	BaseTCPServer::BaseTCPServer(string_view port, string_view ip, DWORD timeout, bool multiThreading, u_long listenSocketBlockingMode, bool freeDLL) :
+	BaseTCPServer::BaseTCPServer(std::string_view port, std::string_view ip, DWORD timeout, bool multiThreading, u_long listenSocketBlockingMode, bool freeDLL) :
 		ip(ip),
 		port(port),
 		listenSocket(INVALID_SOCKET),
@@ -401,13 +399,13 @@ namespace web
 #endif // __LINUX__
 	}
 
-	void BaseTCPServer::start(bool wait, const function<void()>& onStartServer, exception** outException)
+	void BaseTCPServer::start(bool wait, const std::function<void()>& onStartServer, std::exception** outException)
 	{
 		this->createListenSocket();
 
 		isRunning = true;
 
-		handle = async(launch::async, &BaseTCPServer::receiveConnections, this, onStartServer, outException);
+		handle = async(std::launch::async, &BaseTCPServer::receiveConnections, this, onStartServer, outException);
 
 		if (wait)
 		{
@@ -427,9 +425,9 @@ namespace web
 		}
 	}
 
-	void BaseTCPServer::kick(const string& ip)
+	void BaseTCPServer::kick(const std::string& ip)
 	{
-		vector<SOCKET> sockets = data.extract(ip);
+		std::vector<SOCKET> sockets = data.extract(ip);
 
 		for (SOCKET socket : sockets)
 		{
@@ -480,17 +478,17 @@ namespace web
 		return data.getNumberOfConnections();
 	}
 
-	vector<pair<string, vector<SOCKET>>> BaseTCPServer::getClients() const
+	std::vector<std::pair<std::string, std::vector<SOCKET>>> BaseTCPServer::getClients() const
 	{
 		return data.getClients();
 	}
 
-	string_view BaseTCPServer::getIp() const
+	std::string_view BaseTCPServer::getIp() const
 	{
 		return ip;
 	}
 
-	string_view BaseTCPServer::getPort() const
+	std::string_view BaseTCPServer::getPort() const
 	{
 		return port;
 	}

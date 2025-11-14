@@ -107,10 +107,10 @@ namespace web
 
 		/**
 		 * @brief Automatically close socket after clientConnection in cleanup function
-		 * @return 
+		 * @return
 		 */
 		virtual bool autoCloseSocket() const;
-		
+
 	protected:
 		template<typename DataT>
 		static int sendBytes(SOCKET clientSocket, const DataT* const data, int size);
@@ -121,33 +121,33 @@ namespace web
 	public:
 		/**
 		 * @brief Get client IP address
-		 * @param address 
-		 * @return 
+		 * @param address
+		 * @return
 		 */
 		static std::string getClientIpV4(sockaddr address);
 
 		/**
 		 * @brief Get server IP address
-		 * @return 
+		 * @return
 		 */
 		std::string getServerIpV4() const;
 
 		/**
 		 * @brief Get client port
-		 * @param address 
-		 * @return 
+		 * @param address
+		 * @return
 		 */
 		static uint16_t getClientPortV4(sockaddr address);
 
 		/**
 		 * @brief Get server port
-		 * @return 
+		 * @return
 		 */
 		uint16_t getServerPortV4() const;
 
 		/**
 		 * @brief Get BaseTCPServer version
-		 * @return 
+		 * @return
 		 */
 		static std::string getVersion();
 
@@ -176,7 +176,7 @@ namespace web
 
 		/**
 		 * @brief Kick specific client
-		 * @param ip 
+		 * @param ip
 		 */
 		virtual void kick(const std::string& ip);
 
@@ -187,55 +187,55 @@ namespace web
 
 		/**
 		 * @brief Is server accept new connections
-		 * @return 
+		 * @return
 		 */
 		bool isServerRunning() const;
 
 		/**
 		 * @brief Is server's listen socket in blocking mode
-		 * @return 
+		 * @return
 		 */
 		bool isListenSocketInBlockingMode() const;
 
 		/**
 		 * @brief Is client's socket in blocking mode
-		 * @return 
+		 * @return
 		 */
 		bool isAcceptedSocketsInBlockingMode() const;
 
 		/**
 		 * @brief Set blocking mode for all connected sockets
-		 * @param block 
+		 * @param block
 		 */
 		void setAcceptedSocketsBlockingMode(bool block);
 
 		/**
 		 * @brief Number of IP addresses
-		 * @return 
+		 * @return
 		 */
 		size_t getNumberOfClients() const;
 
 		/**
 		 * @brief Number of sockets(each IP address may have few sockets)
-		 * @return 
+		 * @return
 		 */
 		size_t getNumberOfConnections() const;
 
 		/**
 		 * @brief Get all clients ip - sockets
-		 * @return 
+		 * @return
 		 */
 		std::vector<std::pair<std::string, std::vector<SOCKET>>> getClients() const;
 
 		/**
 		 * @brief Initial passed IP
-		 * @return 
+		 * @return
 		 */
 		std::string_view getIp() const;
-		
+
 		/**
 		 * @brief Initial passed port
-		 * @return 
+		 * @return
 		 */
 		std::string_view getPort() const;
 
@@ -263,7 +263,8 @@ namespace web
 
 			totalSent += lastSend;
 
-		} while (totalSent < size);
+		}
+		while (totalSent < size);
 
 		return totalSent;
 	}
