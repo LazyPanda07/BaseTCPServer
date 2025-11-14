@@ -128,7 +128,7 @@ namespace web
 
 		if (flags == -1)
 		{
-			cerr << "Can't F_GETFL on listen socket" << endl;
+			std::cerr << "Can't F_GETFL on listen socket" << std::endl;
 
 			flags = 0;
 		}
