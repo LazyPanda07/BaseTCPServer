@@ -15,14 +15,14 @@ namespace web
 {
 	void BaseTCPServer::ClientData::add(const std::string& ip, SOCKET socket)
 	{
-		std::unique_lock<std::mutex> lock(dataMutex);
+		std::lock_guard<std::mutex> lock(dataMutex);
 
 		data[ip].push_back(socket);
 	}
 
 	void BaseTCPServer::ClientData::remove(const std::string& ip, SOCKET socket)
 	{
-		std::unique_lock<std::mutex> lock(dataMutex);
+		std::lock_guard<std::mutex> lock(dataMutex);
 
 		if (!data.contains(ip))
 		{
@@ -34,7 +34,7 @@ namespace web
 
 	std::vector<SOCKET> BaseTCPServer::ClientData::extract(const std::string& ip)
 	{
-		std::unique_lock<std::mutex> lock(dataMutex);
+		std::lock_guard<std::mutex> lock(dataMutex);
 		std::vector<SOCKET> result;
 
 		if (auto node = data.extract(ip))
@@ -47,7 +47,7 @@ namespace web
 
 	void BaseTCPServer::ClientData::clear()
 	{
-		std::unique_lock<std::mutex> lock(dataMutex);
+		std::lock_guard<std::mutex> lock(dataMutex);
 
 		data.clear();
 	}
@@ -55,7 +55,7 @@ namespace web
 	std::vector<std::pair<std::string, std::vector<SOCKET>>> BaseTCPServer::ClientData::getClients() const
 	{
 		std::vector<std::pair<std::string, std::vector<SOCKET>>> result;
-		std::unique_lock<std::mutex> lock(dataMutex);
+		std::lock_guard<std::mutex> lock(dataMutex);
 
 		result.reserve(data.size());
 
@@ -69,7 +69,7 @@ namespace web
 
 	size_t BaseTCPServer::ClientData::getNumberOfClients() const
 	{
-		std::unique_lock<std::mutex> lock(dataMutex);
+		std::lock_guard<std::mutex> lock(dataMutex);
 
 		return data.size();
 	}
@@ -78,7 +78,7 @@ namespace web
 	{
 		size_t result = 0;
 
-		std::unique_lock<std::mutex> lock(dataMutex);
+		std::lock_guard<std::mutex> lock(dataMutex);
 
 		for (const auto& [key, value] : data)
 		{
@@ -373,7 +373,7 @@ namespace web
 
 	std::string BaseTCPServer::getVersion()
 	{
-		std::string version = "1.17.0";
+		std::string version = "1.17.1";
 
 		return version;
 	}
@@ -405,7 +405,7 @@ namespace web
 
 		isRunning = true;
 
-		handle = async(std::launch::async, &BaseTCPServer::receiveConnections, this, onStartServer, outException);
+		handle = std::async(std::launch::async, &BaseTCPServer::receiveConnections, this, onStartServer, outException);
 
 		if (wait)
 		{
