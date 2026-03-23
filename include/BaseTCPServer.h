@@ -127,23 +127,11 @@ namespace web
 		static std::string getClientIpV4(sockaddr address);
 
 		/**
-		 * @brief Get server IP address
-		 * @return
-		 */
-		std::string getServerIpV4() const;
-
-		/**
 		 * @brief Get client port
 		 * @param address
 		 * @return
 		 */
 		static uint16_t getClientPortV4(sockaddr address);
-
-		/**
-		 * @brief Get server port
-		 * @return
-		 */
-		uint16_t getServerPortV4() const;
 
 		/**
 		 * @brief Get BaseTCPServer version
@@ -154,12 +142,24 @@ namespace web
 	public:
 		/// @brief 
 		/// @param port Server's port
-		/// @param ip Server's ip
+		/// @param host Server's host
 		/// @param timeout recv function timeout in milliseconds, 0 wait for upcoming data
 		/// @param multiThreading Each client in separate thread
 		/// @param listenSocketBlockingMode Blocking mode for listen socket (0 - blocking, non 0 - non blocking)
 		/// @param freeDLL Unload Ws2_32.dll in destructor(Windows only parameter)
-		BaseTCPServer(std::string_view port, std::string_view ip = "0.0.0.0", DWORD timeout = 0, bool multiThreading = true, u_long listenSocketBlockingMode = 0, bool freeDLL = true);
+		BaseTCPServer(std::string_view port, std::string_view host = "0.0.0.0", DWORD timeout = 0, bool multiThreading = true, u_long listenSocketBlockingMode = 0, bool freeDLL = true);
+
+		/**
+		 * @brief Get server IP address
+		 * @return
+		 */
+		std::string getServerIpV4() const;
+
+		/**
+		 * @brief Get server port
+		 * @return
+		 */
+		uint16_t getServerPortV4() const;
 
 		/**
 		 * @brief Start server in separate thread

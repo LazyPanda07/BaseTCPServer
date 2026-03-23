@@ -326,6 +326,39 @@ namespace web
 		return ip;
 	}
 
+	uint16_t BaseTCPServer::getClientPortV4(sockaddr address)
+	{
+		return ntohs(reinterpret_cast<const sockaddr_in&>(address).sin_port);
+	}
+
+	std::string BaseTCPServer::getVersion()
+	{
+		std::string version = "1.17.1";
+
+		return version;
+	}
+
+	BaseTCPServer::BaseTCPServer(std::string_view port, std::string_view host, DWORD timeout, bool multiThreading, u_long listenSocketBlockingMode, bool freeDLL) :
+		ip(host),
+		port(port),
+		listenSocket(INVALID_SOCKET),
+		blockingMode(0),
+		listenSocketBlockingMode(listenSocketBlockingMode),
+		timeout(timeout),
+		freeDLL(freeDLL),
+		isRunning(false),
+		multiThreading(multiThreading)
+	{
+#ifndef __LINUX__
+		WSADATA wsaData;
+
+		if (WSAStartup(MAKEWORD(2, 2), &wsaData))
+		{
+			THROW_WEB_SERVER_EXCEPTION;
+		}
+#endif // __LINUX__
+	}
+
 	std::string BaseTCPServer::getServerIpV4() const
 	{
 		std::string ip;
@@ -351,11 +384,6 @@ namespace web
 		return ip;
 	}
 
-	uint16_t BaseTCPServer::getClientPortV4(sockaddr address)
-	{
-		return ntohs(reinterpret_cast<const sockaddr_in&>(address).sin_port);
-	}
-
 	uint16_t BaseTCPServer::getServerPortV4() const
 	{
 		sockaddr_in serverInfo = {};
@@ -369,34 +397,6 @@ namespace web
 		getsockname(listenSocket, reinterpret_cast<sockaddr*>(&serverInfo), &len);
 
 		return ntohs(serverInfo.sin_port);
-	}
-
-	std::string BaseTCPServer::getVersion()
-	{
-		std::string version = "1.17.1";
-
-		return version;
-	}
-
-	BaseTCPServer::BaseTCPServer(std::string_view port, std::string_view ip, DWORD timeout, bool multiThreading, u_long listenSocketBlockingMode, bool freeDLL) :
-		ip(ip),
-		port(port),
-		listenSocket(INVALID_SOCKET),
-		blockingMode(0),
-		listenSocketBlockingMode(listenSocketBlockingMode),
-		timeout(timeout),
-		freeDLL(freeDLL),
-		isRunning(false),
-		multiThreading(multiThreading)
-	{
-#ifndef __LINUX__
-		WSADATA wsaData;
-
-		if (WSAStartup(MAKEWORD(2, 2), &wsaData))
-		{
-			THROW_WEB_SERVER_EXCEPTION;
-		}
-#endif // __LINUX__
 	}
 
 	void BaseTCPServer::start(bool wait, const std::function<void()>& onStartServer, std::exception** outException)
