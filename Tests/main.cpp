@@ -1,6 +1,7 @@
 #include <iostream>
+#include <fstream>
 
-#include "BaseTCPServer.h"
+#include <BaseTCPServer.h>
 
 class EchoServer : public web::BaseTCPServer
 {
@@ -41,7 +42,7 @@ int main(int argc, char** argv) try
 {
 	EchoServer server;
 
-	server.start(true);
+	server.start(true, []() { std::ofstream("run.txt"); });
 
 	return 0;
 }

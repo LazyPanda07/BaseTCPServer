@@ -18,7 +18,7 @@ jobs:
         configuration: [Debug, Release]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Enable NMake
       uses: ilammy/msvc-dev-cmd@v1.13.0
@@ -33,7 +33,7 @@ jobs:
           cmake --install .
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ matrix.configuration }}_Windows
         path: build/install-dir/
@@ -48,7 +48,7 @@ jobs:
         configuration: [Debug, Release]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Build
       run: |
@@ -59,7 +59,7 @@ jobs:
           cmake --install .
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ matrix.configuration }}_Linux
         path: build/install-dir/
@@ -74,7 +74,7 @@ jobs:
         configuration: [Debug, Release]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Build
       run: |
@@ -85,7 +85,7 @@ jobs:
           cmake --install .
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ matrix.configuration }}_LinuxARM
         path: build/install-dir/
@@ -99,13 +99,13 @@ jobs:
         configuration: [Debug, Release]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
   
     - name: Enable NMake
       uses: ilammy/msvc-dev-cmd@v1.13.0
 
     - name: Download artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with: 
         name: ${{ matrix.configuration }}_Windows
         path: BaseTCPServer
@@ -124,7 +124,6 @@ jobs:
       working-directory: ${{ github.workspace }}/Tests
       run: |
           start Tests.exe
-          timeout /t 1 /nobreak > nul
           python tests.py
 
 
@@ -138,10 +137,10 @@ jobs:
         configuration: [Debug, Release]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
   
     - name: Download artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with: 
         name: ${{ matrix.configuration }}_Linux
         path: BaseTCPServer
@@ -173,10 +172,10 @@ jobs:
         configuration: [Debug, Release]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
   
     - name: Download artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with: 
         name: ${{ matrix.configuration }}_LinuxARM
         path: BaseTCPServer
@@ -209,7 +208,7 @@ jobs:
     needs: [windows-tests, linux-tests, linux-aarch64-tests]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
   
     - uses: LazyPanda07/extract-current-branch@master
     
@@ -219,7 +218,7 @@ jobs:
 
     - name: Download artifacts
       if: ${{ env.CURRENT_BRANCH == 'master' }}
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       
     - name: Setup Windows build list
       run: echo "WINDOWS_BUILD_LIST="$(ls | grep Windows)"" >> ${GITHUB_ENV}
