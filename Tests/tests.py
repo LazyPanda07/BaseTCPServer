@@ -12,7 +12,7 @@ from socket import *
 class EchoServerTest(unittest.TestCase):
     def test_echo(self):
         while True:
-            if os.path.exists("run.txt")
+            if os.path.exists("run.txt"):
                 break
 
         for i in range(8192):
