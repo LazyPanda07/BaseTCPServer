@@ -46,6 +46,14 @@ int main(int argc, char** argv) try
 
 	server.start(false, []() { std::ofstream("run.txt"); });
 
+	int errorCode;
+
+#ifdef __LINUX__
+	errorCode = std::system("python3 tests.py");
+#else
+	errorCode = std::system("python tests.py");
+#endif
+
 	while (true)
 	{
 		if (std::filesystem::exists("finish.txt"))
@@ -56,7 +64,7 @@ int main(int argc, char** argv) try
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 
-	return 0;
+	return errorCode;
 }
 catch (const web::exceptions::WebServerException& e)
 {

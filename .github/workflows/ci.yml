@@ -120,9 +120,7 @@ jobs:
 
     - name: Tests
       working-directory: ${{ github.workspace }}/Tests
-      run: |
-          start Tests.exe
-          python tests.py
+      run: Tests.exe
 
 
   linux-tests:
@@ -155,9 +153,7 @@ jobs:
 
     - name: Tests
       working-directory: ${{ github.workspace }}/Tests
-      run: |
-          ./Tests & sleep 1
-          python3 tests.py
+      run: ./Tests
 
 
   linux-aarch64-tests:
@@ -191,12 +187,7 @@ jobs:
     - name: Tests
       working-directory: ${{ github.workspace }}/Tests
       shell: bash
-      run: | 
-          ./Tests & sleep 1
-          python3 -m venv .venv
-          source .venv/bin/activate
-          pip3 install -r requirements.txt
-          python3 tests.py
+      run: ./Tests
 
 
   publish:
