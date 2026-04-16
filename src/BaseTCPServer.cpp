@@ -37,7 +37,7 @@ namespace web
 
 		if (auto node = data.extract(ip))
 		{
-			result = move(node.mapped());
+			result = std::move(node.mapped());
 		}
 
 		return result;
@@ -415,7 +415,11 @@ namespace web
 	{
 		isRunning = false;
 
-		closesocket(listenSocket);
+#ifdef __LINUX__
+		shutdown(listenSocket, SHUT_RDWR);
+#else
+		shutdown(listenSocket, SD_BOTH);
+#endif
 
 		if (wait)
 		{
