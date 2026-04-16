@@ -331,7 +331,7 @@ namespace web
 
 	std::string BaseTCPServer::getVersion()
 	{
-		std::string version = "1.17.1";
+		std::string version = "1.17.2";
 
 		return version;
 	}
@@ -413,6 +413,25 @@ namespace web
 
 	void BaseTCPServer::stop(bool wait)
 	{
+		auto dummyConnect = [this]()
+			{
+				SOCKET clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+
+				if (clientSocket < 0)
+				{
+					return;
+				}
+
+				sockaddr_in addr{};
+				addr.sin_family = AF_INET;
+				addr.sin_port = htons(static_cast<u_short>(std::stoi(port)));
+				addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+
+				connect(clientSocket, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
+
+				closesocket(clientSocket);
+			};
+
 		isRunning = false;
 
 #ifdef __LINUX__
@@ -420,6 +439,8 @@ namespace web
 #else
 		shutdown(listenSocket, SD_BOTH);
 #endif
+
+		dummyConnect();
 
 		if (wait)
 		{

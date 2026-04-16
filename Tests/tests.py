@@ -1,12 +1,10 @@
 import random
 import string
 import unittest
-import platform
-import subprocess
 import os
-import time
 
 from socket import *
+from pathlib import Path
 
 
 class EchoServerTest(unittest.TestCase):
@@ -16,18 +14,18 @@ class EchoServerTest(unittest.TestCase):
                 break
 
         for i in range(8192):
-            with create_connection(("127.0.0.1", 8080), 5) as socket:
+            with create_connection(("127.0.0.1", 8080), 5) as client_socket:
                 message = EchoServerTest._generate_random_message()
 
-                socket.send(len(message).to_bytes(4, "little"))
+                client_socket.send(len(message).to_bytes(4, "little"))
 
-                socket.send(bytes(message, "UTF-8"))
+                client_socket.send(bytes(message, "UTF-8"))
 
-                length = socket.recv(4)
+                length = client_socket.recv(4)
 
                 length = int.from_bytes(length, "little")
 
-                echo_message = socket.recv(length)
+                echo_message = client_socket.recv(length)
 
                 self.assertEqual(message + " from echo server", echo_message.decode("UTF-8"))
 
@@ -37,6 +35,6 @@ class EchoServerTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(exit=False)
 
-    open("finish.txt", "w").close()
+    Path("finish.txt").touch()

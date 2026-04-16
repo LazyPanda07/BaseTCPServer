@@ -46,12 +46,12 @@ int main(int argc, char** argv) try
 
 	server.start(false, []() { std::ofstream("run.txt"); });
 
-	int errorCode;
+	int errorCode = 0;
 
 #ifdef __LINUX__
-	errorCode = std::system("python3 tests.py");
+	errorCode = std::system("python3 -u tests.py");
 #else
-	errorCode = std::system("python tests.py");
+	errorCode = std::system("python -u tests.py");
 #endif
 
 	while (true)

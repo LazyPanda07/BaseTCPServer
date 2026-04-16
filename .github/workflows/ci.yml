@@ -111,16 +111,15 @@ jobs:
     - name: Build
       working-directory: ${{ github.workspace }}/Tests
       run: |
-          pip install -r requirements.txt
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -G "Ninja" ..
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DCMAKE_INSTALL_PREFIX=bin -G "Ninja" ..
           cmake --build . -j
           cmake --install .
 
     - name: Tests
-      working-directory: ${{ github.workspace }}/Tests
-      run: Tests.exe
+      working-directory: ${{ github.workspace }}/Tests/build/bin
+      run: .\Tests.exe
 
 
   linux-tests:
@@ -144,15 +143,14 @@ jobs:
     - name: Build
       working-directory: ${{ github.workspace }}/Tests
       run: |
-          pip3 install -r requirements.txt
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -G "Ninja" ..
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=bin -G "Ninja" ..
           cmake --build . -j
           cmake --install .
 
     - name: Tests
-      working-directory: ${{ github.workspace }}/Tests
+      working-directory: ${{ github.workspace }}/Tests/build/bin
       run: ./Tests
 
 
@@ -180,12 +178,12 @@ jobs:
       run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -G "Ninja" ..
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=bin -G "Ninja" ..
           cmake --build . -j
           cmake --install .
 
     - name: Tests
-      working-directory: ${{ github.workspace }}/Tests
+      working-directory: ${{ github.workspace }}/Tests/build/bin
       shell: bash
       run: ./Tests
 
