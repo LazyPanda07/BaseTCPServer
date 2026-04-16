@@ -38,3 +38,5 @@ class EchoServerTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+    open("finish.txt", "w").close()

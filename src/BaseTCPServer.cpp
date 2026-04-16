@@ -5,9 +5,7 @@
 #ifdef __LINUX__
 #include <fcntl.h>
 #include <arpa/inet.h>
-#endif
-
-#ifndef __LINUX__
+#else
 #pragma comment (lib, "ws2_32.lib")
 #endif
 
@@ -431,7 +429,11 @@ namespace web
 
 		for (SOCKET socket : sockets)
 		{
-			closesocket(socket);
+#ifdef __LINUX__
+			shutdown(socket, SHUT_RDWR);
+#else
+			shutdown(socket, SD_BOTH);
+#endif
 		}
 	}
 
@@ -441,7 +443,11 @@ namespace web
 		{
 			for (SOCKET socket : sockets)
 			{
-				closesocket(socket);
+#ifdef __LINUX__
+				shutdown(socket, SHUT_RDWR);
+#else
+				shutdown(socket, SD_BOTH);
+#endif
 			}
 		}
 

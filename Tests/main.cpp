@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <chrono>
+#include <filesystem>
 
 #include <BaseTCPServer.h>
 
@@ -42,7 +44,17 @@ int main(int argc, char** argv) try
 {
 	EchoServer server;
 
-	server.start(true, []() { std::ofstream("run.txt"); });
+	server.start(false, []() { std::ofstream("run.txt"); });
+
+	while (true)
+	{
+		if (std::filesystem::exists("finish.txt"))
+		{
+			break;
+		}
+
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
 
 	return 0;
 }

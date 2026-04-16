@@ -3,7 +3,7 @@ name: CI
 
 on:
   push:
-    branches: [master, dev]
+    branches: [main, dev]
 
 
 permissions:
@@ -66,9 +66,7 @@ jobs:
         
   
   linux-aarch64-build:
-    runs-on: ubuntu-latest
-    container:
-      image: lazypanda07/ubuntu_cxx20:aarch64
+    runs-on: ubuntu-24.04-arm
     strategy:
       matrix:
         configuration: [Debug, Release]
@@ -163,9 +161,7 @@ jobs:
 
 
   linux-aarch64-tests:
-    runs-on: ubuntu-latest
-    container:
-      image: lazypanda07/ubuntu_cxx20:aarch64
+    runs-on: ubuntu-24.04-arm
     needs: linux-aarch64-build
     strategy:
       matrix:
@@ -196,7 +192,7 @@ jobs:
       working-directory: ${{ github.workspace }}/Tests
       shell: bash
       run: | 
-          qemu-aarch64 ./Tests & sleep 1
+          ./Tests & sleep 1
           python3 -m venv .venv
           source .venv/bin/activate
           pip3 install -r requirements.txt
@@ -217,26 +213,26 @@ jobs:
       run: echo "VERSION=$($($($(Select-String -Path .\src\BaseTCPServer.cpp -Pattern version) -split '( = )')[3].TrimEnd(';')).Trim('\"'))" >> $Env:GITHUB_ENV
 
     - name: Download artifacts
-      if: ${{ env.CURRENT_BRANCH == 'master' }}
+      if: ${{ env.CURRENT_BRANCH == 'main' }}
       uses: actions/download-artifact@v8
       
     - name: Setup Windows build list
       run: echo "WINDOWS_BUILD_LIST="$(ls | grep Windows)"" >> ${GITHUB_ENV}
       
     - name: Create Windows zip
-      if: ${{ env.CURRENT_BRANCH == 'master' }}
+      if: ${{ env.CURRENT_BRANCH == 'main' }}
       run: zip -r windows.zip ${{ env.WINDOWS_BUILD_LIST }}
 
     - name: Create Linux zip
-      if: ${{ env.CURRENT_BRANCH == 'master' }}
+      if: ${{ env.CURRENT_BRANCH == 'main' }}
       run: zip -r linux.zip Release_Linux ReleaseDLL_Linux
 
     - name: Create Linux ARM zip
-      if: ${{ env.CURRENT_BRANCH == 'master' }}
+      if: ${{ env.CURRENT_BRANCH == 'main' }}
       run: zip -r linux_aarch64.zip Release_LinuxARM ReleaseDLL_LinuxARM
 
     - name: Publish
-      if: ${{ env.CURRENT_BRANCH == 'master' }}
+      if: ${{ env.CURRENT_BRANCH == 'main' }}
       run: gh release create v${{ env.VERSION }} *.zip --title v${{ env.VERSION }} --generate-notes
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
