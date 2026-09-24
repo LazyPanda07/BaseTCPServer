@@ -262,7 +262,6 @@ namespace web
 			}
 
 			totalSent += lastSend;
-
 		}
 		while (totalSent < size);
 
@@ -272,13 +271,25 @@ namespace web
 	template<typename DataT>
 	int BaseTCPServer::receiveBytes(SOCKET clientSocket, DataT* const data, int size)
 	{
-		int lastReceive = recv(clientSocket, reinterpret_cast<char*>(data), size, NULL);
+		int totalReceive = 0;
 
-		if (lastReceive == SOCKET_ERROR)
+		do
 		{
-			THROW_WEB_SERVER_EXCEPTION;
-		}
+			int lastReceive = recv(clientSocket, reinterpret_cast<char*>(data) + totalReceive, size - totalReceive, NULL);
 
-		return lastReceive;
+			if (lastReceive == SOCKET_ERROR)
+			{
+				THROW_WEB_SERVER_EXCEPTION;
+			}
+			else if (!lastReceive)
+			{
+				return totalReceive;
+			}
+
+			totalReceive += lastReceive;
+		}
+		while (totalReceive < size);
+
+		return totalReceive;
 	}
 }

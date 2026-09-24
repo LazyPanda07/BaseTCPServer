@@ -331,7 +331,7 @@ namespace web
 
 	std::string BaseTCPServer::getVersion()
 	{
-		std::string version = "1.17.2";
+		std::string version = "1.17.3";
 
 		return version;
 	}
