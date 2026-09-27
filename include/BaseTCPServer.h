@@ -88,7 +88,7 @@ namespace web
 	protected:
 		void createListenSocket();
 
-		virtual void receiveConnections(const std::function<void()>& onStartServer, std::exception** outException);
+		virtual void receiveConnections(std::function<void()> onStartServer, std::exception** outException);
 
 		virtual void serve(std::string ip, SOCKET clientSocket, sockaddr address);
 

@@ -173,7 +173,7 @@ namespace web
 		freeaddrinfo(info);
 	}
 
-	void BaseTCPServer::receiveConnections(const std::function<void()>& onStartServer, std::exception** outException)
+	void BaseTCPServer::receiveConnections(std::function<void()> onStartServer, std::exception** outException)
 	{
 		try
 		{
@@ -289,7 +289,7 @@ namespace web
 
 		this->clientConnection(ip, clientSocket, address, cleanup);
 
-		if (static_cast<bool>(cleanup))
+		if (cleanup)
 		{
 			cleanup();
 		}
@@ -331,7 +331,7 @@ namespace web
 
 	std::string BaseTCPServer::getVersion()
 	{
-		std::string version = "1.17.3";
+		std::string version = "1.17.4";
 
 		return version;
 	}
