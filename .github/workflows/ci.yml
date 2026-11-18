@@ -18,7 +18,7 @@ jobs:
         configuration: [Debug, Release]
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     
     - name: Enable NMake
       uses: ilammy/msvc-dev-cmd@v1.13.0
@@ -33,7 +33,7 @@ jobs:
           cmake --install .
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ matrix.configuration }}_Windows
         path: build/install-dir/
@@ -42,13 +42,13 @@ jobs:
   linux-build:
     runs-on: ubuntu-latest
     container:
-      image: lazypanda07/ubuntu_cxx20:24.04
+      image: ghcr.io/lazypanda07/ubuntu-cxx23:26.04
     strategy:
       matrix:
         configuration: [Debug, Release]
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     
     - name: Build
       run: |
@@ -59,20 +59,20 @@ jobs:
           cmake --install .
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ matrix.configuration }}_Linux
         path: build/install-dir/
         
   
   linux-aarch64-build:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     strategy:
       matrix:
         configuration: [Debug, Release]
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     
     - name: Build
       run: |
@@ -83,7 +83,7 @@ jobs:
           cmake --install .
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ matrix.configuration }}_LinuxARM
         path: build/install-dir/
@@ -97,7 +97,7 @@ jobs:
         configuration: [Debug, Release]
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
   
     - name: Enable NMake
       uses: ilammy/msvc-dev-cmd@v1.13.0
@@ -125,14 +125,14 @@ jobs:
   linux-tests:
     runs-on: ubuntu-latest
     container:
-      image: lazypanda07/ubuntu_cxx20:24.04
+      image: ghcr.io/lazypanda07/ubuntu-cxx23:26.04
     needs: linux-build
     strategy:
       matrix:
         configuration: [Debug, Release]
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
   
     - name: Download artifacts
       uses: actions/download-artifact@v8
@@ -155,14 +155,14 @@ jobs:
 
 
   linux-aarch64-tests:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     needs: linux-aarch64-build
     strategy:
       matrix:
         configuration: [Debug, Release]
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
   
     - name: Download artifacts
       uses: actions/download-artifact@v8
@@ -193,7 +193,7 @@ jobs:
     needs: [windows-tests, linux-tests, linux-aarch64-tests]
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
   
     - uses: LazyPanda07/extract-current-branch@master
     
