@@ -8,7 +8,7 @@
 class EchoServer : public web::BaseTCPServer
 {
 private:
-	void clientConnection(const std::string& ip, SOCKET clientSocket, sockaddr address, std::function<void()>& cleanup) override try
+	void clientConnection(const std::string& ip, SOCKET clientSocket, uint16_t port, sockaddr address, std::function<void()>& cleanup) override try
 	{
 		int length = 0;
 		std::string message;
@@ -16,10 +16,10 @@ private:
 		this->receiveBytes(clientSocket, &length, sizeof(int));
 
 		message.resize(length);
-		
+
 		this->receiveBytes(clientSocket, message.data(), length);
 
-		message += " from echo server";
+		message += std::format(" from echo server on {} port", port);
 
 		length = message.size();
 
@@ -34,7 +34,7 @@ private:
 
 public:
 	EchoServer() :
-		BaseTCPServer("8080")
+		BaseTCPServer(std::vector<std::string>{ "8080", "1443"})
 	{
 
 	}

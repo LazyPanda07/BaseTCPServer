@@ -1,0 +1,11 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="ProductionRelease" />
+    <BuildType Name="Release" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="BaseTCPServer.vcxproj" Id="d29045d5-a3e0-4b1f-bf3f-7a7395a22b13">
+    <BuildType Solution="Debug|*" Project="Release" />
+  </Project>
+</Solution>

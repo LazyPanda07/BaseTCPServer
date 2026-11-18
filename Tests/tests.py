@@ -13,21 +13,24 @@ class EchoServerTest(unittest.TestCase):
             if os.path.exists("run.txt"):
                 break
 
+        ports = [8080, 1443]
+
         for i in range(8192):
-            with create_connection(("127.0.0.1", 8080), 5) as client_socket:
-                message = EchoServerTest._generate_random_message()
+            for port in ports:
+                with create_connection(("127.0.0.1", port), 5) as client_socket:
+                    message = EchoServerTest._generate_random_message()
 
-                client_socket.send(len(message).to_bytes(4, "little"))
+                    client_socket.send(len(message).to_bytes(4, "little"))
 
-                client_socket.send(bytes(message, "UTF-8"))
+                    client_socket.send(bytes(message, "UTF-8"))
 
-                length = client_socket.recv(4)
+                    length = client_socket.recv(4)
 
-                length = int.from_bytes(length, "little")
+                    length = int.from_bytes(length, "little")
 
-                echo_message = client_socket.recv(length)
+                    echo_message = client_socket.recv(length)
 
-                self.assertEqual(message + " from echo server", echo_message.decode("UTF-8"))
+                    self.assertEqual(message + f" from echo server on {port}", echo_message.decode("UTF-8"))
 
     @staticmethod
     def _generate_random_message() -> str:

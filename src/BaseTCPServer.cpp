@@ -86,94 +86,100 @@ namespace web
 		return result;
 	}
 
-	void BaseTCPServer::createListenSocket()
+	void BaseTCPServer::createListenSockets()
 	{
-		addrinfo* info = nullptr;
-		addrinfo hints = {};
-
-		hints.ai_family = AF_INET;
-		hints.ai_flags = AI_PASSIVE;
-		hints.ai_protocol = IPPROTO_TCP;
-		hints.ai_socktype = SOCK_STREAM;
-
-		if (getaddrinfo(ip.data(), port.data(), &hints, &info))
+		for (size_t i = 0; i < ports.size(); i++)
 		{
-			THROW_WEB_SERVER_EXCEPTION;
-		}
+			std::string_view port = ports[i];
+			SOCKET& listenSocket = listenSockets[i];
 
-		if ((listenSocket = socket(info->ai_family, info->ai_socktype, info->ai_protocol)) == INVALID_SOCKET)
-		{
-			freeaddrinfo(info);
+			addrinfo* info = nullptr;
+			addrinfo hints = {};
 
-			freeDLL = true;
+			hints.ai_family = AF_INET;
+			hints.ai_flags = AI_PASSIVE;
+			hints.ai_protocol = IPPROTO_TCP;
+			hints.ai_socktype = SOCK_STREAM;
 
-			THROW_WEB_SERVER_EXCEPTION;
-		}
+			if (getaddrinfo(ip.data(), port.data(), &hints, &info))
+			{
+				THROW_WEB_SERVER_EXCEPTION;
+			}
 
-		int yes = 1;
+			if ((listenSocket = socket(info->ai_family, info->ai_socktype, info->ai_protocol)) == INVALID_SOCKET)
+			{
+				freeaddrinfo(info);
 
-		if (setsockopt(listenSocket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&yes), sizeof(yes)) == SOCKET_ERROR)
-		{
-			freeaddrinfo(info);
+				freeDLL = true;
 
-			freeDLL = true;
+				THROW_WEB_SERVER_EXCEPTION;
+			}
 
-			THROW_WEB_SERVER_EXCEPTION;
-		}
+			int yes = 1;
+
+			if (setsockopt(listenSocket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&yes), sizeof(yes)) == SOCKET_ERROR)
+			{
+				freeaddrinfo(info);
+
+				freeDLL = true;
+
+				THROW_WEB_SERVER_EXCEPTION;
+			}
 
 #ifdef __LINUX__
-		int flags = fcntl(listenSocket, F_GETFL, 0);
+			int flags = fcntl(listenSocket, F_GETFL, 0);
 
-		if (flags == -1)
-		{
-			std::cerr << "Can't F_GETFL on listen socket" << std::endl;
+			if (flags == -1)
+			{
+				std::cerr << "Can't F_GETFL on listen socket" << std::endl;
 
-			flags = 0;
-		}
+				flags = 0;
+			}
 
-		flags = this->isListenSocketInBlockingMode() ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
+			flags = this->isListenSocketInBlockingMode() ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
 
-		if (fcntl(listenSocket, F_SETFL, flags) == SOCKET_ERROR)
-		{
-			freeaddrinfo(info);
+			if (fcntl(listenSocket, F_SETFL, flags) == SOCKET_ERROR)
+			{
+				freeaddrinfo(info);
 
-			freeDLL = true;
+				freeDLL = true;
 
-			THROW_WEB_SERVER_EXCEPTION;
-		}
+				THROW_WEB_SERVER_EXCEPTION;
+			}
 #else
-		if (ioctlsocket(listenSocket, FIONBIO, &listenSocketBlockingMode) == SOCKET_ERROR)
-		{
-			freeaddrinfo(info);
+			if (ioctlsocket(listenSocket, FIONBIO, &listenSocketBlockingMode) == SOCKET_ERROR)
+			{
+				freeaddrinfo(info);
 
-			freeDLL = true;
+				freeDLL = true;
 
-			THROW_WEB_SERVER_EXCEPTION;
-		}
+				THROW_WEB_SERVER_EXCEPTION;
+			}
 #endif
 
-		if (bind(listenSocket, info->ai_addr, static_cast<int>(info->ai_addrlen)) == SOCKET_ERROR)
-		{
+			if (bind(listenSocket, info->ai_addr, static_cast<int>(info->ai_addrlen)) == SOCKET_ERROR)
+			{
+				freeaddrinfo(info);
+
+				freeDLL = true;
+
+				THROW_WEB_SERVER_EXCEPTION;
+			}
+
+			if (listen(listenSocket, SOMAXCONN) == SOCKET_ERROR)
+			{
+				freeaddrinfo(info);
+
+				freeDLL = true;
+
+				THROW_WEB_SERVER_EXCEPTION;
+			}
+
 			freeaddrinfo(info);
-
-			freeDLL = true;
-
-			THROW_WEB_SERVER_EXCEPTION;
 		}
-
-		if (listen(listenSocket, SOMAXCONN) == SOCKET_ERROR)
-		{
-			freeaddrinfo(info);
-
-			freeDLL = true;
-
-			THROW_WEB_SERVER_EXCEPTION;
-		}
-
-		freeaddrinfo(info);
 	}
 
-	void BaseTCPServer::receiveConnections(std::function<void()> onStartServer, std::exception** outException)
+	void BaseTCPServer::receiveConnections(SOCKET listenSocket, std::function<void()> onStartServer, std::exception** outException)
 	{
 		try
 		{
@@ -240,13 +246,15 @@ namespace web
 
 					data.add(ip, clientSocket);
 
+					uint16_t port = this->getServerPortFromListenSocket(listenSocket);
+
 					if (multiThreading)
 					{
-						std::thread(&BaseTCPServer::serve, this, ip, clientSocket, address).detach();
+						std::thread(&BaseTCPServer::serve, this, ip, clientSocket, port, address).detach();
 					}
 					else
 					{
-						this->serve(ip, clientSocket, address);
+						this->serve(ip, clientSocket, port, address);
 					}
 				}
 				else
@@ -273,7 +281,7 @@ namespace web
 		}
 	}
 
-	void BaseTCPServer::serve(std::string ip, SOCKET clientSocket, sockaddr address)
+	void BaseTCPServer::serve(std::string ip, SOCKET clientSocket, uint16_t port, sockaddr address)
 	{
 		std::function<void()> cleanup = [this, clientSocket, ip]()
 			{
@@ -285,9 +293,9 @@ namespace web
 				data.remove(ip, clientSocket);
 			};
 
-		this->onConnectionReceive(clientSocket, address);
+		this->onConnectionReceive(clientSocket, port, address);
 
-		this->clientConnection(ip, clientSocket, address, cleanup);
+		this->clientConnection(ip, clientSocket, port, address, cleanup);
 
 		if (cleanup)
 		{
@@ -295,7 +303,7 @@ namespace web
 		}
 	}
 
-	void BaseTCPServer::onConnectionReceive(SOCKET clientSocket, sockaddr address)
+	void BaseTCPServer::onConnectionReceive(SOCKET clientSocket, uint16_t port, sockaddr address)
 	{
 
 	}
@@ -308,6 +316,18 @@ namespace web
 	bool BaseTCPServer::autoCloseSocket() const
 	{
 		return true;
+	}
+
+	uint16_t BaseTCPServer::getServerPortFromListenSocket(SOCKET listenSocket) const
+	{
+		auto it = std::ranges::find(listenSockets, listenSocket);
+
+		if (it == listenSockets.end())
+		{
+			return -1;
+		}
+
+		return this->getServerPort(std::distance(listenSockets.begin(), it));
 	}
 
 	std::string BaseTCPServer::getClientIpV4(sockaddr address)
@@ -331,15 +351,15 @@ namespace web
 
 	std::string BaseTCPServer::getVersion()
 	{
-		std::string version = "1.17.4";
+		std::string version = "1.18.0";
 
 		return version;
 	}
 
 	BaseTCPServer::BaseTCPServer(std::string_view port, std::string_view host, DWORD timeout, bool multiThreading, u_long listenSocketBlockingMode, bool freeDLL) :
 		ip(host),
-		port(port),
-		listenSocket(INVALID_SOCKET),
+		ports({ port.data() }),
+		listenSockets({ INVALID_SOCKET }),
 		blockingMode(0),
 		listenSocketBlockingMode(listenSocketBlockingMode),
 		timeout(timeout),
@@ -357,7 +377,28 @@ namespace web
 #endif // __LINUX__
 	}
 
-	std::string BaseTCPServer::getServerIpV4() const
+	BaseTCPServer::BaseTCPServer(const std::vector<std::string>& ports, std::string_view host, DWORD timeout, bool multiThreading, u_long listenSocketBlockingMode, bool freeDLL) :
+		ip(host),
+		ports(ports),
+		listenSockets(ports.size(), INVALID_SOCKET),
+		blockingMode(0),
+		listenSocketBlockingMode(listenSocketBlockingMode),
+		timeout(timeout),
+		freeDLL(freeDLL),
+		isRunning(false),
+		multiThreading(multiThreading)
+	{
+#ifndef __LINUX__
+		WSADATA wsaData;
+
+		if (WSAStartup(MAKEWORD(2, 2), &wsaData))
+		{
+			THROW_WEB_SERVER_EXCEPTION;
+		}
+#endif // __LINUX__
+	}
+
+	std::string BaseTCPServer::getServerIpV4(size_t index) const
 	{
 		std::string ip;
 		sockaddr_in serverInfo = {};
@@ -370,7 +411,7 @@ namespace web
 
 		ip.resize(BaseTCPServer::ipV4Size);
 
-		getsockname(listenSocket, reinterpret_cast<sockaddr*>(&serverInfo), &len);
+		getsockname(listenSockets.at(index), reinterpret_cast<sockaddr*>(&serverInfo), &len);
 
 		inet_ntop(AF_INET, &serverInfo.sin_addr, ip.data(), BaseTCPServer::ipV4Size);
 
@@ -382,7 +423,7 @@ namespace web
 		return ip;
 	}
 
-	uint16_t BaseTCPServer::getServerPortV4() const
+	uint16_t BaseTCPServer::getServerPort(size_t index) const
 	{
 		sockaddr_in serverInfo = {};
 
@@ -392,22 +433,28 @@ namespace web
 		int len = sizeof(serverInfo);
 #endif
 
-		getsockname(listenSocket, reinterpret_cast<sockaddr*>(&serverInfo), &len);
+		getsockname(listenSockets.at(index), reinterpret_cast<sockaddr*>(&serverInfo), &len);
 
 		return ntohs(serverInfo.sin_port);
 	}
 
 	void BaseTCPServer::start(bool wait, const std::function<void()>& onStartServer, std::exception** outException)
 	{
-		this->createListenSocket();
+		this->createListenSockets();
 
 		isRunning = true;
 
-		handle = std::async(std::launch::async, &BaseTCPServer::receiveConnections, this, onStartServer, outException);
+		for (SOCKET listenSocket : listenSockets)
+		{
+			handles.emplace_back(std::async(std::launch::async, &BaseTCPServer::receiveConnections, this, listenSocket, onStartServer, outException));
+		}
 
 		if (wait)
 		{
-			handle.wait();
+			for (std::future<void>& handle : handles)
+			{
+				handle.wait();
+			}
 		}
 	}
 
@@ -415,36 +462,45 @@ namespace web
 	{
 		auto dummyConnect = [this]()
 			{
-				SOCKET clientSocket = socket(AF_INET, SOCK_STREAM, 0);
-
-				if (clientSocket < 0)
+				for (const std::string& port : ports)
 				{
-					return;
+					SOCKET clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+
+					if (clientSocket < 0)
+					{
+						return;
+					}
+
+					sockaddr_in addr{};
+					addr.sin_family = AF_INET;
+					addr.sin_port = htons(static_cast<u_short>(std::stoi(port)));
+					addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+
+					connect(clientSocket, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
+
+					closesocket(clientSocket);
 				}
-
-				sockaddr_in addr{};
-				addr.sin_family = AF_INET;
-				addr.sin_port = htons(static_cast<u_short>(std::stoi(port)));
-				addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-
-				connect(clientSocket, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
-
-				closesocket(clientSocket);
 			};
 
 		isRunning = false;
 
+		for (SOCKET listenSocket : listenSockets)
+		{
 #ifdef __LINUX__
-		shutdown(listenSocket, SHUT_RDWR);
+			shutdown(listenSocket, SHUT_RDWR);
 #else
-		shutdown(listenSocket, SD_BOTH);
+			shutdown(listenSocket, SD_BOTH);
 #endif
+		}
 
 		dummyConnect();
 
 		if (wait)
 		{
-			handle.wait();
+			for (std::future<void>& handle : handles)
+			{
+				handle.wait();
+			}
 		}
 	}
 
@@ -519,9 +575,14 @@ namespace web
 		return ip;
 	}
 
-	std::string_view BaseTCPServer::getPort() const
+	std::string_view BaseTCPServer::getPort(size_t index) const
 	{
-		return port;
+		return ports.at(index);
+	}
+
+	size_t BaseTCPServer::getListenPorts() const
+	{
+		return ports.size();
 	}
 
 	BaseTCPServer::~BaseTCPServer()

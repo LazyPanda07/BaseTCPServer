@@ -67,13 +67,13 @@ namespace web
 	protected:
 		ClientData data;
 		std::string ip;
-		std::string port;
-		SOCKET listenSocket;
+		std::vector<std::string> ports;
+		std::vector<SOCKET> listenSockets;
 		DWORD timeout;
 		bool freeDLL;
 		bool isRunning;
 		const bool multiThreading;
-		std::future<void> handle;
+		std::vector<std::future<void>> handles;
 
 		/**
 		 * @brief 0 for blocking, non 0 for non blocking
@@ -86,11 +86,11 @@ namespace web
 		u_long listenSocketBlockingMode;
 
 	protected:
-		void createListenSocket();
+		void createListenSockets();
 
-		virtual void receiveConnections(const std::function<void()>& onStartServer, std::exception** outException);
+		virtual void receiveConnections(SOCKET listenSocket, std::function<void()> onStartServer, std::exception** outException);
 
-		virtual void serve(std::string ip, SOCKET clientSocket, sockaddr address);
+		virtual void serve(std::string ip, SOCKET clientSocket, uint16_t port, sockaddr address);
 
 		/**
 		 * @brief Serving each client connection
@@ -99,9 +99,9 @@ namespace web
 		 * @param address Structure used to store most addresses.
 		 * @param cleanup Move this function if you want made cleanup by yourself
 		 */
-		virtual void clientConnection(const std::string& ip, SOCKET clientSocket, sockaddr address, std::function<void()>& cleanup) = 0;
+		virtual void clientConnection(const std::string& ip, SOCKET clientSocket, uint16_t port, sockaddr address, std::function<void()>& cleanup) = 0;
 
-		virtual void onConnectionReceive(SOCKET clientSocket, sockaddr address);
+		virtual void onConnectionReceive(SOCKET clientSocket, uint16_t port, sockaddr address);
 
 		virtual void onInvalidConnectionReceive();
 
@@ -110,6 +110,9 @@ namespace web
 		 * @return
 		 */
 		virtual bool autoCloseSocket() const;
+
+	protected:
+		uint16_t getServerPortFromListenSocket(SOCKET listenSocket) const;
 
 	protected:
 		template<typename DataT>
@@ -149,17 +152,19 @@ namespace web
 		/// @param freeDLL Unload Ws2_32.dll in destructor(Windows only parameter)
 		BaseTCPServer(std::string_view port, std::string_view host = "0.0.0.0", DWORD timeout = 0, bool multiThreading = true, u_long listenSocketBlockingMode = 0, bool freeDLL = true);
 
+		BaseTCPServer(const std::vector<std::string>& ports, std::string_view host = "0.0.0.0", DWORD timeout = 0, bool multiThreading = true, u_long listenSocketBlockingMode = 0, bool freeDLL = true);
+
 		/**
 		 * @brief Get server IP address
 		 * @return
 		 */
-		std::string getServerIpV4() const;
+		std::string getServerIpV4(size_t index = 0) const;
 
 		/**
 		 * @brief Get server port
 		 * @return
 		 */
-		uint16_t getServerPortV4() const;
+		uint16_t getServerPort(size_t index = 0) const;
 
 		/**
 		 * @brief Start server in separate thread
@@ -237,7 +242,9 @@ namespace web
 		 * @brief Initial passed port
 		 * @return
 		 */
-		std::string_view getPort() const;
+		std::string_view getPort(size_t index = 0) const;
+
+		size_t getListenPorts() const;
 
 		virtual ~BaseTCPServer();
 	};
@@ -262,7 +269,6 @@ namespace web
 			}
 
 			totalSent += lastSend;
-
 		}
 		while (totalSent < size);
 
@@ -272,13 +278,25 @@ namespace web
 	template<typename DataT>
 	int BaseTCPServer::receiveBytes(SOCKET clientSocket, DataT* const data, int size)
 	{
-		int lastReceive = recv(clientSocket, reinterpret_cast<char*>(data), size, NULL);
+		int totalReceive = 0;
 
-		if (lastReceive == SOCKET_ERROR)
+		do
 		{
-			THROW_WEB_SERVER_EXCEPTION;
-		}
+			int lastReceive = recv(clientSocket, reinterpret_cast<char*>(data) + totalReceive, size - totalReceive, NULL);
 
-		return lastReceive;
+			if (lastReceive == SOCKET_ERROR)
+			{
+				THROW_WEB_SERVER_EXCEPTION;
+			}
+			else if (!lastReceive)
+			{
+				return totalReceive;
+			}
+
+			totalReceive += lastReceive;
+		}
+		while (totalReceive < size);
+
+		return totalReceive;
 	}
 }
