@@ -194,6 +194,8 @@ namespace web
 		if (clientSocket == INVALID_SOCKET)
 		{
 			this->onInvalidConnectionReceive();
+
+			return;
 		}
 
 		if (!isRunning)
@@ -361,7 +363,7 @@ namespace web
 
 	std::string BaseTCPServer::getVersion()
 	{
-		std::string version = "1.19.0";
+		std::string version = "1.19.1";
 
 		return version;
 	}
