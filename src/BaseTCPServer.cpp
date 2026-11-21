@@ -1,6 +1,7 @@
 #include "BaseTCPServer.h"
 
 #include <iostream>
+#include <functional>
 
 #ifdef __LINUX__
 #include <fcntl.h>
@@ -360,7 +361,7 @@ namespace web
 
 	std::string BaseTCPServer::getVersion()
 	{
-		std::string version = "1.18.0";
+		std::string version = "1.18.1";
 
 		return version;
 	}
