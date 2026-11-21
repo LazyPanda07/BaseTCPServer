@@ -179,15 +179,89 @@ namespace web
 		}
 	}
 
+	void BaseTCPServer::receiveSingleConnection(SOCKET listenSocket)
+	{
+#ifdef __LINUX__
+		socklen_t addrlen = sizeof(sockaddr);
+#else
+		int addrlen = sizeof(sockaddr);
+#endif
+
+		sockaddr address;
+		SOCKET clientSocket = accept(listenSocket, &address, &addrlen);
+
+		if (clientSocket == INVALID_SOCKET)
+		{
+			this->onInvalidConnectionReceive();
+		}
+
+		if (!isRunning)
+		{
+			return;
+		}
+
+#ifdef __LINUX__
+		timeval timeoutValue;
+
+		timeoutValue.tv_sec = timeout / 1000;
+		timeoutValue.tv_usec = (timeout - timeoutValue.tv_sec * 1000) * 1000;
+#else
+		DWORD timeoutValue = timeout;
+#endif
+
+		if (setsockopt(clientSocket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&timeoutValue), sizeof(timeoutValue)) == SOCKET_ERROR)
+		{
+			THROW_WEB_SERVER_EXCEPTION;
+		}
+
+		if (setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&timeoutValue), sizeof(timeoutValue)) == SOCKET_ERROR)
+		{
+			THROW_WEB_SERVER_EXCEPTION;
+		}
+
+#ifdef __LINUX__
+		int flags = fcntl(clientSocket, F_GETFL, 0);
+
+		if (flags == -1)
+		{
+			std::cerr << "Can't F_GETFL on socket" << std::endl;
+
+			THROW_WEB_SERVER_EXCEPTION;
+		}
+
+		flags = this->isAcceptedSocketsInBlockingMode() ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
+
+		if (fcntl(clientSocket, F_SETFL, flags) == SOCKET_ERROR)
+		{
+			THROW_WEB_SERVER_EXCEPTION;
+		}
+#else
+		if (ioctlsocket(clientSocket, FIONBIO, &blockingMode) == SOCKET_ERROR)
+		{
+			THROW_WEB_SERVER_EXCEPTION;
+		}
+#endif
+
+		std::string ip = BaseTCPServer::getClientIpV4(address);
+
+		data.add(ip, clientSocket);
+
+		uint16_t port = this->getServerPortFromListenSocket(listenSocket);
+
+		if (multiThreading)
+		{
+			std::thread(&BaseTCPServer::serve, this, ip, clientSocket, port, address).detach();
+		}
+		else
+		{
+			this->serve(ip, clientSocket, port, address);
+		}
+	}
+
 	void BaseTCPServer::receiveConnections(SOCKET listenSocket, std::function<void()> onStartServer, std::exception** outException)
 	{
 		try
 		{
-#ifdef __LINUX__
-			socklen_t addrlen = sizeof(sockaddr);
-#else
-			int addrlen = sizeof(sockaddr);
-#endif
 			if (onStartServer)
 			{
 				onStartServer();
@@ -195,79 +269,14 @@ namespace web
 
 			while (isRunning)
 			{
-				sockaddr address;
-				SOCKET clientSocket = accept(listenSocket, &address, &addrlen);
-
-#ifdef __LINUX__
-				timeval timeoutValue;
-
-				timeoutValue.tv_sec = timeout / 1000;
-				timeoutValue.tv_usec = (timeout - timeoutValue.tv_sec * 1000) * 1000;
-#else
-				DWORD timeoutValue = timeout;
-#endif
-
-				if (isRunning && clientSocket != INVALID_SOCKET)
-				{
-					if (setsockopt(clientSocket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&timeoutValue), sizeof(timeoutValue)) == SOCKET_ERROR)
-					{
-						THROW_WEB_SERVER_EXCEPTION;
-					}
-
-					if (setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&timeoutValue), sizeof(timeoutValue)) == SOCKET_ERROR)
-					{
-						THROW_WEB_SERVER_EXCEPTION;
-					}
-
-#ifdef __LINUX__
-					int flags = fcntl(clientSocket, F_GETFL, 0);
-
-					if (flags == -1)
-					{
-						std::cerr << "Can't F_GETFL on socket" << std::endl;
-
-						THROW_WEB_SERVER_EXCEPTION;
-					}
-
-					flags = this->isAcceptedSocketsInBlockingMode() ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
-
-					if (fcntl(clientSocket, F_SETFL, flags) == SOCKET_ERROR)
-					{
-						THROW_WEB_SERVER_EXCEPTION;
-					}
-#else
-					if (ioctlsocket(clientSocket, FIONBIO, &blockingMode) == SOCKET_ERROR)
-					{
-						THROW_WEB_SERVER_EXCEPTION;
-					}
-#endif
-
-					std::string ip = BaseTCPServer::getClientIpV4(address);
-
-					data.add(ip, clientSocket);
-
-					uint16_t port = this->getServerPortFromListenSocket(listenSocket);
-
-					if (multiThreading)
-					{
-						std::thread(&BaseTCPServer::serve, this, ip, clientSocket, port, address).detach();
-					}
-					else
-					{
-						this->serve(ip, clientSocket, port, address);
-					}
-				}
-				else
-				{
-					this->onInvalidConnectionReceive();
-				}
+				this->receiveSingleConnection(listenSocket);
 			}
 
 			if (this->getNumberOfConnections())
 			{
 				this->kickAll();
 			}
-		}
+	}
 		catch (const std::exception& e)
 		{
 			if (outException)
@@ -279,7 +288,7 @@ namespace web
 				std::cerr << __func__ << " throws exception: " << e.what() << std::endl;
 			}
 		}
-	}
+}
 
 	void BaseTCPServer::serve(std::string ip, SOCKET clientSocket, uint16_t port, sockaddr address)
 	{
@@ -441,12 +450,65 @@ namespace web
 	void BaseTCPServer::start(bool wait, const std::function<void()>& onStartServer, std::exception** outException)
 	{
 		this->createListenSockets();
+		std::vector<std::function<void()>> functions;
 
 		isRunning = true;
 
 		for (SOCKET listenSocket : listenSockets)
 		{
-			handles.emplace_back(std::async(std::launch::async, &BaseTCPServer::receiveConnections, this, listenSocket, onStartServer, outException));
+			if (multiThreading)
+			{
+				handles.emplace_back(std::async(std::launch::async, &BaseTCPServer::receiveConnections, this, listenSocket, onStartServer, outException));
+			}
+			else
+			{
+				functions.push_back(std::bind(&BaseTCPServer::receiveSingleConnection, this, listenSocket));
+			}
+		}
+
+		if (!multiThreading)
+		{
+			handles.emplace_back
+			(
+				std::async
+				(
+					std::launch::async,
+					[this, functions = std::move(functions), onStartServer, outException]()
+					{
+						try
+						{
+							if (onStartServer)
+							{
+								onStartServer();
+							}
+
+							while (isRunning)
+							{
+								for (const std::function<void()>& function : functions)
+								{
+									function();
+								}
+							}
+
+							if (this->getNumberOfConnections())
+							{
+								this->kickAll();
+							}
+						}
+						catch (const std::exception& e)
+						{
+							if (outException)
+							{
+								*outException = new std::runtime_error(e.what());
+							}
+							else
+							{
+								std::cerr << __func__ << " throws exception: " << e.what() << std::endl;
+							}
+						}
+					}
+				)
+			);
 		}
 
 		if (wait)

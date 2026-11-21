@@ -88,6 +88,8 @@ namespace web
 	protected:
 		void createListenSockets();
 
+		void receiveSingleConnection(SOCKET listenSocket);
+
 		virtual void receiveConnections(SOCKET listenSocket, std::function<void()> onStartServer, std::exception** outException);
 
 		virtual void serve(std::string ip, SOCKET clientSocket, uint16_t port, sockaddr address);
