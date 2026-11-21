@@ -90,7 +90,7 @@ namespace web
 
 		void receiveSingleConnection(SOCKET listenSocket);
 
-		virtual void receiveConnections(SOCKET listenSocket, std::function<void()> onStartServer, std::exception** outException);
+		virtual void receiveConnections(SOCKET listenSocket, std::function<void(SOCKET)> onStartServer, std::exception** outException);
 
 		virtual void serve(std::string ip, SOCKET clientSocket, uint16_t port, sockaddr address);
 
@@ -173,7 +173,7 @@ namespace web
 		 * @param wait Wait server serving in current thread
 		 * @param onStartServer Call function before accept first connection
 		 */
-		virtual void start(bool wait = false, const std::function<void()>& onStartServer = []() {}, std::exception** outException = nullptr);
+		virtual void start(bool wait = false, const std::function<void(SOCKET listenSocket)>& onStartServer = [](SOCKET) {}, std::exception** outException = nullptr);
 
 		/**
 		 * @brief Stop receiving new connections

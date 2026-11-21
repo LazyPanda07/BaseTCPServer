@@ -259,13 +259,13 @@ namespace web
 		}
 	}
 
-	void BaseTCPServer::receiveConnections(SOCKET listenSocket, std::function<void()> onStartServer, std::exception** outException)
+	void BaseTCPServer::receiveConnections(SOCKET listenSocket, std::function<void(SOCKET)> onStartServer, std::exception** outException)
 	{
 		try
 		{
 			if (onStartServer)
 			{
-				onStartServer();
+				onStartServer(listenSocket);
 			}
 
 			while (isRunning)
@@ -277,7 +277,7 @@ namespace web
 			{
 				this->kickAll();
 			}
-	}
+		}
 		catch (const std::exception& e)
 		{
 			if (outException)
@@ -289,7 +289,7 @@ namespace web
 				std::cerr << __func__ << " throws exception: " << e.what() << std::endl;
 			}
 		}
-}
+	}
 
 	void BaseTCPServer::serve(std::string ip, SOCKET clientSocket, uint16_t port, sockaddr address)
 	{
@@ -361,7 +361,7 @@ namespace web
 
 	std::string BaseTCPServer::getVersion()
 	{
-		std::string version = "1.18.1";
+		std::string version = "1.19.0";
 
 		return version;
 	}
@@ -448,10 +448,10 @@ namespace web
 		return ntohs(serverInfo.sin_port);
 	}
 
-	void BaseTCPServer::start(bool wait, const std::function<void()>& onStartServer, std::exception** outException)
+	void BaseTCPServer::start(bool wait, const std::function<void(SOCKET)>& onStartServer, std::exception** outException)
 	{
 		this->createListenSockets();
-		std::vector<std::function<void()>> functions;
+		std::vector<std::pair<SOCKET, std::function<void()>>> functions;
 
 		isRunning = true;
 
@@ -463,7 +463,7 @@ namespace web
 			}
 			else
 			{
-				functions.push_back(std::bind(&BaseTCPServer::receiveSingleConnection, this, listenSocket));
+				functions.emplace_back(listenSocket, std::bind(&BaseTCPServer::receiveSingleConnection, this, listenSocket));
 			}
 		}
 
@@ -480,12 +480,15 @@ namespace web
 						{
 							if (onStartServer)
 							{
-								onStartServer();
+								for (auto&& [listenSocket, _] : functions)
+								{
+									onStartServer(listenSocket);
+								}
 							}
 
 							while (isRunning)
 							{
-								for (const std::function<void()>& function : functions)
+								for (const auto& [_, function] : functions)
 								{
 									function();
 								}

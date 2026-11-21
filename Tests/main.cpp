@@ -44,7 +44,7 @@ int main(int argc, char** argv) try
 {
 	EchoServer server;
 
-	server.start(false, []() { std::ofstream("run.txt"); });
+	server.start(false, [](SOCKET listenSocket) { std::ofstream("run.txt"); });
 
 	int errorCode = 0;
 
